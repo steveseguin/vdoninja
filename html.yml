@@ -1,0 +1,2 @@
+curl -X GET \
+     "https://huggingface.co/api/datasets/lmms-lab/LLaVA-Video-178K/parquet/0_30_s_academic_v0_1/caption"
