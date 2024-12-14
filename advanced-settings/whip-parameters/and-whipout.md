@@ -33,7 +33,9 @@ You have to use a version of OBS that contains WHIP support to get OBS to WHIP w
 [https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328001](https://github.com/obsproject/obs-studio/suites/12263428876/artifacts/649328001) mac (arm)\
 [https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926](https://github.com/obsproject/obs-studio/actions/runs/4711358202?pr=7926) (others here)
 
-Hopefully WHIP support will be in OBS officially sometime soon. WHIP support is already added to many other applications and services, and VDO.Ninja will do its best to ensure compatibility as the situation evolves.
+Hopefully WHIP support will be in OBS officially sometime soon. WHIP support is already added to many other applications and services, and VDO.Ninja will do its best to ensure compatibility as the situation evolves.\
+\
+**UPDATE**: While it's possible OBS v31 fixes this WHIP firewall issue, I do have a custom version of OBS that also has proper VDO.Ninja WHIP support [available for Win64 here.](https://backup.vdo.ninja/OBS_VDO_Ninja.zip) \[[fork](https://github.com/steveseguin/obs-studio)]  This version should let you publish WHIP via VDO.Ninja across the Internet, regardless of Firewall. (This OBS binary was last built November 2024.)
 
 See this video for details how to set up OBS WHIP to VDO.Ninja:
 
