@@ -39,13 +39,17 @@ OBS Studio v30 does not, for example, so it may not work if publishing to someon
 * on the same Local Area Network as the publisher,&#x20;
 * if hosting VDO.Ninja on a cloud server with public IP address available,&#x20;
 * if your UDP ports are being forwarded (UDP ports 4096-65535)
-* or if your local IP address is set to the DMZ mode target within your router's network settings.
+* of if your local IP address is set to the DMZ mode target within your router's network settings.\
 
-For WHIP publishing clients that do support NAT traversal, such as Gstreamer's whip element, VDO.Ninja will already work with them.
+
+While it's possible OBS v31 fixes this issue, I do have a custom version of OBS that also has proper VDO.Ninja WHIP support [available for Win64 here.](https://backup.vdo.ninja/OBS_VDO_Ninja.zip) \[[fork](https://github.com/steveseguin/obs-studio)]  This version should let you publish WHIP via VDO.Ninja across the Internet, regardless of Firewall. (This OBS binary was last built November 2024.)\
+
+
+For other WHIP publishing clients, such as Gstreamer's whip element, VDO.Ninja will already work with them in most cases, even across firewalls. Not all though.
 
 I welcome support and engagement from other developers to work through these issues, so please reach out if you'd like to speak.
 
-In terms of ideal settings for OBS v30's WHIP output into VDO.Ninja, below you can find a link to some recommended encoder options, to ensure smoothest playback
+In terms of ideal settings for OBS's WHIP output into VDO.Ninja, below you can find a link to some recommended encoder options, to ensure smoothest playback
 
 {% content-ref url="../guides/obs-whip-output-settings.md" %}
 [obs-whip-output-settings.md](../guides/obs-whip-output-settings.md)
@@ -72,7 +76,7 @@ ie: WHEP: [`https://whep.urdomain.com/yourstreamtoken`](https://whep.urdomain.co
 ### Demo video, showing us publishing from VDO.Ninja to Twitch
 
 {% embed url="https://youtu.be/_RHBsAJmfGs?si=653vhKBJesct_cmS" %}
-[https://youtu.be/\_RHBsAJmfGs?si=653vhKBJesct\_cmS](https://youtu.be/\_RHBsAJmfGs?si=653vhKBJesct\_cmS)
+[https://youtu.be/\_RHBsAJmfGs?si=653vhKBJesct\_cmS](https://youtu.be/_RHBsAJmfGs?si=653vhKBJesct_cmS)
 {% endembed %}
 
 ### The VDO.Ninja Mixer app supports WHIP out also
