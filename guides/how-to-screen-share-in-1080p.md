@@ -104,9 +104,12 @@ Frame rates should be close to 60-fps in this mode, but may vary still vary a bi
 
 An alternative to using the Virtual Camera and browser though is to use a feature in OBS to publish directly to VDO.Ninja.
 
-This is an experimental feature currently and may require a special version of OBS at the moment to work, but it might be included in OBS by default with the release of OBS v30 or v31.
+This is an newer feature it may require a special version of OBS at the moment to work, but WHIP support is now included in OBS v30, but it may be another version or two before OBS supports WHIP properly. \
+\
+If having issues with using OBS WHIP with VDO.Ninja over the Internet, I do have a custom version of OBS that has proper WHIP support [available for Win64 here.](https://backup.vdo.ninja/OBS_VDO_Ninja.zip) \[[fork](https://github.com/steveseguin/obs-studio)]  This version should let you publish WHIP via VDO.Ninja across the Internet, regardless of Firewall. This OBS binary was last built November 2024, but hopefully future releases of OBS make this custom version redundant. :)\
 
-Check out a demo YouTube video of how to accomplish this:\
+
+Check out a demo YouTube video of how to accomplish publishing WHIP into VDO.Ninja:\
 [Publishing from OBS directly to VDO.Ninja](https://www.youtube.com/watch?v=ynSOE2d4Z9Y)
 
 This mode should give OBS Studio control over frame rate and bitrate, so with a good connection it should be possible to lock in a solid 60-fps.
