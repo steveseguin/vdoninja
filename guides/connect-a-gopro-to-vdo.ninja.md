@@ -31,8 +31,7 @@ Using a service like [Speedify](https://speedify.com) on the laptop allows you t
 
 Certain Android tablets or devices with built-in HDMI input can also work, though these solutions are less common and may require testing.
 
-One example is the YoloBox, which supports HDMI input and allows installation of Chrome. If HDMI input can be selected in Chrome, streaming via VDO.Ninja may be possible.\
-[YoloBox on Amazon](https://www.amazon.ca/YoloBox-Band-Facebook-YouTube-Encoder/dp/B07PP6KHHV)
+One example is the [YoloBox](https://www.yololiv.com/), which supports HDMI input and allows installation of Chrome. If HDMI input can be selected in Chrome, streaming via VDO.Ninja may be possible. There's also DIY Android embedded systems with HDMI input, such as Orange Pi 5 Pro, which may let you access the HDMI camera from Chromium.
 
 #### **iPad via USB**
 
@@ -50,7 +49,7 @@ A Raspberry Pi can be configured to ingest the GoPro's HDMI feed and stream it t
 
 The project code is available here: [Raspberry Ninja on GitHub](https://github.com/steveseguin/raspberry_ninja).
 
-This solution is suitable for tinkerers, and with some ingenuity, it could replace the GoPro entirely as a wireless camera.
+This solution is suitable for tinkerers, and with some ingenuity, it could turn your GoPro into a powerful streaming device, or even replace the GoPro if  you choose to use your own camera sensor. Cheap, too.
 
 ![](<../.gitbook/assets/image (127) (1).png>)![](<../.gitbook/assets/image (227).png>)
 
