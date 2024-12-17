@@ -8,7 +8,7 @@ description: How to embed VDO.Ninja into your own website with the IFRAME API
 
 While VDO.Ninja does offer source-code to customize the application and UI at a low level, this isn't for beginners and it is rather hard to maintain. As well, due to the complexity of video streaming in the web, typical approaches for offering API access isn't quite feasible either.
 
-The solution decided on isn't an SDK framework, but rather the use of embeddable _IFrames_ and a corresponding bi-directional IFrame API. An [IFrame](https://www.w3schools.com/tags/tag\_iframe.ASP) allows us to embed a webpage inside a webpage, including VDO.Ninja into your own website.
+The solution decided on isn't an SDK framework, but rather the use of embeddable _IFrames_ and a corresponding bi-directional IFrame API. An [IFrame](https://www.w3schools.com/tags/tag_iframe.ASP) allows us to embed a webpage inside a webpage, including VDO.Ninja into your own website.
 
 Modern web browsers allow the parent website to communicate with the child webpage, giving a high-level of control to a developer, while also abstracting the complex code and hosting requirements. Functionality, we can make an VDON video stream act much like an HTML video element tag, where you can issue commands like play, pause, or change video sources with ease.
 
@@ -16,13 +16,13 @@ Creating an VDON iframe can be done in HTML or programmatically with Javascript 
 
 ```
 const iframe = document.createElement("iframe");
-iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;gyroscope;";
+iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;gyroscope;screen-wake-lock;";
 iframe.src = "https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent";
 ```
 
 You can also make an VDO.Ninja without Javascript, using just HTML, like
 
-`<iframe allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;gyroscope;" src="https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent"></iframe>`
+`<iframe allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;gyroscope;screen-wake-lock;" src="https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent"></iframe>`
 
 Adding that iframe to the DOM will reveal a simple page for accessing for a user to select and share their webcam. For a developer wishing to access a remote guest's stream, this makes the ingestion of that stream into production software like OBS Studios very easy. The level of customization and control opens up opportunities, such as a pay-to-join audience option for a streaming interactive broadcast experience.
 
@@ -376,4 +376,4 @@ Please feel free to follow me in the VDO.Ninja Discord channel ([discord.vdo.nin
 
 I am keen to continue to support the IFrame API, so please reach out if you have questions or requests.
 
-\-steve
+-steve
