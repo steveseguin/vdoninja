@@ -8,11 +8,17 @@ General Option! ([`&push`](../../source-settings/push.md), [`&room`](../../gener
 
 ## Details
 
-Same as [`&cleanoutput`](cleanoutput.md), except it still shows the play button that allows handling gesture requirements in chrome.
+Same as [`&cleanoutput`](cleanoutput.md), except:
 
-Director direct overlay messages are still visible.
+* It still shows the play button that allows handling gesture requirements in chrome.
+* Director direct overlay messages are still visible.
+* When using `&cleanish` and [`&record`](../recording-parameters/and-record.md), you'll get the record button showing, but nothing else.
 
-When using `&cleanish` and [`&record`](../recording-parameters/and-record.md), you'll get the record button showing, but nothing else.
+and as of VDO.Ninja version 26.4,&#x20;
+
+* You can still access the right-click menu, while you can't if using \&clean\
+  \
+
 
 ## Related
 
