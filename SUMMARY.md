@@ -89,6 +89,7 @@
   * [System requirements for streaming](guides/system-requirements-for-streaming.md)
   * [From OBS to VDO.Ninja using WHIP](guides/from-obs-to-vdo.ninja-using-whip.md)
   * [Deploy your own Meshcast-like service](guides/deploy-your-own-meshcast-like-service.md)
+  * [Windows TTS Audio Capture Methods for OBS](guides/windows-tts-audio-capture-methods-for-obs.md)
 * [Advanced Options (URL Parameters)](advanced-settings.md)
   * [Most common Parameters](advanced-settings/cheat-sheet-of-basic-parameters/README.md)
     * [\&push](https://docs.vdo.ninja/advanced-settings/source-parameters/push)
