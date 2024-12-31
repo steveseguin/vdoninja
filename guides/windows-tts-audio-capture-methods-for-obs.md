@@ -10,7 +10,7 @@ While free text-to-speech options are nice, they come with a few annoying limita
 
 OBS Studio's browser source does not have the ability to capture system-level text-to-speech (TTS) audio. It is capable of capturing premium TTS options, such as those powered by Google Cloud, Speechify, or Elevenlabs, but it cannot do so using the free built-in-to-browser ones.  This is a limitation all browsers face when dealing with free TTS.\
 \
-Further Not all browsers even support text-to-speech. Opera, Firefox, and others may lack them.
+Furthermore, not all browsers even support text-to-speech. Opera, Firefox, and others may lack them.
 
 OBS Studio has a limited set of system-level TTS options, with Chrome offer some Google-powered options, and Edge support Microsoft-supported ones, along support for [Windows-installable TTS service pack add-ons](https://www.microsoft.com/en-us/download/details.aspx?id=27224). \
 \
