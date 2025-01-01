@@ -4,7 +4,7 @@ description: How to capture the (free) system Text to Speech audio in Windows wi
 
 # Windows TTS Audio Capture Methods for OBS
 
-While free text-to-speech options are nice, they come with a few annoying limitations and challenges, while we will discuss below. Solutions will be provided.
+While free text-to-speech options are nice, they come with a few annoying limitations and challenges, which we will discuss below. Solutions will be provided.
 
 ### Background
 
