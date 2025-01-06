@@ -36,7 +36,7 @@ You can also use the Companion Ninja service with your own custom set of command
 
 An example of this approach can be found here:
 
-[https://github.com/steveseguin/Companion-Ninja/blob/main/iframe\_api\_customizable\_example.html](https://github.com/steveseguin/Companion-Ninja/blob/main/iframe\_api\_customizable\_example.html)
+[https://github.com/steveseguin/Companion-Ninja/blob/main/iframe\_api\_customizable\_example.html](https://github.com/steveseguin/Companion-Ninja/blob/main/iframe_api_customizable_example.html)
 
 Also note, the IFRAME API used by VDO.Ninja (v19.1) is also largely backwards compatible with the Companion Ninja API. You can find the IFRAME developer sandbox here: [https://vdo.ninja/beta/iframe](https://vdo.ninja/beta/iframe) to get a sense of what is available.
 
@@ -164,25 +164,26 @@ The guest slot (1 to 99) or the guests's stream ID can be used as a target.
 
 Currently toggling is primarily available for options; on/off absolute value options will be coming soon.
 
-| Action                | Target                    | Value                                              | Details                                                                          |
-| --------------------- | ------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------- |
-| forward               | {guest slot or stream ID} | {destination room}                                 | Transfer guest to specified room                                                 |
-| addScene              | {guest slot or stream ID} | {scene ID; 0 to 8, or an active custom scene name} | Toggle guest in/out of specified scene                                           |
-| muteScene             | {guest slot or stream ID} | {scene ID; 0 to 8, or an active custom scene name} | Toggle guest's mic audio in scenes                                               |
-| group                 | {guest slot or stream ID} | {group ID; 1 to 8}                                 | Toggle guest in/out of specified group; default group 1                          |
-| mic                   | {guest slot or stream ID} | null                                               | Toggle the mic of a specific guest                                               |
-| hangup                | {guest slot or stream ID} | null                                               | Hangup a specific guest                                                          |
-| soloChat              | {guest slot or stream ID} | null                                               | Toggle solo chat with a specific guest                                           |
-| soloChatBidirectional | {guest slot or stream ID} | null                                               | Toggle two-way solo chat with a specific guest                                   |
-| speaker               | {guest slot or stream ID} | null                                               | Toggle speaker with a specific guest                                             |
-| display               | {guest slot or stream ID} | null                                               | Toggle whether a specific guest can see any video or not                         |
-| sendDirectorChat      | {guest slot or stream ID} | {some chat message}                                | Sents a chat message to a guest and overlays it on their screen                  |
-| forceKeyframe         | {guest slot or stream ID} | null                                               | Trigger a keyframe for active scenes, wrt to a guest; helps resolve rainbow puke |
-| soloVideo             | {guest slot or stream ID} | null                                               | Toggle whether a video is highlighted everywhere                                 |
-| volume                | {guest slot or stream ID} | {0 to 100}                                         | Set the microphone volume of a specific remote guest                             |
-| stopRoomTimer         | {guest slot or stream ID} | null                                               | Stop the timer for the specific guest (+v23.9)                                   |
-| startRoomTimer        | {guest slot or stream ID} | Integer to count down from                         | Value to count down from is in seconds (+v23.9)                                  |
-| PauseRoomTimer        | {guest slot or stream ID} | null                                               | Pause the timer for the specific guest (+v23.9)                                  |
+| Action                 | Target                    | Value                                              | Details                                                                                       |
+| ---------------------- | ------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| forward                | {guest slot or stream ID} | {destination room}                                 | Transfer guest to specified room                                                              |
+| addScene               | {guest slot or stream ID} | {scene ID; 0 to 8, or an active custom scene name} | Toggle guest in/out of specified scene                                                        |
+| muteScene              | {guest slot or stream ID} | {scene ID; 0 to 8, or an active custom scene name} | Toggle guest's mic audio in scenes                                                            |
+| group                  | {guest slot or stream ID} | {group ID; 1 to 8}                                 | Toggle guest in/out of specified group; default group 1                                       |
+| mic                    | {guest slot or stream ID} | null                                               | Toggle the mic of a specific guest                                                            |
+| hangup                 | {guest slot or stream ID} | null                                               | Hangup a specific guest                                                                       |
+| soloChat               | {guest slot or stream ID} | null                                               | Toggle solo chat with a specific guest                                                        |
+| soloChatBidirectional  | {guest slot or stream ID} | null                                               | Toggle two-way solo chat with a specific guest                                                |
+| speaker                | {guest slot or stream ID} | null                                               | Toggle speaker with a specific guest                                                          |
+| display                | {guest slot or stream ID} | null                                               | Toggle whether a specific guest can see any video or not                                      |
+| sendDirectorChat       | {guest slot or stream ID} | {some chat message}                                | Sends a chat message to a guest and overlays it on their screen. Expires after a few moments. |
+| sendPinnedDirectorChat | {guest slot or stream ID} | {some chat message}                                | Same as sendDirectorChat, but stays until replaced with a new message                         |
+| forceKeyframe          | {guest slot or stream ID} | null                                               | Trigger a keyframe for active scenes, wrt to a guest; helps resolve rainbow puke              |
+| soloVideo              | {guest slot or stream ID} | null                                               | Toggle whether a video is highlighted everywhere                                              |
+| volume                 | {guest slot or stream ID} | {0 to 100}                                         | Set the microphone volume of a specific remote guest                                          |
+| stopRoomTimer          | {guest slot or stream ID} | null                                               | Stop the timer for the specific guest (+v23.9)                                                |
+| startRoomTimer         | {guest slot or stream ID} | Integer to count down from                         | Value to count down from is in seconds (+v23.9)                                               |
+| PauseRoomTimer         | {guest slot or stream ID} | null                                               | Pause the timer for the specific guest (+v23.9)                                               |
 
 #### Callbacks / State Responses
 
