@@ -201,6 +201,7 @@
     * [\&novideo](advanced-settings/video-parameters/and-novideo.md)
     * [\&nodirectorvideo](advanced-settings/video-parameters/and-nodirectorvideo.md)
     * [\&slideshow](advanced-settings/video-parameters/and-slideshow.md)
+    * [\&zoom](advanced-settings/video-parameters/and-zoom.md)
   * [Video Bitrate Parameters](advanced-settings/video-bitrate-parameters/README.md)
     * [\&outboundvideobitrate](advanced-settings/video-bitrate-parameters/and-outboundvideobitrate.md)
     * [\&maxvideobitrate](advanced-settings/video-bitrate-parameters/and-maxvideobitrate.md)
