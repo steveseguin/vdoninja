@@ -29,5 +29,5 @@ Regardless, \&zoom=200 for example can be use to pre-set the zoom to 2X, however
 \
 You can visit [https://vdo.ninja/supports](https://vdo.ninja/supports) to see if your camera supports \&zoom, and if so, what range it offers.
 
-
+<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption><p>Example URL &#x26;zoom=400 resulting in 4x zoom with a Brio 4K camera</p></figcaption></figure>
 

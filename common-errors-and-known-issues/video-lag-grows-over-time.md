@@ -25,7 +25,7 @@ Loading the virtual camera into the Electron Capture app ([https://electroncaptu
 \
 When opening the Electron Capture app, it will auto-detect a virtual camera device, and offer you the option to full-window it.
 
-<figure><img src="../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 For reference, these are the devices that get auto-detected by the Electron Capture app:
 

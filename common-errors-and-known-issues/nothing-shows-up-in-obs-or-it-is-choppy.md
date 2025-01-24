@@ -8,7 +8,7 @@ description: >-
 
 
 
-![Disabling or enabling the hardware acceleration in OBS can sometimes fix choppy or missing video.](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+![Disabling or enabling the hardware acceleration in OBS can sometimes fix choppy or missing video.](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 <figure><img src="../.gitbook/assets/image (254).png" alt=""><figcaption><p>Make sure that the custom frame rate is not set</p></figcaption></figure>
 

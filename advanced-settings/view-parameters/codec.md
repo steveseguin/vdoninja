@@ -111,7 +111,7 @@ If running Chrome on PC, you try enabling H265 support manually however by using
 \
 &#x20;`chrome.exe --enable-features=PlatformHEVCEncoderSupport,WebRtcAllowH265Receive,WebRtcAllowH265Send --force-fieldtrials=WebRTC-Video-H26xPacketBuffer/Enabled`\
 \
-![](../../.gitbook/assets/image.png)
+![](<../../.gitbook/assets/image (1).png>)
 
 For more help with enabling H265 on your browser, or to see if your browser currently supports it, please see: [https://vdo.ninja/h265](https://vdo.ninja/h265)
 
