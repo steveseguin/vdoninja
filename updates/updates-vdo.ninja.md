@@ -19,7 +19,7 @@
 * Added `{setBufferDelay:1000, UUID:"*", streamID: "abc"}` and `{getGuestList:true}` to the VDO.Ninja IFrame API
   * `setBufferDelay` lets you specify the video delay for a specific video, by a specific UUID or streamID, all videos (`UUID:"*"`), or the default buffer delay.
 * `&morescenes=12` added, which lets you specify more numerical scenes buttons; 9 or higher as an integer can be passed.\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1).png>)
 
 \*\* on vdo.ninja/alpha/
 
@@ -113,7 +113,7 @@
     * The option does not show if joining a room or screen sharing, etc - just sharing your camera, as that is the workflow that some users are having issues with.
 
     \*\* on alpha for testing at [https://vdo.ninja/alpha/](https://vdo.ninja/alpha/)\
-    ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1).png>)
+    ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### January 22 <a href="#august-31" id="august-31"></a>
 
@@ -136,7 +136,7 @@
 
 * The [`&welcome`](../newly-added-parameters/and-welcome.md) message on VDO.Ninja will auto hide after 30-seconds now, and the close button is also big and red, to be more obvious.
   * on alpha for testing ([vdo.ninja/alpha/?welcome=hello](https://vdo.ninja/alpha/?welcome=hello))\
-    ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1).png>)
+    ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
 #### January 10 <a href="#august-31" id="august-31"></a>
 
@@ -517,7 +517,7 @@ If you want the VDO.Ninja self-preview to not be mini-sized in broadcast mode, w
 
 * Updated [`&structure`](../advanced-settings/design-parameters/and-structure.md) to work with [`&cover`](../advanced-settings/view-parameters/cover.md), allowing for some more flexibility with controlling fixed aspect-ratios from the viewer/scene side.\
   ie: `https://vdo.ninja/alpha/?room=XXXXX&scene&cover&structure&square&fakeguests=10`\
-  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (3) (1) (1) (1) (1) (1) (1).png>)![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed a couple bugs, such as the local screen share preview not re-appearing after full-windowing another guest's video while screen sharing.
 
 \*\* on alpha
@@ -683,7 +683,7 @@ meshcastcodec == whipoutcodec, woc
 Option for a custom hang-up message added to VDO.Ninja.\
 \-- [`&hangupmessage`](../advanced-settings/setup-parameters/and-hangupmessage-alpha.md) (or `&hum`) , which take a URL encoded string. So it can be just "bye", or it can be some HTML, as shown in the link\
 \-- eg: [https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo\_cropped.png%22%3E\&push=ZimFGxM](https://vdo.ninja/alpha/?hum=bye%3Cimg%20src%3D%22.%2Fmedia%2Flogo_cropped.png%22%3E\&push=ZimFGxM)\
-![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
+![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)\
 \
 \* on alpha
 
@@ -746,7 +746,7 @@ Option for a custom hang-up message added to VDO.Ninja.\
   These flags in theory I think should help try to force a bitrate or resolution, regardless of network conditions, but in practice they still seem to just smash your frame rate. I haven't really been able to find a good use for them yet, but let me know.
 * Fixed an issue where when you hung up on an iPhone, it would still stay the camera/mic was in use at the goodbye/reload page.
 * Added the "test" audio output button to the in-call settings menu (as seen in image).\
-  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
+  ![](<../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 * Fixed an issue with Firefox mobile's camera rotation being wrong in the local preview. (let me know tho if the issues continues tho)
 * Firefox mobile should not go to sleep any more when idle.
 

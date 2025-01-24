@@ -8,7 +8,7 @@ description: Several possible causes of audio not working in Windows are listed
 
 If using OBS for audio playback, be sure that you select "Control Audio via OBS" in the browser source to capture the audio. You won't be able to hear the audio by default this way, but OBS should show the audio level meters moving, signifying the audio is being captured.
 
-<figure><img src="../.gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### OBS may be having a max buffer issue
 
