@@ -14,7 +14,7 @@ Sender-Side Option! ([`&push`](push.md))
 
 Example: `&effects=7` or `&effects=zoom`
 
-<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Avatar</td></tr><tr><td><code>7</code> | <code>zoom</code></td><td>Zoom</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Face tracking</td></tr><tr><td><code>10</code></td><td>Face tracking</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code></td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr></tbody></table>
+<table><thead><tr><th width="227">Value</th><th>Description</th></tr></thead><tbody><tr><td>(no value given)</td><td>Shows a "Digital Video Effects" panel when setting up devices</td></tr><tr><td><code>0</code> | <code>false</code> | <code>off</code></td><td>Disables effects</td></tr><tr><td><code>1</code> | <code>facetracking</code></td><td>Face tracker</td></tr><tr><td><code>-1</code></td><td>Flip image</td></tr><tr><td><code>2</code></td><td>Mirror image</td></tr><tr><td><code>-2</code></td><td>Flip + mirror image</td></tr><tr><td><code>3</code></td><td>Background blur</td></tr><tr><td><code>4</code></td><td>Virtual Greenscreen</td></tr><tr><td><code>5</code></td><td>Background replacement</td></tr><tr><td><code>6</code></td><td>Avatar</td></tr><tr><td><code>7</code> | <code>digitalzoom</code></td><td>Zoom (software-based zoom)</td></tr><tr><td><code>8</code></td><td><a data-mention href="effects.md#and-effects-8">#and-effects-8</a></td></tr><tr><td><code>9</code></td><td>Face tracking</td></tr><tr><td><code>10</code></td><td>Face tracking</td></tr><tr><td><code>11</code> | <code>anon</code></td><td>Anonymous face mask</td></tr><tr><td><code>13</code></td><td>New experimental background blur effect; it's not supported by most browsers/systems and its in origin trial</td></tr></tbody></table>
 
 ## Details
 
@@ -52,7 +52,7 @@ This `&effects=8` mode might also be helpful in solving issues with cameras disc
 
 ### `&effects=7` (Zoom)
 
-[`&effectvalue=1.2`](../newly-added-parameters/and-effectvalue.md) will now work with `&zoom` (`&effects=7`), so you can trigger the camera to digitally zoom in on load.
+[`&effectvalue=1.2`](../newly-added-parameters/and-effectvalue.md) will now work with `&digitalzoom` (`&effects=7`), so you can trigger the camera to digitally zoom in on load. This works regardless of whether the camera supports zooming or not, as it is software based. Software zoom offers lower quality than hardware-based or driver-based zoom, but the zoom effect itself is often quite smooth in comparison to hardware based zoom.
 
 ## Related
 
