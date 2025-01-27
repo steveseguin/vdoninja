@@ -152,6 +152,7 @@
     * [\&hangupmessage](advanced-settings/setup-parameters/and-hangupmessage-alpha.md)
     * [\&humb64](advanced-settings/setup-parameters/and-humb64-alpha.md)
     * [\&groupmode](advanced-settings/setup-parameters/and-groupmode.md)
+    * [\&audience](advanced-settings/setup-parameters/and-audience.md)
   * [Camera Parameters](advanced-settings/camera-parameters/README.md)
     * [\&whitebalance](advanced-settings/camera-parameters/and-whitebalance.md)
     * [\&exposure](advanced-settings/camera-parameters/and-exposure.md)
