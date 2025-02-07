@@ -11,6 +11,7 @@ While there are a few serious limitations with OBS's current WHIP implementation
 Prerequisites
 
 * OBS Studio (version 30 or later)
+  * For WHIP over the Internet, you'll need to use this patched version of OBS for now: [https://backup.vdo.ninja/OBS\_VDO\_Ninja.zip](https://backup.vdo.ninja/OBS_VDO_Ninja.zip)
 * A stable internet connection
 * Access to VDO.Ninja
 
@@ -66,6 +67,7 @@ In some cases, adding [`&buffer=2500`](https://docs.vdo.ninja/advanced-settings/
 * **Network Considerations**:
   * OBS Studio's WHIP implementation doesn't support STUN (NAT traversal)
   * The receiving computer must be on the same LAN or accessible via a public IP without firewall restrictions
+    * You can use the patched version of OBS to work around this issue for now
 * **Troubleshooting**:
   * If the stream doesn't appear, check your firewall settings
   * Ensure both OBS and VDO.Ninja are using the same stream token
@@ -82,7 +84,7 @@ I offer [https://Meshcast.io](https://meshcast.io), for free, which supports WHI
 \
 There's also MediaMTX, which is a self-hosted broadcasting server option that VDO.Ninja supports. Deeper integration with MediaMTX is being added to VDO.Ninja all the time.
 
-In the future, OBS should be able to support 1 to 1 over the Internet, despite firewalls, with VDO.Ninja, in a peer to peer fashion.  This could be added at any time, so we'll wait and see; for now to stream over the Internet peer to peer, you need to enable port forwarding / DMZ / tunneling to have it work.
+In the future, OBS should be able to support 1 to 1 over the Internet, despite firewalls, with VDO.Ninja, in a peer to peer fashion.  Until they officially support it, you can try my patched version of OBS that has added this support: [https://backup.vdo.ninja/OBS\_VDO\_Ninja.zip](https://backup.vdo.ninja/OBS_VDO_Ninja.zip)
 
 ### Alternative browser-free option
 
