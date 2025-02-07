@@ -20,7 +20,7 @@ Prerequisites
 
 1. **Prepare VDO.Ninja**
    * Make up a unique stream token (e.g., `STREAMTOKEN123`)
-   * Create your VDO.Ninja link: `https://vdo.ninja/?hidemenu&whip=STREAMTOKEN123`
+   * Create your VDO.Ninja link: `https://vdo.ninja/?whip=STREAMTOKEN123`
    * Open this link in a web browser on the receiving end
 2. **Configure OBS Studio**
    * Open OBS Studio
