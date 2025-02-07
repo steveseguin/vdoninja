@@ -18,6 +18,12 @@ In some cases when using VDO.Ninja to view the WHIP video, adding [`&buffer=2500
 \
 While these above settings may not offer the lowest latency or CPU usage, please try them out before seeking support about issues you may be having. It's very easy to break things with bad settings.
 
+{% hint style="warning" %}
+OBS Studio does not yet have fully compatible WHIP support with VDO.Ninja, as it lacks the ability to perform NAT traversal. You can resolve this issue with my patched version of OBS in the mean time:\
+\
+[https://backup.vdo.ninja/OBS\_VDO\_Ninja.zip](https://backup.vdo.ninja/OBS_VDO_Ninja.zip) \[[source](https://github.com/steveseguin/obs-studio/)]
+{% endhint %}
+
 ## How to view WHIP streams using VDO.Ninja
 
 There's a guide here for those looking to go live from OBS to VDO.Ninja via WHIP
