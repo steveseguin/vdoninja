@@ -754,6 +754,6 @@
     "streamid-already-published-obvious": "您正在发布的流ID已被占用。\n\n请考虑使用密码或更复杂/唯一的流ID以避免此问题。\n\n即将断开连接。",
     "what-bitrate-gdrive": "该远程嘉宾将把录制内容直接保存至本地磁盘，并同步副本到您的Google Drive（recordings文件夹）。\n\n - 录制可能失败，建议同时开启备份录制！\n\n - 使用iPhone、Android设备或Safari浏览器的嘉宾常会遇到问题，需特别注意。",
     "insecure-stream-id": "⚠️ 检测到不安全流ID\n\n若使用简短非唯一流ID，强烈建议启用密码保护。\n\n本提示可忽略继续操作。",
-    "mobile-no-screen-share": "抱歉，您的移动浏览器不支持屏幕共享。\n\n但 <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>原生APP</a> 可提供基础支持。
+    "mobile-no-screen-share": "抱歉，您的移动浏览器不支持屏幕共享。\n\n但 <a href='https://docs.vdo.ninja/getting-started/native-mobile-app-versions' target='_blank'>原生APP</a> 可提供基础支持。"
   }
 }
