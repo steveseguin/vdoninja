@@ -430,6 +430,11 @@
 			return;
 		}
 		
+		// Save values to localStorage
+		localStorage.setItem('lastPushId', push);
+		if (room) localStorage.setItem('lastRoomName', room);
+		if (password) localStorage.setItem('lastPassword', password);
+		
 		const config = {
 			mode: 'vdo',
 			push,
@@ -449,7 +454,7 @@
 		window.iframe = createAndAppendIframe(config);
 		document.querySelector('.modal-overlay').style.display = 'none';
 	}
-
+	
 	function copyViewLink() {
 		const viewLink = document.getElementById('viewLink');
 		if (window.innerWidth <= 1600) {
@@ -495,10 +500,10 @@
     }
 
     // Show modal on load instead of creating iframe immediately
-    window.addEventListener('load', () => {
+	window.addEventListener('load', () => {
 		if (window.location.search){
 			const getUrlParams = () => Object.fromEntries(new URLSearchParams(window.location.search));
-			const params = getUrlParams(); // {name: 'john', age: '25'}
+			const params = getUrlParams();
 			const room = params.room || params.r || false;
 			const push = params.push || params.id || params.permaid || false;
 			const password = params.password || params.p || params.pw || false;
@@ -512,6 +517,12 @@
 					room,
 					password
 				};
+				
+				// Store these values from URL parameters
+				if (push) localStorage.setItem('lastPushId', push);
+				if (room) localStorage.setItem('lastRoomName', room);
+				if (password) localStorage.setItem('lastPassword', password);
+				
 				createAndAppendIframe(config);
 				
 				return;
@@ -530,17 +541,23 @@
 		const lastWhipUrl = localStorage.getItem('lastWhipUrl');
 		const lastWhipToken = localStorage.getItem('lastWhipToken');
 		const lastTwitchToken = localStorage.getItem('lastTwitchToken');
+		const lastRoomName = localStorage.getItem('lastRoomName');
+		const lastPushId = localStorage.getItem('lastPushId');
+		const lastPassword = localStorage.getItem('lastPassword');
 		
 		if (lastWhipUrl) document.getElementById('whipUrl').value = lastWhipUrl;
 		if (lastWhipToken) document.getElementById('whipToken').value = lastWhipToken;
 		if (lastTwitchToken) document.getElementById('twitchToken').value = lastTwitchToken;
+		if (lastRoomName) document.getElementById('roomName').value = lastRoomName;
+		if (lastPushId) document.getElementById('pushId').value = lastPushId;
+		if (lastPassword) document.getElementById('password').value = lastPassword;
 		
 		document.querySelector('.modal-overlay').style.display = 'flex';
 		
 		// Load last used mode if available
 		const lastMode = localStorage.getItem('lastMode');
 		showMode(lastMode || 'vdo');
-    });
+	});
 	
 	let frameGenerator;
 	let useMediaTrackProcessor = true;

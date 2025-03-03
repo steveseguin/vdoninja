@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    
+    <!-- Primary Meta Tags -->
+    <title>BrowserCheck - Advanced WebRTC and Privacy Analyzer for VDO.Ninja</title>
+    <meta name="title" content="BrowserCheck - Advanced WebRTC and Privacy Analyzer for VDO.Ninja">
+    <meta name="description" content="Debug browser capabilities, privacy features, and modern JavaScript support. Comprehensive browser diagnostic tool.">
+    
+    <!-- Keep existing meta tags -->
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#1e1e2e">
+    <link rel="icon" href="/media/favicon.ico">
+    
+    <!-- Theme -->
+    <meta name="theme-color" content="#1e1e2e">
+    
+    <!-- Favicons -->
+    <link rel="icon" href="/media/favicon.ico">
+	
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --accent-color: #212121;
+            --highlight: #3498db;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --warning: #f39c12;
+        }
+        
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            padding: 20px;
+        }
+
+		.container {
+			background: var(--accent-color);
+			border-radius: 8px;
+			padding: 1.5rem;
+			margin: auto;
+			width: 95%;
+			max-width: 1200px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			gap: 1rem;
+			grid-auto-flow: dense;
+		}
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--highlight);
+            grid-column: 1 / -1;
+        }
+
+		.info-box {
+			background: var(--bg-color);
+			border-radius: 6px;
+			padding: 1rem;
+			word-wrap: break-word;
+			height: fit-content;
+			min-height: 100px;
+			display: flex;
+			flex-direction: column;
+		}
+
+        .label {
+            color: var(--highlight);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .value {
+            font-family: monospace;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            line-height: 1.4;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.2em 0.5em;
+            border-radius: 3px;
+            margin-left: 0.5em;
+            font-size: 0.8em;
+        }
+
+        .status-true {
+            background: var(--success);
+            color: var(--bg-color);
+        }
+
+        .status-false {
+            background: var(--error);
+            color: var(--text-color);
+        }
+		
+		#privacy .status-false {
+			background: var(--success);
+			color: var(--bg-color);
+		}
+
+        @media (max-width: 640px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+		
+		.feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.3rem 0;
+        }
+
+        .warning {
+            color: var(--warning);
+        }
+		.copy-button {
+			grid-column: 1 / -1;
+			background: var(--highlight);
+			color: var(--bg-color);
+			border: none;
+			border-radius: 4px;
+			padding: 8px 16px;
+			cursor: pointer;
+			font-size: 1rem;
+			transition: opacity 0.2s;
+		}
+
+		.copy-button:hover {
+			opacity: 0.9;
+		}
+
+		.copy-button:active {
+			opacity: 0.7;
+		}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Browser Capabilities</h1>
+		
+		<button id="copyResults" class="copy-button">
+			Copy Results
+		</button>
+        
+        <div class="info-box">
+            <div class="label">User Agent</div>
+            <div id="ua" class="value"></div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Browser Details</div>
+            <div id="details" class="value"></div>
+        </div>
+		
+		<div class="info-box">
+            <div class="label">Privacy Features</div>
+            <div id="privacy" class="value"></div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Modern JavaScript</div>
+            <div id="modernjs" class="value"></div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Media Capabilities</div>
+            <div id="media" class="value"></div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">WebRTC Support</div>
+            <div id="webrtc" class="value"></div>
+        </div>
+
+        <div class="info-box">
+            <div class="label">Audio Context</div>
+            <div id="audio" class="value"></div>
+        </div>
+    </div>
+
+    <script>
+        function addStatusBadge(text, status) {
+            return `${text} <span class="status status-${status}">${status}</span>`;
+        }
+				
+		function formatResults() {
+			// Helper to clean and add colored emoji
+			function addStatusEmoji(text, isPrivacy = false) {
+				const cleanText = text.replace(/<[^>]*>/g, '').trim();
+				
+				// For privacy features, false is good (green) and true is bad (red)
+				if (isPrivacy) {
+					if (cleanText.includes('true')) {
+						return cleanText.replace(/true$/, '❌ true');
+					}
+					return cleanText.replace(/false$/, '✅ false');
+				}
+				
+				// For all other features, true is good (green) and false is bad (red)
+				if (cleanText.includes('true')) {
+					return cleanText.replace(/true$/, '✅ true');
+				}
+				return cleanText.replace(/false$/, '❌ false');
+			}
+
+			// Helper to format details line
+			function formatDetailsLine(line) {
+				const [key, ...values] = line.split(':');
+				return `- ${key}: ${values.join(':')}`.trim();
+			}
+
+			const sections = {
+				'User Agent': document.getElementById('ua').textContent.trim(),
+				
+				'Browser Details': document.getElementById('details')
+					.innerHTML
+					.split('<br>')
+					.map(line => formatDetailsLine(line.trim()))
+					.join('\n'),
+				
+				'Privacy Features': document.getElementById('privacy')
+					.innerHTML
+					.split('<br>')
+					.map(line => `- ${addStatusEmoji(line, true)}`)
+					.join('\n'),
+				
+				'Modern JavaScript': document.getElementById('modernjs')
+					.innerHTML
+					.split('<br>')
+					.map(line => `- ${addStatusEmoji(line)}`)
+					.join('\n'),
+				
+				'Media Capabilities': document.getElementById('media')
+					.innerHTML
+					.split('<br>')
+					.map(line => `- ${addStatusEmoji(line)}`)
+					.join('\n'),
+				
+				'WebRTC Support': document.getElementById('webrtc')
+					.innerHTML
+					.split('<br>')
+					.map(line => `- ${addStatusEmoji(line)}`)
+					.join('\n'),
+				
+				'Audio Context': document.getElementById('audio')
+					.innerHTML
+					.split('<br>')
+					.map(line => {
+						line = line.replace(/<[^>]*>/g, '').trim();
+						if (line.includes('AudioContext')) {
+							return `- ${addStatusEmoji(line)}`;
+						}
+						return `- ${line}`;
+					})
+					.filter(line => !line.includes('Resume AudioContext'))
+					.join('\n')
+			};
+
+			const timestamp = new Date().toLocaleString();
+			const formatted = Object.entries(sections)
+				.map(([title, content]) => `### ${title}\n${content.trim()}`)
+				.join('\n\n');
+
+			return `## Browser Capabilities Check Results\n*Generated: ${timestamp}*\n\n${formatted}`;
+		}
+
+		document.getElementById('copyResults').addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(formatResults());
+				const btn = document.getElementById('copyResults');
+				btn.textContent = 'Copied!';
+				setTimeout(() => btn.textContent = 'Copy Results', 2000);
+			} catch (err) {
+				console.error('Failed to copy:', err);
+			}
+		});
+
+        function checkMediaSupport() {
+            const mediaElement = document.getElementById('media');
+            const results = [];
+
+            try {
+                const hasGetUserMedia = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+                results.push(addStatusBadge('getUserMedia API', hasGetUserMedia));
+
+                navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+                    .then(() => {
+                        results.push(addStatusBadge('Media Permissions', true));
+                        mediaElement.innerHTML = results.join('<br>');
+                    })
+                    .catch(err => {
+                        results.push(addStatusBadge('Media Permissions', false));
+                        results.push(`Error: ${err.name}`);
+                        mediaElement.innerHTML = results.join('<br>');
+                    });
+            } catch (err) {
+                results.push(addStatusBadge('Media API', false));
+                results.push(`Error: ${err.message}`);
+                mediaElement.innerHTML = results.join('<br>');
+            }
+        }
+
+        function checkWebRTC() {
+            const webrtcElement = document.getElementById('webrtc');
+            const results = [];
+
+            try {
+                const hasRTCPeerConnection = !!window.RTCPeerConnection;
+                results.push(addStatusBadge('RTCPeerConnection', hasRTCPeerConnection));
+
+                const hasRTCDataChannel = 'createDataChannel' in RTCPeerConnection.prototype;
+                results.push(addStatusBadge('RTCDataChannel', hasRTCDataChannel));
+
+                webrtcElement.innerHTML = results.join('<br>');
+            } catch (err) {
+                results.push(addStatusBadge('WebRTC Support', false));
+                results.push(`Error: ${err.message}`);
+                webrtcElement.innerHTML = results.join('<br>');
+            }
+        }
+
+        function checkAudioContext() {
+            const audioElement = document.getElementById('audio');
+            const results = [];
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    const context = new AudioContext();
+                    results.push(addStatusBadge('AudioContext', true));
+                    results.push(`State: ${context.state}`);
+                    results.push(`Sample Rate: ${context.sampleRate}Hz`);
+                    results.push(`Base Latency: ${context.baseLatency || 'Not available'}`);
+                    
+                    if (context.state === 'suspended') {
+                        const button = document.createElement('button');
+                        button.textContent = 'Resume AudioContext';
+                        button.onclick = () => {
+                            context.resume().then(() => {
+                                results[1] = `State: ${context.state}`;
+                                audioElement.innerHTML = results.join('<br>');
+                            });
+                        };
+                        results.push(button.outerHTML);
+                    }
+                } else {
+                    results.push(addStatusBadge('AudioContext', false));
+                }
+            } catch (err) {
+                results.push(addStatusBadge('AudioContext', false));
+                results.push(`Error: ${err.message}`);
+            }
+            
+            audioElement.innerHTML = results.join('<br>');
+        }
+
+        const ua = navigator.userAgent;
+        document.getElementById('ua').textContent = ua;
+
+        const details = {
+            platform: navigator.platform,
+            language: navigator.language,
+            cookiesEnabled: navigator.cookieEnabled,
+            onLine: navigator.onLine,
+            vendor: navigator.vendor || 'Not available',
+            viewport: `${window.innerWidth}x${window.innerHeight}px`,
+            pixelRatio: window.devicePixelRatio
+        };
+
+        document.getElementById('details').innerHTML = Object.entries(details)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join('<br>');
+		
+		const detectPrivacyFeatures = {
+		  async checkWebRTC() {
+			if (!window.RTCPeerConnection) {
+			  return { supported: false, blocked: true };
+			}
+
+			try {
+			  const pc = new RTCPeerConnection();
+			  const candidates = [];
+			  
+			  pc.createDataChannel('');
+			  await pc.createOffer().then(offer => pc.setLocalDescription(offer));
+			  
+			  return new Promise(resolve => {
+				let timeoutId;
+				
+				pc.onicecandidate = e => {
+				  if (e.candidate) {
+					candidates.push(e.candidate.candidate);
+				  } else {
+					clearTimeout(timeoutId);
+					pc.close();
+					resolve({
+					  supported: true,
+					  blocked: !candidates.some(c => c.includes('srflx') || c.includes('host')),
+					  candidates
+					});
+				  }
+				};
+				
+				timeoutId = setTimeout(() => {
+				  pc.close();
+				  resolve({ supported: true, blocked: true });
+				}, 1000);
+			  });
+			} catch (e) {
+			  return { supported: true, blocked: true, error: e.message };
+			}
+		  },
+
+		  checkDNS() {
+			return new Promise(resolve => {
+			  const img = new Image();
+			  const start = performance.now();
+			  
+			  img.onload = () => {
+				const time = performance.now() - start;
+				resolve({ blocked: false, loadTime: time });
+			  };
+			  
+			  img.onerror = () => {
+				resolve({ blocked: true });
+			  };
+			  
+			  img.src = 'https://www.google.com/favicon.ico?' + new Date().getTime();
+			});
+		  },
+
+		  async checkNetworkFeatures() {
+			const results = {
+			  webrtc: await this.checkWebRTC(),
+			  dns: await this.checkDNS(),
+			  privateMode: !window.localStorage,
+			  doNotTrack: navigator.doNotTrack === "1" || window.doNotTrack === "1",
+			  proxy: await fetch('https://api.ipify.org?format=json')
+				.then(r => r.json())
+				.then(() => false)
+				.catch(() => true)
+			};
+			
+			return results;
+		  }
+		};
+
+        const detectModernJS = {
+			testFeatures() {
+				return {
+					optionalChaining: (() => {
+						try {
+							eval('const obj = {}; obj?.prop');
+							return true;
+						} catch { return false; }
+					})(),
+
+					nullishCoalescing: (() => {
+						try {
+							eval('const val = null ?? "default"');
+							return true;
+						} catch { return false; }
+					})(),
+
+					logicalAssignment: (() => {
+						try {
+							eval('let x = 0; x ||= 1');
+							return true;
+						} catch { return false; }
+					})(),
+
+					privateFields: (() => {
+						try {
+							eval('class Test { #private = 123; }');
+							return true;
+						} catch { return false; }
+					})(),
+
+					arrayAt: (() => {
+						try {
+							return typeof [].at === 'function';
+						} catch { return false; }
+					})(),
+					
+					dynamicImport: (() => {
+						try {
+							new Function('return import("data:text/javascript;base64,")');
+							return true;
+						} catch { return false; }
+					})(),
+					
+					bigInt: (() => {
+						try {
+							return typeof BigInt === 'function';
+						} catch { return false; }
+					})(),
+					
+					matchAll: (() => {
+						try {
+							return typeof ''.matchAll === 'function';
+						} catch { return false; }
+					})()
+				};
+			}
+		};
+
+        // Initialize all checks
+        async function initializeChecks() {
+            // Run existing checks
+            checkMediaSupport();
+            checkWebRTC();
+            checkAudioContext();
+
+            // Add user agent and details
+            const ua = navigator.userAgent;
+            document.getElementById('ua').textContent = ua;
+
+            const details = {
+                platform: navigator.platform,
+                language: navigator.language,
+                cookiesEnabled: navigator.cookieEnabled,
+                onLine: navigator.onLine,
+                vendor: navigator.vendor || 'Not available',
+                viewport: `${window.innerWidth}x${window.innerHeight}px`,
+                pixelRatio: window.devicePixelRatio
+            };
+
+            document.getElementById('details').innerHTML = Object.entries(details)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join('<br>');
+
+            // Run new privacy checks
+            const privacyResults = await detectPrivacyFeatures.checkNetworkFeatures();
+            const privacyElement = document.getElementById('privacy');
+            const privacyHTML = [
+                addStatusBadge('WebRTC Leak Protection', privacyResults.webrtc.blocked),
+                addStatusBadge('DNS Requests Blocked', privacyResults.dns.blocked),
+                addStatusBadge('Private Mode', privacyResults.privateMode),
+                addStatusBadge('Proxy Detected', privacyResults.proxy)
+            ];
+            privacyElement.innerHTML = privacyHTML.join('<br>');
+
+            // Run JavaScript feature checks
+            const jsFeatures = detectModernJS.testFeatures();
+            const jsElement = document.getElementById('modernjs');
+            const jsHTML = Object.entries(jsFeatures)
+                .map(([feature, supported]) => addStatusBadge(feature, supported))
+                .join('<br>');
+            jsElement.innerHTML = jsHTML;
+        }
+
+        // Start all checks
+        initializeChecks();
+    </script>
+</body>
+</html>

@@ -75,7 +75,7 @@ var miscTranslations = {
 	"room-is-claimed-codirector": "The room is already claimed by someone else.\n\nTrying to join as a co-director...",
 	"streamid-already-published": "The stream ID you are publishing to is already in use.\n\nPlease try with a different invite link or refresh to retry again.\n\nYou will now be disconnected.",
 	"streamid-already-published-obvious": "The stream ID you are publishing to is already in use.\n\nPlease consider using a password or a more varied/unique stream ID to avoid this issue.\n\nYou will now be disconnected.",
-	director: "Director",
+	"director": "Director",
 	"unknown-user": "Unknown User",
 	"room-test-not-good": "The room name 'test' is very commonly used and may not be secure.\n\nAre you sure you wish to proceed?",
 	"load-previous-session": "Would you like to load your previous session's settings?",
@@ -590,6 +590,30 @@ function safariVersion() {
 	return ver;
 }
 
+function judgePerformance(){
+  try {
+	if (SafariVersion && SafariVersion >= 17 && (iOS || iPad)) { // iphone xr or newer
+		return 0;
+	}
+    const cores = typeof navigator.hardwareConcurrency === 'number' ? navigator.hardwareConcurrency : 0;
+	
+	if (session.mobile && (cores>=4)){ // assume hardware encoded acceleration
+		return 0;
+	}
+	
+	if (!cores){
+		return 1;
+	} else if (cores < 4 ){
+		return 2;
+	} else if (cores>8){
+		return 0;
+	}
+	return 1
+  } catch (e) {
+    return 1; // 99% safe default
+  }
+}
+
 try {
 	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform); // used by main.js also
 	var iPad = navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /MacIntel/.test(navigator.platform);
@@ -619,10 +643,10 @@ try {
 	var SamsungASeries = isSamsungASeries();
 	var isVingester = navigator.userAgent.indexOf("Vingester") >= 0;
 
-	var gpgpuSupport = detectGPUSupport();
+	var gpgpuSupport = detectGPUSupport(); // graphics ; not supported on ios
 	log(gpgpuSupport);
 
-	var cpuSupport = detectCPUSupport();
+	var cpuSupport = detectCPUSupport(); // thread count ; supported on ios
 	log(cpuSupport);
 
 	var iPhone12Up = false;
@@ -633,6 +657,12 @@ try {
 			iPhone12Up = true; // iPhone SE is left out.
 		}
 	}
+	session.quality_wb = judgePerformance(); // try to estimate what resolution to use for encoding when not in a room.
+	
+	if (session.quality_room < session.quality_wb){
+		session.quality_room = session.quality_wb;
+	}
+	
 } catch (e) {
 	errorlog(e);
 }
@@ -2758,89 +2788,6 @@ function checkConnection() {
 	}
 }
 
-function combinedLayout(layout) {
-	var combined = {};
-	for (var i = 0; i < layout.length; i++) {
-		if (!layout[i]) {
-			continue;
-		}
-		var streamID = null;
-		if ("slot" in layout[i]) {
-			try {
-				streamID = session.currentSlots[parseInt(layout[i].slot) + 1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
-			} catch (e) {
-				errorlog(e);
-				streamID = null;
-			}
-		}
-		if (!streamID) {
-			if (combined[""]) {
-				combined[""].push(layout[i]);
-			} else {
-				combined[""] = [layout[i]];
-			}
-		} else {
-			combined[streamID] = layout[i];
-		}
-	}
-	return combined;
-}
-
-function combinedLayoutSimple(layout) {
-	var combined = {};
-	Object.keys(layout).forEach(i => {
-		if (!layout[i]) {
-			return;
-		}
-
-		if (i === "") {
-			layout[i].forEach(j => {
-				if (!j) {
-					return;
-				}
-				var streamID = null;
-				if ("slot" in j) {
-					try {
-						streamID = session.currentSlots[parseInt(j.slot) + 1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
-					} catch (e) {
-						errorlog(e);
-						streamID = null;
-					}
-				}
-				if (!streamID) {
-					if (combined[""]) {
-						combined[""].push(j);
-					} else {
-						combined[""] = j;
-					}
-				} else {
-					combined[streamID] = j;
-				}
-			});
-		} else {
-			var streamID = null;
-			if ("slot" in layout[i]) {
-				try {
-					streamID = session.currentSlots[parseInt(layout[i].slot) + 1]; // slot 1 is index of 0, but slot 0 is considered NULL; I need to stream line this a bit
-				} catch (e) {
-					errorlog(e);
-					streamID = null;
-				}
-			}
-			if (!streamID) {
-				if (combined[""]) {
-					combined[""].push(layout[i]);
-				} else {
-					combined[""] = [layout[i]];
-				}
-			} else {
-				combined[streamID] = layout[i];
-			}
-		}
-	});
-	return combined;
-}
-
 session.obsSceneSync = function () {
 	if (session.layouts && session.obsSceneTriggers && session.obsState && session.obsState.details && session.obsState.details.currentScene.name && session.obsSceneTriggers.includes(session.obsState.details.currentScene.name)) {
 		var idx = session.obsSceneTriggers.indexOf(session.obsState.details.currentScene.name);
@@ -4105,107 +4052,6 @@ function makeDraggableElement(element) {
 			element.style.transform = `translate(${element.currentX}px, ${element.currentY}px)`;
 		}
 	}
-
-	// if (session.disableMouseEvents){return;}
-
-	// try {
-	// 	elmnt.dragElement = false;
-	// 	elmnt.style.bottom = "auto";
-	// 	elmnt.style.cursor = "grab";
-	// 	elmnt.stashonmouseup = null;
-	// 	elmnt.stashonmousemove = null;
-	// } catch (e) {
-	// 	errorlog(e);
-	// 	return;
-	// }
-	// var pos1 = 0;
-	// var pos2 = 0;
-	// var pos3 = 0;
-	// var pos4 = 0;
-	// var timestamp = false;
-
-	// var enterEventCount = 0;
-	// var leaveEventCount = 0;
-
-	// function dragMouseDown(e) {
-	// 	timestamp = Date.now();
-
-	// 	e = e || window.event;
-	// 	e.preventDefault();
-
-	// 	pos3 = e.clientX;
-	// 	pos4 = e.clientY;
-	// 	//elmnt.stashonmouseup = document.onmouseup; // I don't want to interfere with other drag events.
-	// 	//elmnt.stashonmousemove = document.onmousemove;
-	// 	//elmnt.stashonclick = document.onclick;
-
-	// 	document.onmouseup = function(event){closeDragElement(event, elmnt);};
-
-	// 	document.onmousemove = function(event){elementDrag(elmnt,event);};
-
-	// 	if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
-
-	// 	elmnt.onmouseleave = function(event){
-	// 		leaveEventCount+=1;
-	// 		elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-	// 				closeDragElement(evt1, ele);}
-	// 			,100, elmnt, event);
-	// 	};
-	// 	elmnt.onmouseenter = function(event){
-	// 		enterEventCount+=1;
-	// 		if (enterEventCount>=leaveEventCount){
-	// 			if ("stopDragTimeout" in elmnt){clearTimeout(elmnt.stopDragTimeout);}
-	// 		} else {
-	// 			if (("stopDragTimeout" in elmnt) && (elmnt.stopDragTimeout)){
-	// 				clearTimeout(elmnt.stopDragTimeout);
-	// 				elmnt.stopDragTimeout = setTimeout(function(ele,evt1){
-
-	// 					closeDragElement(evt1, ele);}
-	// 				,100, elmnt, event);
-	// 			}
-	// 		}
-	// 	};
-
-	// }
-	// function elementDrag(ele,e) {
-
-	// 	e = e || window.event;
-	// 	if (("buttons" in e) && (e.buttons!==1)){return;}
-
-	// 	e.preventDefault();
-
-	// 	ele.dragElement = true;
-	// 	pos1 = pos3 - e.clientX;
-	// 	pos2 = pos4 - e.clientY;
-	// 	pos3 = e.clientX;
-	// 	pos4 = e.clientY;
-
-	// 	var topDrag = (ele.offsetTop - pos2 );
-	// 	if (absolute){
-	// 		if (topDrag > (-3 + (window.innerHeight - ele.clientHeight))){
-	// 			topDrag = (-3 + (window.innerHeight - ele.clientHeight));
-	// 		}
-	// 	} else {
-	// 		if (topDrag > -3){
-	// 			topDrag = -3;
-	// 		}
-	// 	}
-	// 	ele.style.top = topDrag + "px";
-	// 	ele.style.left = (ele.offsetLeft - pos1) + "px";
-
-	// }
-	// function closeDragElement(event=false, ele=false) {
-	// 	document.onmouseup = null;
-	// 	document.onmousemove = null
-	// 	ele.onmouseleave = null;
-	// 	ele.onmouseenter = null;
-	// 	enterEventCount = 0;
-	// 	leaveEventCount = 0;
-	// 	updateMixer();
-	// 	//document.onclick = elmnt.stashonclick;
-	// }
-
-	// elmnt.onmousedown = dragMouseDown;
 }
 
 function clearCacheForCurrentSite() {
@@ -5208,6 +5054,44 @@ function setupIncomingVideoTracking(v, UUID) {
 	if (session.rpcs[UUID].stats.info && "remote" in session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.remote) {
 		v.addEventListener("wheel", remoteFocusZoomRequest); //  just remote focus
 	}
+	
+	if (session.zoomSlider && (session.director || (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.remote))){
+		const slider = document.createElement('div');
+		slider.className = 'video-zoom-slider';
+		
+		const input = document.createElement('input');
+		input.title = "Hint: The remote camera's browser may needs to be visible for zoom to work in certain browsers";
+		input.type = 'range';
+		input.min = '0';
+		input.max = '255';
+		input.value = '0';
+		
+		let updating = false;
+		input.addEventListener('input', (e) => {
+			if (updating) return;
+			const zoomValue = parseInt(e.target.value) / 255;
+			session.requestZoomChange(zoomValue, UUID, session.remote, true);
+		});
+		
+		// Update slider if remote changes occur
+		const updateSlider = (value) => {
+			updating = true;
+			input.value = Math.round(value * 255);
+			updating = false;
+			input.title = input.value*100 + "";
+		};
+		
+		slider.appendChild(input);
+		
+		if (!v.container){
+			v.container = getById("videoContainer_" + UUID);
+		}
+		
+		v.container.appendChild(slider);
+		
+		// Store reference for external updates
+		session.rpcs[UUID].zoomSlider = updateSlider;
+	}
 
 	if (v.controls == false) {
 		v.addEventListener("click", function () {
@@ -5302,8 +5186,14 @@ function setupIncomingVideoTracking(v, UUID) {
 
 function remoteFocusZoomRequest(event) {
 	event.preventDefault();
-	var scale = parseFloat(event.deltaY * -0.001);
+	
+	var scale = event.deltaY> 0 ? -0.004 : 0.004;
 	log(event.currentTarget);
+	log(event.deltaY);
+	
+	if (!event.altKey){
+		scale*=10;
+	}
 
 	if (event.ctrlKey || event.metaKey) {
 		// focus
@@ -7873,10 +7763,15 @@ function updateMixerRun(e = false) {
 				vid.style.backgroundColor = "unset";
 			}
 
-			if ((vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && 
-				(("label" in session.rpcs[vid.dataset.UUID]) && session.rpcs[vid.dataset.UUID].label !== false && (session.showlabels === true)) ||
-				(session.showmeta === true && session.rpcs[vid.dataset.UUID].meta)) ||
-				((session.showlabels === true || session.showmeta === true) && (((vid.id === "videosource") && session.label) || vid.labelText || session.meta))) {
+			if ((vid.dataset.UUID && session.rpcs && session.rpcs[vid.dataset.UUID] && 
+					(
+					  ("label" in session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label !== false && session.showlabels === true) ||
+					  (session.showmeta === true && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].meta)
+					)) 
+				||
+				((session.showlabels === true || session.showmeta === true) && 
+					(((vid.id === "videosource") && session.label) || vid.labelText || session.meta)
+				)) {
 
 				if (animated && container.twidth && container.theight) {
 					var vidwidth = container.twidth;
@@ -7915,16 +7810,40 @@ function updateMixerRun(e = false) {
 					label.style.fontSize = parseInt(fontsize) + "px";
 				}
 
-				// In the video display loop where labels are handled, adjust the meta section:
-				if ((vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && (("label" in session.rpcs[vid.dataset.UUID]) && session.rpcs[vid.dataset.UUID].label !== false && (session.showlabels === true))
-					||
-					(session.showmeta === true && session.rpcs[vid.dataset.UUID].meta)) ||
-					((session.showlabels === true || session.showmeta === true) && (((vid.id === "videosource") && session.label) || vid.labelText || session.meta))) {
+				if (  (
+						vid.dataset.UUID && 
+						session.rpcs && 
+						session.rpcs[vid.dataset.UUID] && 
+						(
+						  // Label check
+						  (
+							"label" in session.rpcs[vid.dataset.UUID] && 
+							session.rpcs[vid.dataset.UUID].label !== false && 
+							session.showlabels === true
+						  ) 
+						  || 
+						  // Meta check with explicit undefined checks
+						  (
+							session.showmeta === true && 
+							session.rpcs[vid.dataset.UUID] && 
+							session.rpcs[vid.dataset.UUID].meta
+						  )
+						)
+					  )
+					  ||
+					  (
+						(session.showlabels === true || session.showmeta === true) && 
+						(
+						  ((vid.id === "videosource") && session.label) || 
+						  vid.labelText || 
+						  session.meta
+						)
+					  )
+					) {
 
 					let labelContent = [];
 					let imageElements = [];
 
-					// Handle labels first
 					if (session.showlabels === true) {
 						if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].label) {
 							session.rpcs[vid.dataset.UUID].label.split("\\n").forEach(label => {
@@ -7937,7 +7856,6 @@ function updateMixerRun(e = false) {
 						}
 					}
 
-					// Handle meta data
 					if (session.showmeta === true) {
 						let metaData = [];
 						if (vid.dataset.UUID && session.rpcs[vid.dataset.UUID] && session.rpcs[vid.dataset.UUID].meta) {
@@ -8468,26 +8386,7 @@ function miniTranslate(ele, ident = false, direct = false) {
 	}
 }
 
-var controlBarTimeout = false;
-function showControl(e) {
-	if (controlBarTimeout) {
-		clearTimeout(controlBarTimeout);
-	}
-	if (session.mobile) {
-		getById("controlButtons").classList.remove("partialFadeout");
-	} else {
-		getById("controlButtons").classList.remove("fadeout");
-	}
-	controlBarTimeout = setTimeout(function () {
-		if (session.mobile) {
-			getById("controlButtons").classList.add("partialFadeout");
-		} else {
-			getById("controlButtons").classList.add("fadeout");
-		}
-	}, 5000);
-}
-
-async function changeLg(lang) {
+async function changeLg(lang, rtl=false) {
 	log("changeLg: " + lang);
 	var retry = false;
 	if (lang == "auto") {
@@ -8506,7 +8405,7 @@ async function changeLg(lang) {
 						console.warn("Couldn't find the exact language file for '" + lang + "'; trying a more generic option instead");
 						lang = lang.split("-")[0];
 						if (lang && lang !== "auto") {
-							await changeLg(lang); // Retry with a more generic language code.
+							await changeLg(lang, rtl); // Retry with a more generic language code.
 						}
 					}
 					return;
@@ -8515,6 +8414,16 @@ async function changeLg(lang) {
 					.json()
 					.then(async function (data) {
 						translation = data; // translation.innerHTML[ele.dataset.translate]
+						
+						document.documentElement.dir = rtl ? "rtl" : "ltr";
+						document.documentElement.setAttribute('lang', lang);
+						
+						document.body.classList.remove('rtl');
+						document.body.classList.remove('ltr');
+						
+						document.body.classList.add(rtl ? 'rtl' : 'ltr');
+						document.documentElement.style.setProperty('--rtl-or-ltr', rtl ? 'right' : 'left');
+						
 
 						if (translation.miscellaneous) {
 							Object.keys(translation.miscellaneous).forEach(key => {
@@ -8571,7 +8480,7 @@ async function changeLg(lang) {
 							console.warn("Couldn't find the exact language file for '" + lang + "'; trying a more generic option instead");
 							lang = lang.split("-")[0];
 							if (lang && lang !== "auto") {
-								await changeLg(lang); // won't retry I'd hope.
+								await changeLg(lang, rtl); // won't retry I'd hope.
 							}
 						} else {
 							errorlog(err2);
@@ -8586,13 +8495,34 @@ async function changeLg(lang) {
 				console.warn("Couldn't find exact language; trying a more generic option instead");
 				lang = lang.split("-")[0];
 				if (lang && lang !== "auto") {
-					await changeLg(lang); // won't retry I'd hope.
+					await changeLg(lang, rtl); // won't retry I'd hope.
 				}
 			} else {
 				errorlog(err);
 			}
 		});
 }
+
+
+var controlBarTimeout = false;
+function showControl(e) {
+	if (controlBarTimeout) {
+		clearTimeout(controlBarTimeout);
+	}
+	if (session.mobile) {
+		getById("controlButtons").classList.remove("partialFadeout");
+	} else {
+		getById("controlButtons").classList.remove("fadeout");
+	}
+	controlBarTimeout = setTimeout(function () {
+		if (session.mobile) {
+			getById("controlButtons").classList.add("partialFadeout");
+		} else {
+			getById("controlButtons").classList.add("fadeout");
+		}
+	}, 5000);
+}
+
 
 var loadedQRCode = false;
 function loadQR(callback = false, value = false) {
@@ -9106,35 +9036,37 @@ async function tapToFocus(x, y, force = false) {
 	sharpnessToolActive = false;
 }
 
-session.remoteZoom = function (zoom) {
+session.remoteFocus = async function (focusDistance) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks();
 		track0 = track0[0];
 		if (track0.getCapabilities) {
 			var capabilities = track0.getCapabilities();
-
-			if (!capabilities.zoom) {
-				warnlog("No zoom supported on this device");
+			if (!capabilities.focusDistance) {
+				warnlog("No Focus supported on this device");
 				return;
 			}
-			if ("min" in capabilities.zoom && "max" in capabilities.zoom) {
-				if (capabilities.zoom.max === capabilities.zoom.min) {
-					warnlog("zoom only has one fixed setting");
-					return;
-				}
+
+			const focusRange = capabilities.focusDistance;
+			if (!("min" in focusRange)) {
+				return;
 			}
 
-			if (session.zoom == false) {
-				session.zoom = capabilities.zoom.min;
+			const range = focusRange.max - focusRange.min;
+			const step = focusRange.step || 0.01;
+			const change = Math.max(Math.abs(range * focusDistance), step);
+
+			if (session.focusDistance === false) {
+				session.focusDistance = focusRange.min;
 			}
-			session.zoom += zoom;
-			if (session.zoom > capabilities.zoom.max) {
-				session.zoom = capabilities.zoom.max;
-			} else if (session.zoom < capabilities.zoom.min) {
-				session.zoom = capabilities.zoom.min;
-			}
-			//updateCameraConstraints("zoom", session.zoom); // TODO: I should align the remote zoom and focus with the local one.
-			track0.applyConstraints({ advanced: [{ zoom: session.zoom }] });
+
+			session.focusDistance += focusDistance > 0 ? change : -change;
+			session.focusDistance = Math.min(Math.max(session.focusDistance, focusRange.min), focusRange.max);
+			
+			const steps = Math.round((session.focusDistance - focusRange.min) / step);
+			session.focusDistance = focusRange.min + (steps * step);
+
+			await track0.applyConstraints({ advanced: [{ focusMode: "manual", focusDistance: session.focusDistance }] });
 		} else if (Firefox) {
 			warnlog("firefox sucks. that's why");
 		}
@@ -9143,31 +9075,42 @@ session.remoteZoom = function (zoom) {
 	}
 };
 
-session.remoteFocus = async function (focusDistance) {
+session.remoteZoom = function (zoom, absolute=false) {
 	try {
 		var track0 = session.streamSrc.getVideoTracks();
 		track0 = track0[0];
 		if (track0.getCapabilities) {
 			var capabilities = track0.getCapabilities();
-
-			if (!capabilities.focusDistance) {
-				warnlog("No Focus supported on this device");
-				return;
-			} else if (!("min" in capabilities.focusDistance)) {
+			if (!capabilities.zoom) {
+				warnlog("No zoom supported on this device");
 				return;
 			}
 
-			if (session.focusDistance == false) {
-				session.focusDistance = capabilities.focusDistance.min;
+			const zoomRange = capabilities.zoom;
+			if ("min" in zoomRange && "max" in zoomRange && zoomRange.max === zoomRange.min) {
+				warnlog("zoom only has one fixed setting");
+				return;
 			}
-			session.focusDistance += focusDistance;
-			if (session.focusDistance > capabilities.focusDistance.max) {
-				session.focusDistance = capabilities.focusDistance.max;
-			} else if (session.focusDistance < capabilities.focusDistance.min) {
-				session.focusDistance = capabilities.focusDistance.min;
+
+			const range = zoomRange.max - zoomRange.min;
+			const step = zoomRange.step || 0.01;
+			const change = Math.max(Math.abs(range * zoom), step);
+
+			if (session.zoom === false) {
+				session.zoom = zoomRange.min;
 			}
-			//updateCameraConstraints("zoom", session.zoom); // TODO: I should align the remote zoom and focus with the local one.
-			await track0.applyConstraints({ advanced: [{ focusMode: "manual", focusDistance: session.focusDistance }] });
+
+			session.zoom += zoom > 0 ? change : -change;
+			session.zoom = Math.min(Math.max(session.zoom, zoomRange.min), zoomRange.max);
+			
+			const steps = Math.round((session.zoom - zoomRange.min) / step);
+			session.zoom = zoomRange.min + (steps * step);
+			
+			if (absolute){
+				session.zoom = Math.min(zoomRange.max,zoomRange.min + (Math.round(range*zoom/step)*step));
+			}
+
+			track0.applyConstraints({ advanced: [{ zoom: session.zoom }] });
 		} else if (Firefox) {
 			warnlog("firefox sucks. that's why");
 		}
@@ -9526,6 +9469,7 @@ function setAvatarImage(tracks) {
 		applyMirror(true);
 
 		session.avatar.tracks = session.canvas.captureStream().getVideoTracks();
+		
 		return session.avatar.tracks;
 	}
 	applyMirror(session.mirrorExclude);
@@ -10844,10 +10788,12 @@ function applyEffects(track) {
 
 		document.body.appendChild(session.canvasWebGL);
 		loadEffect(session.effect);
+		
 		return session.canvasWebGL.captureStream().getVideoTracks()[0];
 	}
 	try {
 		return session.canvas.captureStream().getVideoTracks()[0];
+		
 	} catch (e) {
 		if (!session.cleanOutput) {
 			warnUser(getTranslation("not-clean-session"), false, false);
@@ -16405,118 +16351,106 @@ function toggleVideoMute(apply = false) {
 		}
 	}
 }
-
 var toggleSettingsState = false;
+let settingsClickHandler = null;
+
 async function toggleSettings(forceShow = false) {
-	// TODO: I need to have this be MUTE, toggle, with volume not touched.
+    if (session.nosettings) return;
 
-	if (session.nosettings) {
-		return;
-	}
+    const multiselectTrigger = getById("multiselect-trigger3");
+    multiselectTrigger.dataset.state = "0";
+    multiselectTrigger.classList.add("closed");
+    multiselectTrigger.classList.remove("open");
+    getById("chevarrow2").classList.add("bottom");
 
-	getById("multiselect-trigger3").dataset.state = "0";
-	getById("multiselect-trigger3").classList.add("closed");
-	getById("multiselect-trigger3").classList.remove("open");
-	getById("chevarrow2").classList.add("bottom");
+    const popupSelector = getById("popupSelector");
 
-	if (toggleSettingsState == true) {
-		if (forceShow == true) {
-			await enumerateDevices().then(gotDevices2);
-			return;
-		}
-	} // don't close if already open
-	if (getById("popupSelector").style.display == "none") {
-		updateConstraintSliders();
+    // For forceShow, if already open just update devices
+    if (toggleSettingsState && forceShow) {
+        await enumerateDevices().then(gotDevices2);
+        return;
+    }
 
-		setTimeout(function () {
-			document.addEventListener("click", toggleSettings);
-		}, 10);
+    if (popupSelector.style.display === "none") {
+        await showSettings();
+    } else {
+        hideSettings();
+    }
 
-		getById("popupSelector").addEventListener("click", function (e) {
-			e.stopPropagation();
-			return false;
-		});
+    pokeIframeAPI("settings-menu-state", toggleSettingsState);
+}
 
-		if (navigator.userAgent.indexOf("Chrome") != -1) {
-			try {
-				await navigator.permissions
-					.query({
-						name: "camera"
-					})
-					.then(async function (promise) {
-						if (promise && promise.state) {
-							if (promise.state == "prompt") {
-								warnlog("navigator.mediaDevices.getUserMedia starting...");
-								await navigator.mediaDevices
-									.getUserMedia({
-										video: true,
-										audio: false
-									})
-									.then(async function (stream) {
-										await enumerateDevices()
-											.then(gotDevices2)
-											.then(function () {
-												stream.getTracks().forEach(function (track) {
-													//stream.removeTrack(track);
-													track.stop(); // clean up?
-												});
-											});
-									})
-									.catch(async function (err) {
-										await enumerateDevices()
-											.then(gotDevices2)
-											.then(function () {});
-									});
-							} else {
-								await enumerateDevices()
-									.then(gotDevices2)
-									.then(function () {});
-							}
-						} else {
-							await enumerateDevices()
-								.then(gotDevices2)
-								.then(function () {});
-						}
-					});
-			} catch (e) {
-				await enumerateDevices()
-					.then(gotDevices2)
-					.then(function () {});
-			}
-		} else {
-			await enumerateDevices()
-				.then(gotDevices2)
-				.then(function () {});
-		}
+async function showSettings() {
+    const popupSelector = getById("popupSelector");
+    const settingsButton = getById("settingsbutton");
 
-		getById("popupSelector").style.display = "inline-block";
-		getById("settingsbutton").classList.add("brown");
-		getById("settingsbutton").ariaPressed = "true";
+    updateConstraintSliders();
 
-		loadContentEffectsImages(); // only triggers if effects==5 is true
+    // Handler only closes the menu when clicking outside
+    settingsClickHandler = (e) => {
+        if (!popupSelector.contains(e.target) && !e.target.closest('#settingsbutton')) {
+            hideSettings();
+            pokeIframeAPI("settings-menu-state", false);
+        }
+    };
+    
+    setTimeout(() => {
+        document.addEventListener("click", settingsClickHandler);
+    }, 10);
 
-		setTimeout(function () {
-			getById("popupSelector").style.right = "0px";
-		}, 1);
-		toggleSettingsState = true;
-	} else {
-		document.removeEventListener("click", toggleSettings);
-		getById("popupSelector").removeEventListener("click", function (e) {
-			e.stopPropagation();
-			return false;
-		});
+    if (navigator.userAgent.indexOf("Chrome") !== -1) {
+        try {
+            const permissionResult = await navigator.permissions.query({ name: "camera" });
+            if (permissionResult.state === "prompt") {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    await enumerateDevices().then(gotDevices2);
+                    stream.getTracks().forEach(track => track.stop());
+                } catch {
+                    await enumerateDevices().then(gotDevices2);
+                }
+            } else {
+                await enumerateDevices().then(gotDevices2);
+            }
+        } catch {
+            await enumerateDevices().then(gotDevices2);
+        }
+    } else {
+        await enumerateDevices().then(gotDevices2);
+    }
 
-		getById("popupSelector").style.right = "-500px";
+    popupSelector.style.display = "inline-block";
+    settingsButton.classList.add("brown");
+    settingsButton.ariaPressed = "true";
+    
+    loadContentEffectsImages();
+    
+    setTimeout(() => {
+        popupSelector.style.right = "0px";
+    }, 1);
+    
+    toggleSettingsState = true;
+}
 
-		getById("settingsbutton").classList.remove("brown");
-		getById("settingsbutton").ariaPressed = "false";
-		setTimeout(function () {
-			getById("popupSelector").style.display = "none";
-		}, 200);
-		toggleSettingsState = false;
-		getById("videoSettings3").style.display = "none";
-	}
-	pokeIframeAPI("settings-menu-state", toggleSettingsState);
+function hideSettings() {
+    const popupSelector = getById("popupSelector");
+    const settingsButton = getById("settingsbutton");
+
+    if (settingsClickHandler) {
+        document.removeEventListener("click", settingsClickHandler);
+        settingsClickHandler = null;
+    }
+
+    popupSelector.style.right = "-500px";
+    settingsButton.classList.remove("brown");
+    settingsButton.ariaPressed = "false";
+    
+    setTimeout(() => {
+        popupSelector.style.display = "none";
+    }, 200);
+    
+    toggleSettingsState = false;
+    getById("videoSettings3").style.display = "none";
 }
 
 let wakeLockObject = null;
@@ -17242,14 +17176,17 @@ function getDetailedState(sid = false) {
 
 			try {
 				item.layout = session.rpcs[UUID].layout;
+				
 				if (session.director && session.slotmode) {
-					item.slot = query("[data--u-u-i-d='" + UUID + "'][data-slot]").dataset.slot || false;
+					item.slot = getSlotState(UUID);
 				} else if (session.currentSlots) {
 					item.slot = Object.keys(session.currentSlots).find(key => session.currentSlots[key] === session.rpcs[UUID].streamID) || false;
 				}
+				
 				if (item.slot) {
 					item.slot = parseInt(item.slot);
 				}
+				
 				if (session.director) {
 					let featured = query("[data--u-u-i-d='" + UUID + "'][data-action-type='solo-video']");
 					if (featured && parseInt(featured.value)) {
@@ -17401,13 +17338,24 @@ function getDetailedState(sid = false) {
 	streamList[session.streamID].layout = session.layout;
 
 	try {
-		if (session.director && session.slotmode) {
-			streamList[session.streamID].slot = query("#container_director [data-slot]").dataset.slot || false;
-			if (streamList[session.streamID].slot) {
-				streamList[session.streamID].slot = parseInt(streamList[session.streamID].slot);
+		if (session.streamID && session.slotmode) {
+			// Properly check for director's slots by looking directly at currentSlots
+			let directorSlot = false;
+			
+			// Look for the director's main stream in currentSlots
+			Object.entries(session.currentSlots).forEach(([slot, sid]) => {
+				if (sid === session.streamID) {
+					directorSlot = parseInt(slot);
+				}
+			});
+			
+			// If the director has a slot assigned, use it
+			if (directorSlot) {
+				streamList[session.streamID].slot = directorSlot;
+			} else {
+				// No slot found for director
+				streamList[session.streamID].slot = false;
 			}
-		} else if (session.currentSlots && session.streamID) {
-			streamList[session.streamID].slot = Object.keys(session.currentSlots).find(key => session.currentSlots[key] === session.streamID) || false;
 		}
 	} catch (e) {
 		errorlog(e);
@@ -17630,12 +17578,14 @@ function syncSceneState(sid) {
 	}
 }
 
-function issueLayout(layout = false, scene = false, UUID = false) {
+function issueLayout(scene = false, UUID = false) {
 	// A directing room only is controlled by the Director, with the exception of MUTE.
 	log("issueLayout() called");
+	
 	var msg = {};
-	msg.layout = layout;
-
+	msg.layout = session.layout;
+	msg.layout_array = session.layout_array;
+	
 	//try {
 	//	pokeIframeAPI("layout", {layout:layout, scene:scene});
 	//} catch(e){}
@@ -19648,6 +19598,12 @@ function parseURL4Iframe(iframeURL) {
 		return iframeURL;
 	}
 
+	if (!iframeURL.startsWith("https://") && !iframeURL.startsWith("http://")) {
+		if (iframeURL.includes(".") && !iframeURL.startsWith("./") && !iframeURL.startsWith("/")) {
+			iframeURL = "https://" + iframeURL;
+		}
+	}
+	
 	if (iframeURL.startsWith("http://")) {
 		try {
 			iframeURL = "https://" + iframeURL.split("http://")[1];
@@ -19657,49 +19613,51 @@ function parseURL4Iframe(iframeURL) {
 	}
 
 	if (iframeURL.startsWith("https://") || iframeURL.startsWith("http://")) {
-		var domain = new URL(iframeURL);
-		domain = domain.hostname;
+		var domain;
+		try {
+			domain = new URL(iframeURL);
+			domain = domain.hostname;
+		} catch (e) {
+			errorlog(e);
+			return iframeURL;
+		}
 
 		if (domain == "youtu.be") {
 			iframeURL = iframeURL.replace("youtu.be/", "youtube.com/watch?v=");
 		}
-
+		
 		if (domain == "youtu.be" || domain == "www.youtube.com" || domain == "youtube.com") {
+			if (iframeURL.includes("/v/")) {
+				var vidMatch = iframeURL.match(/\/v\/([^\/\?#]+)/);
+				if (vidMatch && vidMatch[1] && vidMatch[1].length == 11) {
+					return createYoutubeLink(vidMatch[1]);
+				}
+			}
+			
 			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 			var match = iframeURL.match(regExp);
-			var vidid = match && match[7].length == 11 ? match[7] : false;
-
-			// https://www.youtube.com/live_chat?v=<your video ID>&embed_domain=<your blog domain>
+			var vidid = match && match[7] && match[7].length == 11 ? match[7] : false;
+			
 			if (iframeURL.includes("/live_chat")) {
 				if (!iframeURL.includes("&embed_domain=")) {
 					iframeURL += "&embed_domain=" + location.hostname;
 				}
+				return iframeURL;
 			}
-
+			
 			if (vidid) {
-				//specialResult = {};
-				//specialResult.originalSrc = iframeURL;
-				//specialResult.parsedSrc = "https://www.youtube.com/embed/"+vidid+"?autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
-				//specialResult.handler = "youtube";
-				//specialResult.vid = vidid;
-				//iframeURL = specialResult;
 				iframeURL = createYoutubeLink(vidid);
 			} else {
-				// see if there is a playlist link here or not.
-
-				// https://youtube.com/playlist?list=PLWodc2tCfAH1l_LDvEyxEqFf42hOBKqQM
 				iframeURL = iframeURL.replace("playlist?list=", "embed/videoseries?list=");
-
 				var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(videoseries\?))\??list?=?([^#&?]*).*/;
 				var match = iframeURL.match(regExp);
-				var plid = match && match[7].length == 34 ? match[7] : false;
+				var plid = match && match[7] && match[7].length == 34 ? match[7] : false;
 				if (plid) {
 					iframeURL = "https://www.youtube.com/embed/videoseries?list=" + plid + "&autoplay=1&modestbranding=1&playsinline=1&enablejsapi=1";
 				}
 			}
 		} else if (domain == "twitch.tv" || domain == "www.twitch.tv") {
 			if (iframeURL.includes("twitch.tv/popout/")) {
-				// this is a twitch live chat window
 				iframeURL = iframeURL.replace("/popout/", "/embed/");
 				iframeURL = iframeURL.replace("?popout=", "?parent=" + location.hostname);
 				iframeURL = iframeURL.replace("?popout", "?parent=" + location.hostname);
@@ -19727,6 +19685,7 @@ function parseURL4Iframe(iframeURL) {
 			}
 		}
 	}
+	
 	return iframeURL;
 }
 
@@ -22890,6 +22849,84 @@ function requestVideoSettings(ele) {
 	}
 }
 
+function combinedLayoutSimple(layout) {
+    var combined = {};
+    Object.keys(layout).forEach(i => {
+        if (!layout[i]) {
+            return;
+        }
+        
+        if (i === "") {
+            layout[i].forEach(j => {
+                if (!j) {
+                    return;
+                }
+                var streamID = null;
+                if ("slot" in j) {
+                    try {
+                        streamID = session.currentSlots[parseInt(j.slot) + 1];
+                    } catch (e) {
+                        errorlog(e);
+                        streamID = null;
+                    }
+                }
+                if (!streamID) {
+                    if (!combined[""]) {
+                        combined[""] = [];
+                    }
+                    combined[""].push(j);
+                } else {
+                    combined[streamID] = j;
+                }
+            });
+        } else {
+            var streamID = null;
+            if ("slot" in layout[i]) {
+                try {
+                    streamID = session.currentSlots[parseInt(layout[i].slot) + 1];
+                } catch (e) {
+                    errorlog(e);
+                    streamID = null;
+                }
+            }
+            if (!streamID) {
+                if (!combined[""]) {
+                    combined[""] = [];
+                }
+                combined[""].push(layout[i]);
+            } else {
+                combined[streamID] = layout[i];
+            }
+        }
+    });
+    return combined;
+}
+
+function createSlotUpdate(UUID = false) {
+    try {
+        // Create a clean copy of currentSlots with empty slots removed
+        const cleanSlots = {};
+        Object.entries(session.currentSlots).forEach(([slot, streamID]) => {
+            if (streamID) {
+                cleanSlots[slot] = streamID;
+            }
+        });
+        
+        // Send to appropriate recipients
+        if (!UUID) {
+            for (var uid in session.pcs) {
+                if (session.pcs[uid].layout) {
+                    session.sendMessage({ slotsUpdate: cleanSlots }, uid);
+                }
+            }
+        } else {
+            session.sendMessage({ slotsUpdate: cleanSlots }, UUID);
+        }
+    } catch (e) {
+        errorlog(e);
+    }
+}
+
 async function createDirectorOnlyBox() {
 	var soloLink = soloLinkGenerator(session.streamID);
 
@@ -22905,29 +22942,44 @@ async function createDirectorOnlyBox() {
 	container.id = "container_director"; // needed to delete on user disconnect
 	container.setAttribute("aria-label", miscTranslations["your-camera"]);
 	container.setAttribute("role", "region");
-
+	
 	var buttons = "";
 	if (session.slotmode) {
-		var slots = document.querySelectorAll("div.slotsbar[data-slot]");
 		var biggestSlot = 0;
-
 		var slotDefault = null;
+		
+		// Check past slots first
 		if (session.streamID in session.pastSlots) {
 			slotDefault = session.pastSlots[session.streamID];
 		}
+		
+		// Get all current slots from RPC state
 		var allSlots = [];
-		if (session.slotmode == 1) {
-			for (var i = 0; i < slots.length; i++) {
-				if (parseInt(slots[i].dataset.slot) > biggestSlot) {
-					biggestSlot = parseInt(slots[i].dataset.slot);
+	    if (session.slotmode == 1) {
+			Object.entries(session.currentSlots).forEach(([currentSlot, sid]) => {
+				if (currentSlot) {
+					if (parseInt(currentSlot) > biggestSlot) {
+						biggestSlot = parseInt(currentSlot);
+					}
+					if (slotDefault === parseInt(currentSlot)) {
+						slotDefault = null;
+					}
+					allSlots.push(parseInt(currentSlot));
 				}
-				if (slotDefault === parseInt(slots[i].dataset.slot)) {
-					slotDefault = null;
-				}
-				allSlots.push(parseInt(slots[i].dataset.slot));
-			}
+			});
 			biggestSlot += 1;
+		} else if (slotDefault !== null && session.slotmode == 2) {
+			// Check if slot is already in use - include director's stream
+			const slotInUse = Object.keys(session.rpcs).some(UUID => 
+				getSlotState(UUID) === slotDefault
+			) || getSlotState(session.streamID) === slotDefault || getSlotState(session.streamID+":s") === slotDefault;
+			
+			if (slotInUse) {
+				slotDefault = null; // This slot is already in use
+			}
 		}
+		
+		// Determine final slot value
 		if (slotDefault !== null) {
 			biggestSlot = slotDefault;
 		} else if (session.slotmode == 1) {
@@ -22942,20 +22994,31 @@ async function createDirectorOnlyBox() {
 			}
 			biggestSlot = bestfree;
 		}
-		var slotName = "slot: " + biggestSlot;
-		if (!biggestSlot) {
-			slotName = "unset";
-		}
-
+		
+		// Set slot name
+		var slotName = biggestSlot ? "slot: " + biggestSlot : "unset";
+		
+		// Build HTML with same structure
 		buttons +=
-			"<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='" +
-			session.streamID +
-			"' data-slot='" +
-			biggestSlot +
-			"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' data-action-type='setslot' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>" +
-			slotName +
-			"</button></div>";
+			`<div draggable='true' title='Drag to swap layout positions' 
+					ondragend='dragendSlot(event)' 
+					ondragstart='dragSlot(event)' 
+					ondrop='dropSlot(event)' 
+					ondragover='allowDropSlot(event)' 
+					data-sid='${session.streamID}' 
+					data-slot='${biggestSlot}' 
+					class='slotsbar'>
+				<button ondrop='dropSlot(event)' 
+						data-action-type='setslot' 
+						draggable='true' 
+						ondragend='dragendSlot(event)' 
+						ondragstart='dragSlot(event)' 
+						ondragover='allowDropSlot(event)' 
+						onclick='changeSlot(event, this);'>${slotName}</button>
+			 </div>`;
+
+		// Sync the initial state
+		syncSlotState(session.streamID, biggestSlot, false); // false since UI is being created here
 	}
 	buttons +=
 		"<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
@@ -22992,7 +23055,7 @@ async function createDirectorOnlyBox() {
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
-				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span data-translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID) {
@@ -23091,30 +23154,11 @@ async function createDirectorOnlyBox() {
 	}
 }
 
-function createSlotUpdate(UUID = false) {
-	try {
-		var newSlots = {};
-		document.querySelectorAll("[data-sid][data-slot]").forEach(ele => {
-			newSlots[ele.dataset.slot] = ele.dataset.sid;
-		});
-		if (!UUID) {
-			for (var uid in session.pcs) {
-				if (session.pcs[uid].layout) {
-					session.sendMessage({ slotsUpdate: newSlots }, uid);
-				}
-			}
-		} else {
-			session.sendMessage({ slotsUpdate: newSlots }, UUID);
-		}
-	} catch (e) {
-		errorlog(e);
-	}
-}
 
 async function createDirectorScreenshareOnlyBox() {
 	// sstype=3
-
-	var soloLink = soloLinkGenerator(session.streamID + ":s");
+	var screenStreamID = session.streamID + ":s";
+	var soloLink = soloLinkGenerator(screenStreamID);
 
 	if (document.getElementById("deleteme")) {
 		getById("deleteme").parentNode.removeChild(getById("deleteme"));
@@ -23131,26 +23175,30 @@ async function createDirectorScreenshareOnlyBox() {
 
 	var buttons = "";
 	if (session.slotmode) {
-		var slots = document.querySelectorAll("div.slotsbar[data-slot]");
 		var biggestSlot = 0;
-
 		var slotDefault = null;
-		if (session.streamID + ":s" in session.pastSlots) {
-			slotDefault = session.pastSlots[session.streamID + ":s"];
+		
+		if (screenStreamID in session.pastSlots) {
+			slotDefault = session.pastSlots[screenStreamID];
 		}
+		
 		var allSlots = [];
-		if (session.slotmode == 1) {
-			for (var i = 0; i < slots.length; i++) {
-				if (parseInt(slots[i].dataset.slot) > biggestSlot) {
-					biggestSlot = parseInt(slots[i].dataset.slot);
-				}
-				if (slotDefault === parseInt(slots[i].dataset.slot)) {
-					slotDefault = null;
-				}
-				allSlots.push(parseInt(slots[i].dataset.slot));
-			}
-			biggestSlot += 1;
-		}
+	    if (session.slotmode == 1) {
+		    Object.entries(session.currentSlots).forEach(([currentSlot, sid]) => {
+		  	    if (currentSlot) {
+				   if (parseInt(currentSlot) > biggestSlot) {
+					   biggestSlot = parseInt(currentSlot);
+				   }
+				   if (slotDefault === parseInt(currentSlot)) {
+					   slotDefault = null;
+				   }
+				   allSlots.push(parseInt(currentSlot));
+			    }
+		    });
+		    biggestSlot += 1;
+	    }
+		
+		// Determine final slot value
 		if (slotDefault !== null) {
 			biggestSlot = slotDefault;
 		} else if (session.slotmode == 1) {
@@ -23165,31 +23213,38 @@ async function createDirectorScreenshareOnlyBox() {
 			}
 			biggestSlot = bestfree;
 		}
-
-		var slotName = "slot: " + biggestSlot;
-		if (!biggestSlot) {
-			slotName = "unset";
-		}
-
+		
+		var slotName = biggestSlot ? "slot: " + biggestSlot : "unset";
+		
 		buttons +=
-			"<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-sid='" +
-			session.streamID +
-			":s" +
-			"' data-slot='" +
-			biggestSlot +
-			"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' data-action-type='setslot' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>" +
-			slotName +
-			"</button></div>";
+			`<div draggable='true' title='Drag to swap layout positions' 
+				 ondragend='dragendSlot(event)' 
+				 ondragstart='dragSlot(event)' 
+				 ondrop='dropSlot(event)' 
+				 ondragover='allowDropSlot(event)' 
+				 data-sid='${screenStreamID}' 
+				 data-slot='${biggestSlot}' 
+				 class='slotsbar'>
+			   <button ondrop='dropSlot(event)' 
+					   data-action-type='setslot' 
+					   draggable='true' 
+					   ondragend='dragendSlot(event)' 
+					   ondragstart='dragSlot(event)' 
+					   ondragover='allowDropSlot(event)' 
+					   onclick='changeSlot(event, this);'>${slotName}</button>
+			 </div>`;
+
+		// Sync the initial state
+		syncSlotState(screenStreamID, biggestSlot, false); // false since UI is being created here
 	}
 	buttons +=
 		"<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' onclick='shiftPC(this,-1, true);'></i><i class='las la-angle-right' onclick='shiftPC(this,1, true)';></i></div>\
 		<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" +
-		session.streamID +
-		":s</span>\
+		screenStreamID +
+		"</span>\
 			<i class='las la-copy' data-sid='" +
-		session.streamID +
-		":s'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+		screenStreamID +
+		"'  onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
 			<i class='las la-window-minimize' onclick='minimizeMe(this, 'container_screen_director')' title='Minimize this control box'></i>\
 			<span id='label_director' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream' data-translate='add-a-label'>" +
 		getTranslation("add-a-label") +
@@ -23217,7 +23272,7 @@ async function createDirectorScreenshareOnlyBox() {
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
-				<button class='pull-right controlsGrid' style='width:100%' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' style='width:100%' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span data-translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>\
 			<div id='groups'></div>";
 		if (session.directorUUID) {
@@ -23238,7 +23293,7 @@ async function createDirectorScreenshareOnlyBox() {
 
 	controls.querySelectorAll("[data-action-type]").forEach(ele => {
 		// give action buttons some self-reference
-		ele.dataset.sid = session.streamID + ":s";
+		ele.dataset.sid = screenStreamID;
 	});
 
 	container.appendChild(controls);
@@ -23249,7 +23304,7 @@ async function createDirectorScreenshareOnlyBox() {
 		if (document.getElementById("container_screen_director")) {
 			if (!getById("container_screen_director").querySelectorAll('[data-scene="' + scene + '"]').length) {
 				var newScene = document.createElement("div");
-				newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="' + session.streamID + ':s" data-action-type="addToScene" data-scene="' + scene + '"   title="Add to Scene ' + scene + '" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: ' + scene + "</span></button>";
+				newScene.innerHTML = '<button style="margin: 0 5px 10px 5px;" data-sid="' + screenStreamID + '" data-action-type="addToScene" data-scene="' + scene + '"   title="Add to Scene ' + scene + '" onclick="directEnable(this, event);"><span ><i class="las la-plus-square" style="color:#060"></i> Scene: ' + scene + "</span></button>";
 				newScene.classList.add("customScene");
 				//getById("container_screen_director").appendChild(newScene);
 
@@ -23285,45 +23340,10 @@ async function createDirectorScreenshareOnlyBox() {
 		elex.remove();
 	});
 
-	// var labelID = document.getElementById("label_director");
-
-	// labelID.onclick = async function(ee){
-	// var oldlabel = ee.target.innerText;
-	// if (session.label===false){
-	// oldlabel = "";
-	// }
-	// window.focus();
-	// var newlabel = await promptAlt(getTranslation("enter-new-display-name"), false, false, oldlabel);
-	// if (newlabel!==null){
-	// newlabel = newlabel.trim();
-	// if (newlabel === ""){
-	// newlabel = false;
-	// ee.target.innerHTML = getTranslation("add-a-label");
-	// miniTranslate(ee.target,"add-a-label");
-	// ee.target.classList.add("addALabel");
-	// } else {
-	// ee.target.innerText = newlabel;
-	// ee.target.classList.remove("addALabel");
-	// }
-	// session.label = newlabel;
-	// var data = {};
-	// data.changeLabel = true;
-	// data.value = session.label;
-	// session.sendMessage(data);
-	// }
-	// }
-	// labelID.style.float = "left";
-	// labelID.style.top = "2px";
-	// labelID.style.marginLeft = "5px";
-	// labelID.style.position  = "relative";
-	// labelID.style.cursor="pointer";
-	// if (session.label){
-	// labelID.innerText = session.label;
-	// }
 	pokeIframeAPI("control-box", true, true);
 	if (session.slotmode) {
-		pokeIframeAPI("slot-updated", biggestSlot, null, session.streamID + ":s"); // need to support self-director
-		session.pastSlots[session.streamID + ":s"] = biggestSlot;
+		pokeIframeAPI("slot-updated", biggestSlot, null, screenStreamID); // need to support self-director
+		session.pastSlots[screenStreamID] = biggestSlot;
 		createSlotUpdate();
 	}
 }
@@ -23474,42 +23494,64 @@ function dragendSlot(event) {
 }
 
 function dropSlot(event) {
-	log("drop");
-	event.preventDefault();
-	event.stopPropagation();
+    log("drop");
+    event.preventDefault();
+    event.stopPropagation();
 
-	var SID = event.dataTransfer.getData("text");
-	if (!SID) {
-		return;
-	}
-	var origThing = document.querySelector("[data-sid='" + SID + "'][data-slot]");
-	if (!origThing) {
-		return;
-	}
+    // Get the dragged streamID
+    var SID = event.dataTransfer.getData("text");
+    if (!SID) return;
+    
+    var origThing = document.querySelector("[data-sid='" + SID + "'][data-slot]");
+    if (!origThing) return;
 
-	var targetSID = event.target.dataset.sid || event.target.parentNode.dataset.sid;
-	if (!targetSID) {
-		return;
-	}
-	var targetThing = document.querySelector("[data-sid='" + targetSID + "'][data-slot]");
-	if (!targetThing) {
-		return;
-	}
+    // Get target streamID
+    var targetSID = event.target.dataset.sid || event.target.parentNode.dataset.sid;
+    if (!targetSID) return;
+    
+    var targetThing = document.querySelector("[data-sid='" + targetSID + "'][data-slot]");
+    if (!targetThing) return;
 
-	targetThing.dataset.sid = SID;
-	origThing.dataset.sid = targetSID;
-
-	swapNodes(targetThing, origThing);
-
-	pokeIframeAPI("slot-updated", parseInt(targetThing.dataset.slot), null, targetThing.dataset.sid); // need to support self-director
-	pokeIframeAPI("slot-updated", parseInt(origThing.dataset.slot), null, origThing.dataset.sid); // need to support self-director
-
-	session.pastSlots[targetThing.dataset.sid] = parseInt(targetThing.dataset.slot);
-	session.pastSlots[origThing.dataset.sid] = parseInt(origThing.dataset.slot);
-
-	createSlotUpdate();
-
-	return false;
+    // Get original slots
+    const origSlot = parseInt(origThing.dataset.slot);
+    const targetSlot = parseInt(targetThing.dataset.slot);
+    
+    // Key fix: We need to swap the DOM elements *and* swap the session.currentSlots entries
+    // Save the original values
+    const tempStreamID = session.currentSlots[targetSlot]; // Save the target slot's original value
+    
+    // Update session.currentSlots (this is the crucial part)
+    session.currentSlots[targetSlot] = SID;
+    session.currentSlots[origSlot] = tempStreamID;
+    
+    // Update the data-sid attributes for the visual swap
+    targetThing.dataset.sid = SID;
+    origThing.dataset.sid = targetSID;
+    
+    // Update the UI text as well
+    const targetButton = targetThing.querySelector('button');
+    const origButton = origThing.querySelector('button');
+    
+    if (targetButton) {
+        targetButton.innerText = targetSlot ? `slot: ${targetSlot}` : 'unset';
+    }
+    
+    if (origButton) {
+        origButton.innerText = origSlot ? `slot: ${origSlot}` : 'unset';
+    }
+    
+    // Update past slots for future reference
+    session.pastSlots[SID] = targetSlot;
+    session.pastSlots[targetSID] = origSlot;
+    
+    // Tell any iframes about the swap
+    pokeIframeAPI("slot-updated", targetSlot, null, SID);
+    pokeIframeAPI("slot-updated", origSlot, null, targetSID);
+    
+    // Notify all peers of the update
+    createSlotUpdate();
+    
+    return false;
 }
 
 function dragenterSlot(event) {
@@ -23526,7 +23568,7 @@ function dragleaveSlot(event) {
 	}
 }
 
-async function changeSlot(event, ele) {
+async function changeSlot(event, ele) { 
 	var picker = document.getElementById("slotPicker");
 
 	if (picker) {
@@ -23579,40 +23621,115 @@ async function changeSlot(event, ele) {
 }
 
 function setSlot(ele, slot) {
-	log("setSlot()");
-	getById("slotPicker").classList.add("hidden");
-	if (slot !== null) {
-		try {
-			slot = parseInt(slot) || 0;
-			var slots = document.querySelectorAll("div.slotsbar[data-slot]");
-			for (var i = 0; i < slots.length; i++) {
-				if (parseInt(slots[i].dataset.slot) == slot) {
-					slots[i].dataset.slot = ele.parentNode.dataset.slot;
-					slots[i].querySelector("button").innerText = ele.innerText;
-					warnlog("Slot already existed; setting old one to 0 (unset)");
-					pokeIframeAPI("slot-updated", parseInt(slots[i].dataset.slot), null, slots[i].dataset.sid);
-					session.pastSlots[slots[i].dataset.sid] = parseInt(slots[i].dataset.slot);
-					break;
-				}
-			}
-			ele.parentNode.dataset.slot = slot;
-			if (slot) {
-				ele.innerText = "slot: " + slot;
-			} else {
-				ele.innerText = "unset";
-			}
-			pokeIframeAPI("slot-updated", slot, null, ele.parentNode.dataset.sid);
-			session.pastSlots[ele.parentNode.dataset.sid] = slot;
-
-			createSlotUpdate();
-		} catch (e) {
-			errorlog(e);
-			return false;
-		}
-		return true;
-	} else {
-		return false;
-	}
+    log("setSlot()");
+    getById("slotPicker").classList.add("hidden");
+    if (slot !== null) {
+        try {
+            slot = parseInt(slot) || 0;
+            
+            // Find container with stream ID
+            const container = ele.closest('[data-sid]');
+            const streamID = container ? container.dataset.sid : null;
+            
+            if (!streamID) {
+                return false;
+            }
+            
+            // Critical part: Check if the slot is already occupied and swap instead of replace
+            const existingStreamID = session.currentSlots[slot];
+            if (existingStreamID && existingStreamID !== streamID) {
+                // Find the current slot of the stream we're moving
+                let currentSlot = null;
+                Object.entries(session.currentSlots).forEach(([key, value]) => {
+                    if (value === streamID) {
+                        currentSlot = parseInt(key);
+                    }
+                });
+                
+                // If the stream we're moving is already in a slot, update that slot's value
+                if (currentSlot !== null) {
+                    // Perform the swap
+                    session.currentSlots[slot] = streamID;
+                    session.currentSlots[currentSlot] = existingStreamID;
+                    
+                    // Update the other element's UI
+                    const otherSlotBar = document.querySelector(`[data-sid="${existingStreamID}"][data-slot]`);
+                    if (otherSlotBar) {
+                        otherSlotBar.dataset.slot = currentSlot;
+                        const otherButton = otherSlotBar.querySelector('button');
+                        if (otherButton) {
+                            otherButton.innerText = currentSlot ? `slot: ${currentSlot}` : 'unset';
+                        }
+                    }
+                    
+                    // Update UI for the element we're setting
+                    container.dataset.slot = slot;
+                    ele.innerText = slot ? `slot: ${slot}` : 'unset';
+                    
+                    // Update pastSlots
+                    session.pastSlots[streamID] = slot;
+                    session.pastSlots[existingStreamID] = currentSlot;
+                    
+                    // Update iframes
+                    pokeIframeAPI("slot-updated", slot, null, streamID);
+                    pokeIframeAPI("slot-updated", currentSlot, null, existingStreamID);
+                } else {
+                    // We're moving a stream that wasn't in a slot before
+                    // First clear any current assignment for this stream
+                    Object.entries(session.currentSlots).forEach(([key, value]) => {
+                        if (value === streamID) {
+                            delete session.currentSlots[key];
+                        }
+                    });
+                    
+                    // Then assign it to the new slot
+                    session.currentSlots[slot] = streamID;
+                    
+                    // Update UI
+                    container.dataset.slot = slot;
+                    ele.innerText = slot ? `slot: ${slot}` : 'unset';
+                    
+                    // Update pastSlots
+                    session.pastSlots[streamID] = slot;
+                    
+                    // Update iframe
+                    pokeIframeAPI("slot-updated", slot, null, streamID);
+                }
+            } else {
+                // No conflict, just set the slot normally
+                // Clear any existing slot for this stream
+                Object.entries(session.currentSlots).forEach(([key, value]) => {
+                    if (value === streamID) {
+                        delete session.currentSlots[key];
+                    }
+                });
+                
+                // Set the new slot
+                if (slot) {
+                    session.currentSlots[slot] = streamID;
+                }
+                
+                // Update UI
+                container.dataset.slot = slot;
+                ele.innerText = slot ? `slot: ${slot}` : 'unset';
+                
+                // Update pastSlots
+                session.pastSlots[streamID] = slot;
+                
+                // Update iframe
+                pokeIframeAPI("slot-updated", slot, null, streamID);
+            }
+            
+            // Always update all peers
+            createSlotUpdate();
+            
+        } catch (e) {
+            errorlog(e);
+            return false;
+        }
+        return true;
+    }
+    return false;
 }
 
 function swapNodes(n1, n2) {
@@ -23641,12 +23758,80 @@ function swapNodes(n1, n2) {
 	p2.insertBefore(n1, p2.children[i2]);
 }
 
-function remoteRemoveQueue(ele) {
-	let ts = { ...transferSettings };
-	ts.justResetting = true;
-	session.directMigrateIssue(session.roomid, ts, ele.dataset.UUID);
+function getCurrentSlot(streamID) {
+    const slotEntry = Object.entries(session.currentSlots).find(([_, sid]) => sid === streamID);
+    return slotEntry ? slotEntry[0] : false;
+}
 
-	ele.classList.add("hidden");
+function getSlotState(UUID) {
+    if (!UUID || !(UUID in session.rpcs)) return false;
+    return getCurrentSlot(session.rpcs[UUID].streamID);
+}
+
+function combinedLayout(layout) {
+    if (!Array.isArray(layout)) return layout || {};
+    
+    var combined = {};
+    for (var i = 0; i < layout.length; i++) {
+        if (!layout[i] || !("slot" in layout[i])) {
+            if (!combined[""]) combined[""] = [];
+            combined[""].push(layout[i]);
+            continue;
+        }
+        
+        const slotNumber = parseInt(layout[i].slot || 0) + 1;
+        const streamID = session.currentSlots[slotNumber];
+        
+        if (!streamID) {
+            if (!combined[""]) combined[""] = [];
+            combined[""].push(layout[i]);
+            continue;
+        }
+        
+        combined[streamID] = layout[i];
+    }
+    return combined;
+}
+
+function syncSlotState(streamID, slotValue=false, updateUI=true) {
+    // Clear any existing slots for this stream
+    Object.entries(session.currentSlots).forEach(([slot, sid]) => {
+        if (sid === streamID) delete session.currentSlots[slot];
+    });
+    
+    // Set new slot if one provided
+    if (slotValue) {
+        session.currentSlots[slotValue] = streamID;
+    }
+    
+    // Update UI if requested
+    if (updateUI) {
+        const slotsBar = document.querySelector(`[data-sid="${streamID}"][data-slot]`);
+        if (slotsBar) {
+            slotsBar.dataset.slot = slotValue;
+            const slotButton = slotsBar.querySelector('button');
+            if (slotButton) {
+                slotButton.innerText = slotValue ? `slot: ${slotValue}` : 'unset';
+            }
+        }
+    }
+    
+    createSlotUpdate();
+    return true;
+}
+
+function updateSlotUI() {
+    // Update all slot UI elements based on the current state in session.currentSlots
+    Object.entries(session.currentSlots).forEach(([slot, streamID]) => {
+        const slotBar = document.querySelector(`[data-sid="${streamID}"][data-slot]`);
+        if (slotBar) {
+            slotBar.dataset.slot = slot;
+            const button = slotBar.querySelector('button');
+            if (button) {
+                button.innerText = slot ? `slot: ${slot}` : 'unset';
+            }
+        }
+    });
 }
 
 function createControlBox(UUID, soloLink, streamID, slot_init = false) {
@@ -23747,7 +23932,7 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 			"'/>" +
 			sanitizeChat(soloLink) +
 			"</a>\
-				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
+				<button class='pull-right controlsGrid' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span data-translate='copy-solo-view-link'>copy solo view link</span></button>\
 			</div>";
 	}
 
@@ -23778,73 +23963,94 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 		ele.dataset.UUID = UUID;
 		ele.dataset.sid = streamID;
 	});
-
 	var buttons = "";
 	if (session.slotmode) {
-		var slots = document.querySelectorAll("div.slotsbar[data-slot]");
-		var biggestSlot = 0;
-		var slotDefault = null;
-
-		if (slot_init && session.slotmode == 1) {
-			slotDefault = slot_init || null;
-		}
-
-		if (streamID in session.pastSlots) {
-			slotDefault = session.pastSlots[streamID];
-		}
-
-		var allSlots = [];
+	    var biggestSlot = 0;
+	    var slotDefault = null;
+	   
+	    // Handle initial slot value from initialization or past slots
+	    if (slot_init && session.slotmode == 1) {
+		   slotDefault = slot_init || null;
+	    }
+	    if (streamID in session.pastSlots) {
+		   slotDefault = session.pastSlots[streamID];
+	    }
+	   
+	    // Get all current slots from RPC state
+	    var allSlots = [];
 		if (session.slotmode == 1) {
-			for (var i = 0; i < slots.length; i++) {
-				if (parseInt(slots[i].dataset.slot) > biggestSlot) {
-					biggestSlot = parseInt(slots[i].dataset.slot);
+			Object.entries(session.currentSlots).forEach(([currentSlot, sid]) => {
+				if (currentSlot) {
+					if (parseInt(currentSlot) > biggestSlot) {
+						biggestSlot = parseInt(currentSlot);
+					}
+					if (slotDefault === parseInt(currentSlot)) {
+						slotDefault = null;
+					}
+					allSlots.push(parseInt(currentSlot));
 				}
-				allSlots.push(parseInt(slots[i].dataset.slot));
-				if (slotDefault === parseInt(slots[i].dataset.slot)) {
-					// already taken
-					slotDefault = null;
-				}
-			}
+			});
 			biggestSlot += 1;
 		} else if (slotDefault !== null && session.slotmode == 2) {
-			if (document.querySelector("div.slotsbar[data-slot='" + slotDefault + "']")) {
-				slotDefault = null; // This slot is already in use, so we won't re-assign it.
+			// Check if slot is already in use by any remote participant
+			const remoteSlotInUse = Object.keys(session.rpcs).some(UUID => 
+				getSlotState(UUID) === slotDefault
+			);
+			
+			// Check if slot is used by the director
+			const directorSlotInUse = Object.entries(session.currentSlots).some(([slot, sid]) => 
+				parseInt(slot) === slotDefault && (sid === session.streamID || sid === session.streamID+":s")
+			);
+			
+			if (remoteSlotInUse || directorSlotInUse) {
+				slotDefault = null; // This slot is already in use
 			}
 		}
-
-		if (slotDefault !== null) {
-			// the default slot is avialable
-			biggestSlot = slotDefault;
-		} else if (slot_init && session.slotmode == 1) {
-			// was manually set, so can't be something else but 0; 0 or false would still end up with 0
-			biggestSlot = 0;
-		} else if (session.slotmode == 1) {
-			var bestfree = 0;
-			for (var i = 1; i <= biggestSlot; i++) {
-				if (allSlots.includes(i)) {
-					continue;
-				} else {
-					bestfree = i;
-					break;
-				}
-			}
-			biggestSlot = bestfree;
-		}
-
-		var slotName = "slot: " + biggestSlot;
-		if (!biggestSlot) {
-			slotName = "unset";
-		}
-
+	   
+	   // Determine final slot value
+	   if (slotDefault !== null) {
+		   // the default slot is available
+		   biggestSlot = slotDefault;
+	   } else if (slot_init && session.slotmode == 1) {
+		   // was manually set, so can't be something else but 0
+		   biggestSlot = 0;
+	   } else if (session.slotmode == 1) {
+		   var bestfree = 0;
+		   for (var i = 1; i <= biggestSlot; i++) {
+			   if (allSlots.includes(i)) {
+				   continue;
+			   } else {
+				   bestfree = i;
+				   break;
+			   }
+		   }
+		   biggestSlot = bestfree;
+	   }
+	   
+	   // Set slot name
+	   var slotName = biggestSlot ? "slot: " + biggestSlot : "unset";
+	   
 		buttons +=
-			"<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='" +
-			biggestSlot +
-			"' data-sid='" +
-			streamID +
-			"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' draggable='true' data-action-type='setslot' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>" +
-			slotName +
-			"</button></div>";
+			`<div draggable='true' title='Drag to swap layout positions' 
+				 ondragend='dragendSlot(event)' 
+				 ondragstart='dragSlot(event)' 
+				 ondrop='dropSlot(event)' 
+				 ondragover='allowDropSlot(event)' 
+				 data-sid='${streamID}' 
+				 data-uuid='${UUID}'
+				 data-slot='${biggestSlot}' 
+				 class='slotsbar'>
+			   <button ondrop='dropSlot(event)' 
+					   data-action-type='setslot' 
+					   draggable='true' 
+					   ondragend='dragendSlot(event)' 
+					   ondragstart='dragSlot(event)' 
+					   ondragover='allowDropSlot(event)' 
+					   onclick='changeSlot(event, this);'>${slotName}</button>
+			</div>`;
+
+	   // Sync the initial state
+	   syncSlotState(streamID, biggestSlot, false); // false since UI is being created here
 	}
 	buttons +=
 		"<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='" +
@@ -23925,36 +24131,9 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 	}
 
 	if (session.batteryMeter) {
-		////////
 		if (!session.rpcs[UUID].batteryMeter) {
 			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
 			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
-			/*
-			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
-				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
-				if (level){
-					var value = session.rpcs[UUID].stats.info.power_level;
-					if (value > 100){value = 100;}
-					else if (value < 0){ value = 0;}
-					level.style.height = parseInt(value)+"%";
-					if (value<10){
-						session.rpcs[UUID].batteryMeter.classList.add("alert");
-					} else if (value<25){
-						session.rpcs[UUID].batteryMeter.classList.add("warn");
-					}
-					if (value<100){
-						session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-					}
-					session.rpcs[UUID].batteryMeter.title = (Math.round(value*10)/10)+"% battery remaining";
-				}
-			}
-			if (session.rpcs[UUID].stats.info && ("plugged_in" in session.rpcs[UUID].stats.info) && (session.rpcs[UUID].stats.info.plugged_in===false)){
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "0";
-				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-			} else {
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
-			}
-   			*/
 			batteryMeterInfoUpdate(UUID);
 		}
 		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
@@ -24011,12 +24190,337 @@ function createControlBox(UUID, soloLink, streamID, slot_init = false) {
 	pokeIframeAPI("control-box", true, UUID);
 	if (session.slotmode) {
 		pokeIframeAPI("slot-updated", biggestSlot, UUID); // need to support self-director
-		session.pastSlots[streamID] = biggestSlot;
+		session.pastSlots[streamID] = biggestSlot; 
 
 		createSlotUpdate();
 	}
 }
 
+
+function createControlBoxScreenshare(UUID, soloLink, streamID) {
+	if (document.getElementById("deleteme")) {
+		getById("deleteme").parentNode.removeChild(getById("deleteme"));
+	}
+	var controls = getById("controls_blank").cloneNode(true);
+	controls.classList.remove("hidden");
+	controls.id = "controls_" + UUID;
+
+	var container = document.createElement("div");
+	container.className = "vidcon directorMargins";
+	container.id = "container_" + UUID; // needed to delete on user disconnect
+	container.UUID = UUID;
+	container.dataset.UUID = UUID;
+	container.dataset.sid = streamID;
+
+	if (session.orderby) {
+		try {
+			var added = false;
+			for (var i = 0; i < getById("guestFeeds").children.length; i++) {
+				if (getById("guestFeeds").children[i].UUID && !getById("guestFeeds").children[i].shifted) {
+					if (getById("guestFeeds").children[i].UUID in session.rpcs) {
+						if (session.rpcs[getById("guestFeeds").children[i].UUID].streamID.toLowerCase() > streamID.toLowerCase()) {
+							getById("guestFeeds").insertBefore(container, getById("guestFeeds").children[i]);
+							added = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!added) {
+				getById("guestFeeds").appendChild(container);
+			}
+		} catch (e) {
+			getById("guestFeeds").appendChild(container);
+		}
+	} else {
+		getById("guestFeeds").appendChild(container);
+	}
+
+	controls.querySelector(".controlsGrid").classList.add("notmain");
+
+	if (!session.rpcs[UUID].voiceMeter) {
+		if (session.meterStyle == 1) {
+			session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate2").cloneNode(true);
+		} else {
+			session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
+			session.rpcs[UUID].voiceMeter.style.opacity = 0;
+			if (session.meterStyle == 2) {
+				session.rpcs[UUID].voiceMeter.classList.add("video-meter-2");
+				session.rpcs[UUID].voiceMeter.classList.remove("video-meter");
+			} else {
+				session.rpcs[UUID].voiceMeter.classList.add("video-meter-director");
+			}
+		}
+		session.rpcs[UUID].voiceMeter.id = "voiceMeter_" + UUID;
+		session.rpcs[UUID].voiceMeter.dataset.level = 0;
+		session.rpcs[UUID].voiceMeter.classList.remove("hidden");
+	}
+
+	session.rpcs[UUID].remoteMuteElement = getById("muteStateTemplate").cloneNode(true);
+	session.rpcs[UUID].remoteMuteElement.id = "";
+	session.rpcs[UUID].remoteMuteElement.style.top = "5px";
+	session.rpcs[UUID].remoteMuteElement.style.right = "7px";
+
+	session.rpcs[UUID].remoteVideoMuteElement = getById("videoMuteStateTemplate").cloneNode(true);
+	session.rpcs[UUID].remoteVideoMuteElement.id = "";
+	session.rpcs[UUID].remoteVideoMuteElement.style.top = "5px";
+	session.rpcs[UUID].remoteVideoMuteElement.style.right = "28px";
+
+	session.rpcs[UUID].remoteRaisedHandElement = getById("raisedHandTemplate").cloneNode(true);
+	session.rpcs[UUID].remoteRaisedHandElement.id = "";
+	session.rpcs[UUID].remoteRaisedHandElement.style.top = "5px";
+	session.rpcs[UUID].remoteRaisedHandElement.style.right = "49px";
+
+	var videoContainer = document.createElement("div");
+	videoContainer.id = "videoContainer_" + UUID; // needed to delete on user disconnect
+	videoContainer.style.margin = "0";
+	videoContainer.style.position = "relative";
+	videoContainer.style.minHeight = "30px";
+
+	var iframeDetails = document.createElement("div");
+	iframeDetails.id = "iframeDetails_" + UUID; // needed to delete on user disconnect
+	iframeDetails.className = "iframeDetails hidden";
+
+	//controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advancedAudioSettings'></div>";
+	//controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advancedVideoSettings'></div>";
+
+	var handsID = "hands_" + UUID;
+
+	controls.innerHTML += "<div>";
+
+	if (session.hidesololinks == false) {
+		controls.innerHTML +=
+			"<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else.'> \
+			<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
+			value='" +
+			soloLink +
+			"' href='" +
+			soloLink +
+			"'/>" +
+			sanitizeChat(soloLink) +
+			"</a>\
+			<button class='pull-right' style='width:100%;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span data-translate='copy-solo-view-link'>copy solo view link</span></button>\
+			</div>";
+	}
+
+	controls.innerHTML +=
+		'<button data-action-type="hand-raised" id=\'' +
+		handsID +
+		"' class='hidden lowerRaisedHand' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" +
+		UUID +
+		'\');">\
+			<i class="las la-hand-paper"></i>\
+			<span data-translate="user-raised-hand">Lower Raised Hand</span>\
+		</button>\
+		</div>';
+
+	controls.querySelectorAll("[data-action-type]").forEach(ele => {
+		// give action buttons some self-reference
+		ele.dataset.UUID = UUID;
+		ele.dataset.sid = streamID;
+	});
+	
+	var buttons = "";
+	if (session.slotmode) {
+	   var biggestSlot = 0;
+	   var slotDefault = null;
+	   
+	   // Check past slots first
+	   if (streamID in session.pastSlots) {
+		   slotDefault = session.pastSlots[streamID]; 
+	   }
+	   
+	   // Get all current slots from RPC state
+	   var allSlots = [];
+	   if (session.slotmode == 1) {
+		    Object.entries(session.currentSlots).forEach(([currentSlot, sid]) => {
+		  	    if (currentSlot) {
+				   if (parseInt(currentSlot) > biggestSlot) {
+					   biggestSlot = parseInt(currentSlot);
+				   }
+				   if (slotDefault === parseInt(currentSlot)) {
+					   slotDefault = null;
+				   }
+				   allSlots.push(parseInt(currentSlot));
+			    }
+		    });
+		    biggestSlot += 1;
+	    }
+	   
+	   // Determine final slot value
+	   if (slotDefault !== null) {
+		   biggestSlot = slotDefault;
+	   } else if (session.slotmode == 1) {
+		   var bestfree = 0;
+		   for (var i = 1; i <= biggestSlot; i++) {
+			   if (allSlots.includes(i)) {
+				   continue;
+			   } else {
+				   bestfree = i;
+				   break;
+			   }
+		   }
+		   biggestSlot = bestfree;
+	   }
+	   
+	   // Set slot name and update past slots
+	   var slotName = biggestSlot ? "slot: " + biggestSlot : "unset"; 
+	   session.pastSlots[streamID] = biggestSlot;
+	   
+	   // Build HTML with same structure
+	   buttons +=
+		   `<div draggable='true' title='Drag to swap layout positions' 
+				 ondragend='dragendSlot(event)' 
+				 ondragstart='dragSlot(event)' 
+				 ondrop='dropSlot(event)' 
+				 ondragover='allowDropSlot(event)' 
+				 data-sid='${streamID}' 
+				 data-uuid='${UUID}'
+				 data-slot='${biggestSlot}' 
+				 class='slotsbar'>
+			   <button ondrop='dropSlot(event)' 
+					   data-action-type='setslot' 
+					   draggable='true' 
+					   ondragend='dragendSlot(event)' 
+					   ondragstart='dragSlot(event)' 
+					   ondragover='allowDropSlot(event)' 
+					   onclick='changeSlot(event, this);'>${slotName}</button>
+			</div>`;
+
+	   // Sync the initial state
+	   syncSlotState(streamID, biggestSlot, false); // false since UI is being created here
+	}
+
+	buttons +=
+		"<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='" +
+		UUID +
+		"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='" +
+		UUID +
+		"' id='position_" +
+		UUID +
+		"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='" +
+		UUID +
+		"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" +
+		streamID +
+		"</span>\
+	<i class='las la-copy' data-sid='" +
+		streamID +
+		"' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
+	<i class='las la-window-minimize' data--u-u-i-d='" +
+		UUID +
+		"' onclick='minimizeMe(this)' title='Minimize this control box' style='cursor:pointer'></i>\
+	<span id='label_" +
+		UUID +
+		"' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
+	</div>";
+
+	container.innerHTML = buttons;
+	updateLockedElements();
+
+	var videoContainerControlBox = document.createElement("div");
+	videoContainerControlBox.className = "controlVideoBox";
+	container.containerControlBox = videoContainerControlBox;
+
+	container.appendChild(videoContainerControlBox);
+	videoContainerControlBox.appendChild(videoContainer);
+
+	if (session.signalMeter) {
+		if (!session.rpcs[UUID].signalMeter) {
+			session.rpcs[UUID].signalMeter = getById("signalMeterTemplate").cloneNode(true);
+			session.rpcs[UUID].signalMeter.id = "signalMeter_" + UUID;
+			session.rpcs[UUID].signalMeter.dataset.level = 0;
+			session.rpcs[UUID].signalMeter.classList.remove("hidden");
+			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
+			session.rpcs[UUID].signalMeter.title = getTranslation("signal-meter");
+
+			//if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.cpu_maxed){
+			//	session.rpcs[UUID].signalMeter.dataset.cpu = "1";
+			//}
+
+			session.rpcs[UUID].signalMeter.addEventListener("click", function (e) {
+				// show stats of video if double clicked
+				log("clicked signal meter");
+				try {
+					e.preventDefault();
+					if (session.statsMenu !== false) {
+						var uid = e.currentTarget.dataset.UUID;
+						if ("stats" in session.rpcs[uid]) {
+							var [menu, innerMenu] = statsMenuCreator();
+							printViewStats(innerMenu, uid);
+							menu.interval = setInterval(printViewStats, session.statsInterval, innerMenu, uid);
+						}
+					}
+					e.stopPropagation();
+					return false;
+				} catch (e) {
+					errorlog(e);
+				}
+			});
+		}
+		videoContainer.appendChild(session.rpcs[UUID].signalMeter);
+	}
+
+	if (session.batteryMeter) {
+		////////
+		if (!session.rpcs[UUID].batteryMeter) {
+			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
+			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
+			batteryMeterInfoUpdate(UUID);
+		}
+		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
+	}
+
+	if (session.showConnections) {
+		if (!session.rpcs[UUID].connectionDetails) {
+			createConnectionDetailsEle(UUID);
+		}
+		videoContainer.appendChild(session.rpcs[UUID].connectionDetails);
+	}
+
+	videoContainer.appendChild(session.rpcs[UUID].voiceMeter);
+	videoContainer.appendChild(session.rpcs[UUID].remoteMuteElement);
+	videoContainer.appendChild(session.rpcs[UUID].remoteVideoMuteElement);
+	videoContainer.appendChild(session.rpcs[UUID].remoteRaisedHandElement);
+	videoContainer.appendChild(iframeDetails);
+	videoContainer.appendChild(session.rpcs[UUID].videoElement);
+	container.appendChild(controls);
+
+	session.group.forEach(group => {
+		var ele = controls.querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + group + '"]');
+		if (!ele) {
+			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + group + '" title="Add to Group: ' + group + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + group + "</span></button>");
+
+			var added = false;
+			container.querySelectorAll(".customGroup>[data-group]").forEach(ele => {
+				log(ele);
+				if (!added && ele.dataset.group > group + "") {
+					ele.parentNode.insertBefore(newGroup, ele);
+					added = true;
+				}
+			});
+			if (!added) {
+				var newGroupCon = container.querySelector(".customGroup");
+				if (!newGroupCon) {
+					newGroupCon = document.createElement("div");
+					newGroupCon.classList.add("customGroup");
+					container.appendChild(newGroupCon);
+				}
+				newGroupCon.appendChild(newGroup);
+			}
+		}
+	});
+
+	initSceneList(UUID);
+	pokeIframeAPI("control-box", true, UUID);
+}
+
+function remoteRemoveQueue(ele) {
+	let ts = { ...transferSettings };
+	ts.justResetting = true;
+	session.directMigrateIssue(session.roomid, ts, ele.dataset.UUID);
+
+	ele.classList.add("hidden");
+}
 function minimizeMe(button, director = false) {
 	if (!director) {
 		getById("container_" + button.dataset.UUID).classList.toggle("minimized");
@@ -24638,19 +25142,17 @@ function gotDevices(deviceInfos, miconly = false) {
 		}
 
 		if (session.videoDevice && session.videoDevice !== 1) {
-			// this sorts according to users's manual selection
 			var tmp = [];
 			var tmp2 = [];
 			var tmp3 = [];
+			var deviceIdMatch = false;
 
+			// First pass - check for label matches
 			for (let i = 0; i !== deviceInfos.length; ++i) {
 				deviceInfo = deviceInfos[i];
 				if (deviceInfo.kind === "videoinput" && normalizeDeviceLabel(deviceInfo.label).startsWith(session.videoDevice)) {
 					tmp.push(deviceInfo);
 					log("Starts With V DEVICE FOUND");
-				} else if (deviceInfo.deviceId === session.videoDevice) {
-					tmp.push(deviceInfo);
-					log("EXACT V DEVICE FOUND");
 				} else if (deviceInfo.kind === "videoinput" && normalizeDeviceLabel(deviceInfo.label).includes(session.videoDevice)) {
 					tmp2.push(deviceInfo);
 					log("Includes With V DEVICE FOUND");
@@ -24659,7 +25161,20 @@ function gotDevices(deviceInfos, miconly = false) {
 				}
 			}
 
-			if (tmp2.length) {
+			// If no label matches found, try device ID match
+			if (tmp.length === 0 && tmp2.length === 0) {
+				for (let i = 0; i < tmp3.length; ++i) {
+					deviceInfo = tmp3[i];
+					if (deviceInfo.kind === "videoinput" && deviceInfo.deviceId === session.videoDevice) {
+						tmp.push(deviceInfo);
+						deviceIdMatch = true;
+						log("EXACT DEVICE ID MATCH FOUND");
+						break;
+					}
+				}
+			}
+
+			if (tmp2.length && !deviceIdMatch) {
 				tmp = tmp.concat(tmp2);
 			}
 			if (tmp3.length) {
@@ -24667,7 +25182,7 @@ function gotDevices(deviceInfos, miconly = false) {
 			}
 
 			deviceInfos = tmp;
-			log("VDECICE:" + session.videoDevice);
+			log("VDEVICE:" + session.videoDevice);
 			log(deviceInfos);
 		} else if (session.videoDevice === false && session.facingMode) {
 			var tmp = [];
@@ -24716,6 +25231,28 @@ function gotDevices(deviceInfos, miconly = false) {
 			}
 			deviceInfos = matched.concat(notmatch);
 			delete session.store.SelectedVideoInputDevices;
+		} else if (session.mobile){
+			var tmp = [];
+			
+			for (let i = 0; i !== deviceInfos.length; ++i) {
+				deviceInfo = deviceInfos[i];
+				if (deviceInfo.kind === "videoinput" && normalizeDeviceLabel(deviceInfo.label).includes("front")) {
+					tmp.push(deviceInfo);
+					log("V DEVICE FOUND = " + normalizeDeviceLabel(deviceInfo.label));
+				}
+			}
+		
+			for (let i = 0; i !== deviceInfos.length; ++i) {
+				deviceInfo = deviceInfos[i];
+				if (!(deviceInfo.kind === "videoinput" && normalizeDeviceLabel(deviceInfo.label).includes(session.videoDevice))) {
+					if (deviceInfo.deviceId !== session.videoDevice) {
+						tmp.push(deviceInfo);
+					}
+				}
+			}
+			deviceInfos = tmp;
+			log("AUTO FRONT:" + session.videoDevice);
+			log(deviceInfos);
 		}
 
 		if (session.audioDevice && typeof session.audioDevice == "object") {
@@ -26914,7 +27451,7 @@ async function toggleScreenShare(reload = false) {
 	var quality = session.quality_ss;
 
 	if (quality === false) {
-		quality = session.quality_wb;
+		quality = session.roomid ? session.quality_room : session.quality_wb;
 	}
 
 	if (session.quality !== false) {
@@ -27422,6 +27959,27 @@ if (navigator.userAgent.toLowerCase().indexOf(" electron/") > -1) {
 		ElectronDesktopCapture = true;
 	} catch (e) {
 		warnlog("Couldn't load electron's screen capture. Elevate the app's permission to allow it (right-click?)");
+	}
+	
+	try {
+		if (!isIFrame){
+			const draggableCSS = `
+			  #electronDragZone, #header { -webkit-app-region: drag; }
+			`;
+			const nonDraggableCSS = `
+			  #popupSelector, a, input, button, #head1, #head4, #head5,
+			  .close, select, button { -webkit-app-region: no-drag; }
+			`;
+			const dragStyle = document.createElement('style');
+			dragStyle.textContent = draggableCSS;
+			document.head.appendChild(dragStyle);
+			const noDragStyle = document.createElement('style');
+			noDragStyle.textContent = nonDraggableCSS;
+			document.head.appendChild(noDragStyle);
+			getById("electronDragZone").style.display = "unset";
+		}
+	} catch(e) {
+	  console.error("Error applying Electron/OBS CSS fixes:", e);
 	}
 }
 
@@ -28396,7 +28954,7 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 
 		var sq = 0;
 		if (session.quality === false) {
-			sq = session.quality_wb;
+			sq = session.roomid ? session.quality_room : session.quality_wb;
 		} else if (session.quality > 2) {
 			// 1080, 720, and 360p
 			sq = 2; // hacking my own code. TODO: ugly, so I need to revisit this.
@@ -28429,6 +28987,21 @@ async function grabVideo(quality = 0, eleName = "previewWebcam", selector = "sel
 		//}
 
 		log("Quality selected:" + quality);
+		
+		if (session.outboundVideoBitrate_userSet === false) {
+			// default is 2500
+			if (session.quality == 0) { // 1080p
+				session.outboundVideoBitrate = 4000;
+			} else if (session.quality == -1) { // unlocked
+				session.outboundVideoBitrate = 4000;
+			} else if (session.quality == -2) { // 4k
+				session.outboundVideoBitrate = 8000;
+			} else if (session.quality == -3) { // 2k
+				session.outboundVideoBitrate = 6000;
+			} else {
+				session.outboundVideoBitrate = false;
+			}
+		}
 
 		if (session.facingMode) {
 			constraints.video.facingMode = { exact: session.facingMode }; // user or environment
@@ -29773,7 +30346,7 @@ function setEncodings(sender, settings = null, callback = null, cbarg = null) {
 				}
 			}
 		} else if (Firefox) {
-			// Firefox , all versions, don't support active state with audio yet.?? GAhhhhhhhh!
+			// Firefox , all versions, don't support active state with audio yet?? GAhhhhhhhh!
 			if ("track" in sender && "kind" in sender.track && sender.track.kind == "audio") {
 				if ("active" in settings) {
 					warnlog("Firefox does not support track active state with AUDIO yet... We will use enable/disable for that instead.");
@@ -29946,12 +30519,17 @@ session.applySoloChat = function (apply = true) {
 	}
 };
 
-function senderAudioUpdate(callbackUUID = false, tracks = false) {
+function senderAudioUpdate(callbackUUID = false, videoSource=null) {
 	try {
-		if (!tracks) {
+		let tracks = [];
+		
+		if (!videoSource){
 			checkBasicStreamsExist();
-			tracks = session.videoElement.srcObject.getAudioTracks();
-		}
+			videoSource =  session.videoElement.srcObject;
+		} 
+		
+		tracks = videoSource.getAudioTracks();
+		
 
 		if (session.audioContentHint && tracks.length) {
 			tracks.forEach(trk => {
@@ -30070,7 +30648,8 @@ function senderAudioUpdate(callbackUUID = false, tracks = false) {
 						if (added) {
 							return;
 						}
-						var sender = session.pcs[UUID].addTrack(track, session.videoElement.srcObject);
+						var sender = session.pcs[UUID].addTrack(track, videoSource);
+						
 					});
 				} else {
 					var senders = getSenders2(UUID);
@@ -30291,7 +30870,7 @@ async function press2talk(clean = false) {
 						await grabVideo(session.quality, "videosource", "#videoSource3");
 					} else {
 						//session.quality_wb = parseInt(getById("webcamquality").elements.namedItem("resolution").value);
-						await grabVideo(session.quality_wb || 0, "videosource", "#videoSource3");
+						await grabVideo(session.roomid ? session.quality_room : session.quality_wb, "videosource", "#videoSource3");
 					}
 				}
 
@@ -30470,7 +31049,7 @@ session.publishStream = function (v) {
 	if (((session.roomid === false || session.roomid === "") && session.quality === false) || session.forceMediaSettings) {
 		try {
 			if (session.quality_wb !== false && session.quality === false) {
-				getById("webcamquality3").elements.namedItem("resolution").value = session.quality_wb;
+				getById("webcamquality3").elements.namedItem("resolution").value = (session.roomid ? (session.quality_room || 0) : session.quality_wb);
 			} else if (session.quality !== false) {
 				getById("webcamquality3").elements.namedItem("resolution").value = session.quality;
 			}
@@ -30487,6 +31066,7 @@ session.publishStream = function (v) {
 				}
 				activatedPreview = false;
 				session.quality_wb = parseInt(getById("webcamquality3").elements.namedItem("resolution").value);
+				session.quality_room = session.quality_wb;
 				grabVideo(session.quality_wb, "videosource", "select#videoSource3");
 			};
 		} catch (e) {
@@ -30621,50 +31201,7 @@ session.publishStream = function (v) {
 		if (session.disableMouseEvents) {
 			return;
 		}
-		log("touched");
-
-		//document.ontouchup = null;
-		//document.onmouseup = null;
-		document.onmousemove = null;
-		document.ontouchmove = null;
-
-		var currentTime = new Date().getTime();
-		var tapLength = currentTime - v.touchLastTap;
-		clearTimeout(v.touchTimeOut);
-		if (tapLength < 500 && tapLength > 0) {
-			///
-			log("double touched");
-			v.touchCount += 1;
-			event.preventDefault();
-			if (v.touchCount < 5) {
-				v.touchLastTap = currentTime;
-				return false;
-			}
-			v.touchLastTap = 0;
-			v.touchCount = 0;
-
-			var [menu, innerMenu] = statsMenuCreator();
-
-			menu.interval = setInterval(printMyStats, session.statsInterval, innerMenu);
-
-			printMyStats(innerMenu);
-			event.stopPropagation();
-			return false;
-			//////
-		} else {
-			v.touchCount = 1;
-			v.touchLastTap = currentTime;
-
-			v.touchTimeOut = setTimeout(
-				function (vv) {
-					clearTimeout(vv.touchTimeOut);
-					vv.touchLastTap = 0;
-					vv.touchCount = 0;
-				},
-				5000,
-				v
-			);
-		}
+		
 	});
 
 	updateReshareLink();
@@ -30761,7 +31298,7 @@ session.postPublish = async function () {
 	}
 
 	if (session.welcomeImage) {
-		var welcomeoverlay = document.createElement("img");
+		let welcomeoverlay = document.createElement("img");
 		welcomeoverlay.src = session.welcomeImage;
 		welcomeoverlay.className = "welcomeOverlay";
 		document.body.appendChild(welcomeoverlay);
@@ -30783,7 +31320,7 @@ session.postPublish = async function () {
 	}
 
 	if (session.welcomeHTML) {
-		var welcomeHTML = document.createElement("div");
+		let welcomeHTML = document.createElement("div");
 		welcomeHTML.innerHTML = session.welcomeHTML;
 		welcomeHTML.className = "welcomeOverlay";
 		document.body.appendChild(welcomeHTML);
@@ -30802,7 +31339,15 @@ session.postPublish = async function () {
 			welcomeHTML
 		);
 	}
-
+	
+	if (session.waitPage && session.iFramesAllowed) {
+		let waitPageIFrame = parseURL4Iframe(session.waitPage);
+		if (waitPageIFrame){
+			session.layout = combinedLayout([{"w":100,"h":100,"x":0,"y":0,"z":1,"slot":1,"cover":false,"borderThickness":20,"animated":1000,"borderColor":"#0000","backgroundMedia":"","foregroundMedia":"","iframeSrc":waitPageIFrame,"defaultStreamID":"","margin":50,"rounded":30,"muted":false}]);
+			updateMixer();
+		}
+	}
+	
 	clearInterval(session.updateLocalStatsInterval);
 	session.updateLocalStatsInterval = setInterval(function () {
 		updateLocalStats();
@@ -31767,53 +32312,102 @@ function updateReshareLink() {
 	pokeIframeAPI("share-link", shareLink);
 }
 
+function cleanupMediaState(vid) {
+    if (session.canvasSource) {
+        session.canvasSource.destroy();
+        session.canvasSource = null;
+    }
+    
+    if (vid) {
+        if (vid.srcObject) {
+            const tracks = vid.srcObject.getTracks();
+            tracks.forEach(track => track.stop());
+            vid.srcObject = null;
+        }
+        if (vid.currentObjectURL) {
+            URL.revokeObjectURL(vid.currentObjectURL);
+            vid.currentObjectURL = null;
+        }
+        vid.src = '';
+    }
+    
+    if (session.streamSrc) {
+        const tracks = session.streamSrc.getTracks();
+        tracks.forEach(track => track.stop());
+        session.streamSrc = null;
+    }
+}
+
 session.changePublishFile = function (ele, event) {
-	// webcam stream is used to generated an SDP
-	log("FILE VIDEO STREAM CHANGE");
-	var files = [];
-	for (var i = 0; i < ele.files.length; i++) {
-		// changing from a FileList to an Array. Arrays are easier to modify later on
-		files.push(ele.files[i]);
-	}
-	var vid = getById("videosource");
-	vid.playlist = files;
-	nextFilePlaylist(vid);
+    log("FILE STREAM CHANGE");
+    var files = Array.from(ele.files);
+    var vid = getById("videosource");
+    
+    // Clean up existing state first
+    cleanupMediaState(vid);
+    
+    if (files[0].type.startsWith('image/')) {
+        const objectURL = URL.createObjectURL(files[0]);
+        session.canvasSource = new CanvasStreamSource();
+        session.canvasSource.imgSrc = objectURL;
+        window.postMessage({ type: 'canvas-frame', frame: session.canvasSource.imgSrc }, '*');
+        
+        session.streamSrc = session.canvasSource.getStream();
+        // Process the stream like we do for video
+        session.streamSrc = outboundAudioPipeline(session.streamSrc);
+        
+        var tracks = session.streamSrc.getVideoTracks();
+        if (tracks.length) {
+            pushOutVideoTrack(tracks[0]);
+        }
+        senderAudioUpdate();
+        
+        vid.play();  // We still need play() but don't set srcObjec
+    } else {
+        log("FILE VIDEO STREAM CHANGE");
+        vid.playlist = files;
+        nextFilePlaylist(vid);
+    }
+    session.applySoloChat();
+    session.applyIsolatedChat(); 
+    toggleMute(true);
 };
 
 function nextFilePlaylist(vid) {
     log("nextFilePlaylistD");
     var filenext = vid.playlist.shift();
     
-    if (!filenext) { // No more files
+    cleanupMediaState(vid);
+    
+    if (!filenext) {
         if (session.blankStream) {
             session.streamSrc = session.blankStream;
             pushOutVideoTrack(session.blankStream.getVideoTracks()[0]);
-            return;
         }
+        return;
     }
     
     vid.pause();
-    vid.removeAttribute("src"); // empty source
-    vid.src = URL.createObjectURL(filenext);
+    vid.currentObjectURL = URL.createObjectURL(filenext);
+    vid.src = vid.currentObjectURL;
     
-    // Wrap the onloadeddata in error handling
+	 // Wrap the onloadeddata in error handling
     vid.onloadeddata = function() {
         try {
             if (Firefox) {
                 session.streamSrc = vid.mozCaptureStream();
             } else {
                 session.streamSrc = vid.captureStream();
-            }
+            } 
             updateMixer();
             var tracks = session.streamSrc.getVideoTracks();
             if (tracks.length) {
                 pushOutVideoTrack(tracks[0]); // video only
             }
-            session.streamSrc = outboundAudioPipeline(session.streamSrc);
-            var tracks = session.streamSrc.getAudioTracks();
-            senderAudioUpdate(false, tracks);
+			senderAudioUpdate(false, session.streamSrc);
+			
         } catch (e) {
-            errorlog("Stream capture failed:", e);
+            errorlog(e);
             if (session.blankStream) {
                 session.streamSrc = session.blankStream;
                 pushOutVideoTrack(session.blankStream.getVideoTracks()[0]);
@@ -31821,8 +32415,9 @@ function nextFilePlaylist(vid) {
         }
     };
 
-    vid.onerror = function(e) {
-        errorlog("Video error:", e);
+    vid.onerror = (e) => {
+        errorlog(e);
+		cleanupMediaState(vid);
         if (session.blankStream) {
             session.streamSrc = session.blankStream;
             pushOutVideoTrack(session.blankStream.getVideoTracks()[0]);
@@ -31833,9 +32428,6 @@ function nextFilePlaylist(vid) {
         }
     };
     
-    session.applySoloChat();
-    session.applyIsolatedChat();
-    toggleMute(true);
     vid.load();
     
     vid.play()
@@ -31855,8 +32447,8 @@ function nextFilePlaylist(vid) {
         });
 }
 
+
 session.publishFile = function (ele, event) {
-	// webcam stream is used to generated an SDP
 	log("FILE STREAM SETUP");
 	
 	if (!session.blankStream) {
@@ -31866,6 +32458,7 @@ session.publishFile = function (ele, event) {
 		const ctx = canvas.getContext('2d');
 		ctx.fillStyle = 'black';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		
 		session.blankStream = canvas.captureStream(30);
 		session.streamSrc = session.blankStream;
 	}
@@ -31875,14 +32468,13 @@ session.publishFile = function (ele, event) {
 			setupClosedCaptions();
 		}, 1000);
 	}
-	
-	//getById("mediafileshare").classList.remove("hidden");
 
 	const files = Array.from(ele.files);
 	log(files);
-	//var type = file.type;
+	const file = files[0];
+	const isImage = file.type.startsWith('image/');
 
-	var fileURL = URL.createObjectURL(files[0]);
+	var fileURL = URL.createObjectURL(file);
 	var container = document.createElement("div");
 	container.id = "container";
 
@@ -31905,47 +32497,6 @@ session.publishFile = function (ele, event) {
 		v.dataset.sid = session.streamID;
 	}
 
-	getById("gridlayout").appendChild(container);
-	
-	if (session.roomid !== false) {
-		if (session.roomid === "" && (!session.view || session.view === "")) {
-		} else {
-			log("ROOMID EANBLED");
-			log("Update Mixer Event on REsize SET");
-			//window.addEventListener("resize", updateMixer);// TODO FIX
-			//window.addEventListener("orientationchange", updateMixer);// TODO FIX
-			getById("head3").classList.add("hidden");
-			getById("head3a").classList.add("hidden");
-			joinRoom(session.roomid);
-		}
-	} else {
-		getById("head3").classList.remove("hidden");
-		getById("head3a").classList.remove("hidden");
-		getById("logoname").style.display = "none";
-	}
-	
-	updatePushId();
-	
-	getById("head1").className = "hidden";
-	getById("head2").className = "hidden";
-	
-	if (!session.cleanOutput) {
-		getById("chatbutton").className = "float";
-		//getById("sharefilebutton").classList.remove("hidden"); // we won't override "display:none", if set, though.
-		getById("mediafileshare").classList.remove("hidden");
-		getById("hangupbutton").className = "float";
-		getById("controlButtons").classList.remove("hidden");
-		//getById("helpbutton").style.display = "inherit";
-		//getById("reportbutton").style.display = "";
-	} else {
-		getById("controlButtons").classList.add("hidden");
-	}
-
-	var bigPlayButton = document.getElementById("bigPlayButton");
-	if (bigPlayButton) {
-		bigPlayButton.parentNode.removeChild(bigPlayButton);
-	}
-
 	v.autoplay = false;
 	if (session.showControls !== null) {
 		v.controls = session.showControls;
@@ -31953,26 +32504,33 @@ session.publishFile = function (ele, event) {
 		v.controls = true;
 	}
 	v.muted = false;
+	v.loop = files.length == 1;
 
-	if (files.length == 1) {
-		// we don't want to do the complex logic if there is just one video
-		v.loop = true;
+	v.id = "videosource";
+	v.dataset.menu = "context-menu-video";
+	v.setAttribute("playsinline", "");
+	
+	if (isImage) {
+		
+		session.canvasSource = new CanvasStreamSource();
+		session.canvasSource.imgSrc = fileURL;
+		
+		window.postMessage({ type: 'canvas-frame', frame: session.canvasSource.imgSrc }, '*');
+		
+		session.streamSrc = session.canvasSource.getStream();
+		v.srcObject = session.streamSrc;
+		v.play();
+		handleUIAndStream();
 	} else {
-		v.loop = false; // triggers the complex track/rtc logic.
+		v.src = fileURL;
 	}
-
-	function myHandler(e) {
+	
+	v.playlist = files;
+	v.addEventListener("ended", function(e) {
 		log("MY HANDLER TRIGGERED");
 		var vid = getById("videosource");
 		nextFilePlaylist(vid);
-	}
-	
-	v.id = "videosource"; // could be set to UUID in the future
-	v.dataset.menu = "context-menu-video";
-	v.setAttribute("playsinline", "");
-	v.src = fileURL;
-	v.playlist = files;
-	v.addEventListener("ended", myHandler, false); // only fires if the video doesn't loop.
+	}, false);
 
 	v.className = "tile clean fileshare";
 	
@@ -32008,8 +32566,6 @@ session.publishFile = function (ele, event) {
 		}
 		log("touched");
 
-		//document.ontouchup = null;
-		//document.onmouseup = null;
 		document.onmousemove = null;
 		document.ontouchmove = null;
 
@@ -32017,7 +32573,6 @@ session.publishFile = function (ele, event) {
 		var tapLength = currentTime - v.touchLastTap;
 		clearTimeout(v.touchTimeOut);
 		if (tapLength < 500 && tapLength > 0) {
-			///
 			log("double touched");
 			v.touchCount += 1;
 			event.preventDefault();
@@ -32035,7 +32590,6 @@ session.publishFile = function (ele, event) {
 			printMyStats(innerMenu);
 			event.stopPropagation();
 			return false;
-			//////
 		} else {
 			v.touchCount = 1;
 			v.touchTimeOut = setTimeout(
@@ -32050,7 +32604,7 @@ session.publishFile = function (ele, event) {
 			v.touchLastTap = currentTime;
 		}
 	});
-
+	
 	v.onerror = () => {
 		if (session.cleanOutput) {
 			errorlog("File failed to load.\n\nSelect a compatible media file.");
@@ -32060,16 +32614,51 @@ session.publishFile = function (ele, event) {
 	};
 
 	v.onloadeddata = async () => {
-		
 		session.mediafileShare = true;
 		getById("mainmenu").remove();
 		
 		if (Firefox) {
 			session.streamSrc = v.mozCaptureStream();
 		} else {
-			session.streamSrc = v.captureStream(); // gaaaaaaaaaaaahhhhhhhh!
+			session.streamSrc = v.captureStream();
 		}
 		
+		handleUIAndStream();
+	};
+	
+
+	getById("gridlayout").appendChild(container);
+	
+	function handleUIAndStream() {
+		if (session.roomid !== false) {
+			if (session.roomid === "" && (!session.view || session.view === "")) {
+			} else {
+				log("ROOMID ENABLED");
+				log("Update Mixer Event on REsize SET");
+				getById("head3").classList.add("hidden");
+				getById("head3a").classList.add("hidden");
+				joinRoom(session.roomid);
+			}
+		} else {
+			getById("head3").classList.remove("hidden");
+			getById("head3a").classList.remove("hidden");
+			getById("logoname").style.display = "none";
+		}
+		
+		updatePushId();
+		
+		getById("head1").className = "hidden";
+		getById("head2").className = "hidden";
+		
+		if (!session.cleanOutput) {
+			getById("chatbutton").className = "float";
+			getById("mediafileshare").classList.remove("hidden");
+			getById("hangupbutton").className = "float";
+			getById("controlButtons").classList.remove("hidden");
+		} else {
+			getById("controlButtons").classList.add("hidden");
+		}
+
 		toggleMute(true);
 		
 		if (session.director) {
@@ -32086,7 +32675,7 @@ session.publishFile = function (ele, event) {
 					}
 
 					if (session.windowed) {
-						v.className = "myVideo clean fileshare";
+						session.videoElement.className = "myVideo clean fileshare";
 						container.classList.add("vidcon");
 					}
 					getById("mutespeakerbutton").classList.add("hidden");
@@ -32099,13 +32688,11 @@ session.publishFile = function (ele, event) {
 					play();
 				}
 			} else {
-				//session.cbr=0; // we're just going to override it
 				if (session.stereo == 5) {
 					session.stereo = 3;
 				}
 				session.windowed = session.windowed === null ? false : session.windowed;
 			}
-			applyMirror(session.mirrorExclude);
 		} else {
 			if (session.fullscreen) {
 				session.windowed = session.windowed === null ? false : session.windowed;
@@ -32115,21 +32702,18 @@ session.publishFile = function (ele, event) {
 				session.windowed = session.windowed === null ? true : session.windowed;
 			}
 			if (session.windowed) {
-				v.className = "myVideo clean fileshare";
+				session.videoElement.className = "myVideo clean fileshare";
 				container.classList.add("vidcon");
 			}
 			getById("mutespeakerbutton").classList.add("hidden");
 			container.style.width = "100%";
 			container.style.alignItems = "center";
 			container.backgroundColor = "#666";
-			applyMirror(session.mirrorExclude);
 		}
+		applyMirror(session.mirrorExclude);
 		
-		//session.streamSrc = outboundAudioPipeline(session.streamSrc);
-		//updateMixer();
-
 		updateReshareLink();
-		pokeIframeAPI("started-fileshare"); // depreciated
+		pokeIframeAPI("started-fileshare");
 		pokeIframeAPI("file-share", true);
 
 		clearInterval(session.updateLocalStatsInterval);
@@ -32137,13 +32721,13 @@ session.publishFile = function (ele, event) {
 			updateLocalStats();
 		}, session.statsInterval);
 		
-		if (session.whipOutput){ // was handling these functions within session.seedStream(); doing it here now instead. 8-08-2024
+		if (session.whipOutput) {
 			whipOut();
 		}
-		if (session.meshcast){
-			await meshcast();
+		if (session.meshcast) {
+			meshcast();
 		}
-		if (session.whepHost){
+		if (session.whepHost) {
 			whepOut();
 		}
 
@@ -32155,7 +32739,7 @@ session.publishFile = function (ele, event) {
 		}
 
 		session.seedStream();
-	};
+	}
 }; // publishFile
 
 class CanvasStreamSource {
@@ -32163,15 +32747,16 @@ class CanvasStreamSource {
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
         this.stream = this.canvas.captureStream(30);
+		
         this.initialized = false;
+		this.boundHandleFrame = this.handleFrame.bind(this);
         this.lastFrameTime = Date.now();
         this.indicatorRotation = 0;
         
         this.frameCheckInterval = setInterval(() => {
             this.drawKeyframeTrigger();
         }, 100);
-        
-        window.addEventListener('message', this.handleFrame.bind(this));
+		window.addEventListener('message', this.boundHandleFrame);
     }
 
     drawKeyframeTrigger() {
@@ -32258,9 +32843,20 @@ class CanvasStreamSource {
             this.writer.close();
         }
         if (this.stream) {
-            this.stream.getTracks().forEach(track => track.stop());
+            this.stream.getTracks().forEach(track => {
+                track.stop();
+                this.stream.removeTrack(track);
+            });
         }
-        window.removeEventListener('message', this.handleFrame.bind(this));
+        if (this.imgSrc) {
+            URL.revokeObjectURL(this.imgSrc);
+        }
+        window.removeEventListener('message', this.boundHandleFrame);
+        this.canvas = null;
+        this.ctx = null;
+        this.stream = null;
+        this.writer = null;
+        this.initialized = false;
     }
 }
 
@@ -32341,8 +32937,8 @@ session.publishFrameSource = function (ele, event) {
 	v.dataset.menu = "context-menu-video";
 	v.setAttribute("playsinline", "");
 	
-	const canvasSource = new CanvasStreamSource();
-	session.streamSrc = canvasSource.getStream();
+	session.canvasSource = new CanvasStreamSource();
+	session.streamSrc = session.canvasSource.getStream();
 	v.srcObject = session.streamSrc;
 	
 	v.className = "tile clean";
@@ -36457,7 +37053,7 @@ async function updateCameraConstraints(constraint, value = null, ctrl = false, U
 		return;
 	}
 
-	log("updateCameraConstraintsBusy..?");
+	log("updateCameraConstraintsBusy?");
 
 	if (updateCameraConstraintsBusy) {
 		updateCameraConstraintsNext = [constraint, value, ctrl, UUID, save];
@@ -36883,45 +37479,83 @@ async function requestBasicPermissions(constraint = { video: true, audio: true }
 				}
 			}, 10000);
 		}
+		
+		let modifiedConstraint = { ...constraint };
+		
+		try {
+            const videoPermission = await navigator.permissions.query({ name: "camera" });
+            const audioPermission = await navigator.permissions.query({ name: "microphone" });
+
+            // If video is denied but audio is allowed, adjust the constraint
+            if (videoPermission.state === "denied" && constraint.video) {
+                warnlog("Video permissions are denied");
+                if (constraint.audio) {
+                    // Keep audio if it was originally requested
+                    modifiedConstraint.video = false;
+                } else {
+                    // If no audio was requested, this will likely fail
+                    throw new Error("Video permissions denied");
+                }
+            }
+
+            // If audio is denied but video is allowed, adjust the constraint
+            if (audioPermission.state === "denied" && constraint.audio) {
+                warnlog("Audio permissions are denied");
+                if (constraint.video) {
+                    // Keep video if it was originally requested
+                    modifiedConstraint.audio = false;
+                } else {
+                    // If no video was requested, this will likely fail
+                    throw new Error("Audio permissions denied");
+                }
+            }
+        } catch (permissionError) {
+            log("Permissions API check failed:", permissionError);
+        }
 
 		if (session.audioInputChannels) {
-			if (constraint.audio === true) {
-				constraint.audio = {};
-				constraint.audio.channelCount = session.audioInputChannels;
-			} else if (constraint.audio) {
-				constraint.audio.channelCount = session.audioInputChannels;
+			if (modifiedConstraint.audio === true) {
+				modifiedConstraint.audio = {};
+				modifiedConstraint.audio.channelCount = session.audioInputChannels;
+			} else if (modifiedConstraint.audio) {
+				modifiedConstraint.audio.channelCount = session.audioInputChannels;
 			}
 		}
 
 		if (session.micSampleRate) {
-			if (constraint.audio === true) {
-				constraint.audio = {};
-				constraint.audio.sampleRate = parseInt(session.micSampleRate);
-			} else if (constraint.audio) {
-				constraint.audio.sampleRate = parseInt(session.micSampleRate);
+			if (modifiedConstraint.audio === true) {
+				modifiedConstraint.audio = {};
+				modifiedConstraint.audio.sampleRate = parseInt(session.micSampleRate);
+			} else if (modifiedConstraint.audio) {
+				modifiedConstraint.audio.sampleRate = parseInt(session.micSampleRate);
 			}
 		}
 		if (session.micSampleSize) {
-			if (constraint.audio === true) {
-				constraint.audio = {};
-				constraint.audio.sampleSize = parseInt(session.micSampleSize);
-			} else if (constraint.audio) {
-				constraint.audio.sampleSize = parseInt(session.micSampleSize);
+			if (modifiedConstraint.audio === true) {
+				modifiedConstraint.audio = {};
+				modifiedConstraint.audio.sampleSize = parseInt(session.micSampleSize);
+			} else if (modifiedConstraint.audio) {
+				modifiedConstraint.audio.sampleSize = parseInt(session.micSampleSize);
 			}
 		}
+		
+		if (!modifiedConstraint.audio && !modifiedConstraint.video) {
+            userWarn("No media types available for request.\n\nPlease ensure you have granted the microphone and camera permissions.");
+            return null;
+        }
 
 		if (session.safemode) {
-			if (constraint.video) {
-				constraint.video = true;
+			if (modifiedConstraint.video) {
+				modifiedConstraint.video = true;
 			}
-			if (constraint.audio) {
-				constraint.audio = true;
+			if (modifiedConstraint.audio) {
+				modifiedConstraint.audio = true;
 			}
 		}
 		getUserMediaRequestID += 1;
 		var gumID = getUserMediaRequestID;
 		log("CONSTRAINT");
-		log(constraint);
+		log(modifiedConstraint);
 		var timeoutStart = 0;
 		if (Firefox) {
 			timeoutStart = 500;
@@ -37077,7 +37711,7 @@ async function requestBasicPermissions(constraint = { video: true, audio: true }
 			},
 			timeoutStart,
 			gumID,
-			constraint,
+			modifiedConstraint,
 			timerBasicCheck,
 			callback,
 			miconly
@@ -37429,6 +38063,7 @@ function setupWebcamSelection(miconly = false) {
 						grabVideo(session.quality);
 					} else if (document.getElementById("webcamquality")) {
 						session.quality_wb = parseInt(document.getElementById("webcamquality").elements.namedItem("resolution").value);
+						session.quality_room = session.quality_wb;
 						grabVideo(session.quality_wb);
 					}
 				};
@@ -37519,6 +38154,7 @@ function setupWebcamSelection(miconly = false) {
 
 					activatedPreview = false;
 					session.quality_wb = parseInt(getById("webcamquality").elements.namedItem("resolution").value);
+					session.quality_room = session.quality_wb;
 					grabVideo(session.quality_wb);
 				};
 
@@ -37570,6 +38206,7 @@ function setupWebcamSelection(miconly = false) {
 						grabVideo(session.quality);
 					} else if (document.getElementById("webcamquality")) {
 						session.quality_wb = parseInt(getById("webcamquality").elements.namedItem("resolution").value);
+						session.quality_room = session.quality_wb;
 						grabVideo(session.quality_wb);
 					}
 				}
@@ -39805,6 +40442,7 @@ function popOutClock(clock) {
 		clock.video.onloadedmetadata = function () {
 			togglePictureInPicture(clock.video);
 		};
+		
 		clock.video.srcObject = canvas.captureStream();
 		clock.video.play();
 		//clock.video.dataset.menu = "context-menu-clock";
@@ -45686,6 +46324,478 @@ function resizeWindow(width, height) {
 	}, 5000);
 }
 
+// compress SDP
+/* 
+function compressSDP(sdp) {
+  // Extract critical values
+  const iceUfrag = sdp.match(/a=ice-ufrag:([^\r\n]+)/)[1];
+  const icePwd = sdp.match(/a=ice-pwd:([^\r\n]+)/)[1];
+  
+  // Extract fingerprint (removing colons)
+  const fingerprintMatch = sdp.match(/a=fingerprint:sha-256 ([^\r\n]+)/);
+  const fingerprint = fingerprintMatch[1].replace(/:/g, '');
+  
+  // Extract ICE candidates if they exist
+  const candidates = [];
+  const candidateRegex = /a=candidate:([^\r\n]+)/g;
+  let candidateMatch;
+  while ((candidateMatch = candidateRegex.exec(sdp)) !== null) {
+    const parts = candidateMatch[1].split(' ');
+    
+    // Skip IPv6 candidates
+    if (parts[4].includes(':')) continue;
+    
+    // Only keep foundation, component, protocol, priority, ip, port, type and related values
+    const foundation = parts[0];
+    const component = parts[1];
+    const protocol = parts[2].toLowerCase() === 'udp' ? 'u' : 't';
+    const priority = parseInt(parts[3]);
+    const ip = parts[4];
+    const port = parseInt(parts[5]);
+    const type = parts[7];
+    
+    // Encode type: host=h, srflx=s, relay=r
+    let typeCode;
+    switch(type) {
+      case 'host': typeCode = 'h'; break;
+      case 'srflx': typeCode = 's'; break;
+      case 'relay': typeCode = 'r'; break;
+      default: typeCode = 'x';
+    }
+    
+    // Compact representation of candidate
+    // Format: foundation,component,protocol,priority(shortened),ip,port,type
+    candidates.push(
+      `${foundation},${component},${protocol},${priorityToCompact(priority)},${ip},${port},${typeCode}`
+    );
+  }
+  
+  // Convert fingerprint from hex to a more compact representation
+  const compactFingerprint = hexToCompact(fingerprint);
+  
+  // Build the compressed string
+  // Format: C(version)|ufrag|pwd|fingerprint|[candidates]
+  let result = `C1|${iceUfrag}|${icePwd}|${compactFingerprint}`;
+  
+  // Add candidates if they exist
+  if (candidates.length > 0) {
+    result += `|${candidates.join('/')}`;
+  }
+  
+  return result;
+}
+function playCompressedSDP(sdp){
+	sdp = decompressSDP(sdp)
+	let msg = {};
+	msg.description = {sdp, type:"offer"};
+	msg.UUID = session.generateStreamID(15);
+	session.processDescription2(msg);
+}
+
+function decompressSDP(compressed) {
+  // Parse compressed string
+  // Format: C(version)|ufrag|pwd|fingerprint|[candidates]
+  const parts = compressed.split('|');
+  
+  // Version check
+  if (parts[0] !== 'C1') {
+    throw new Error('Unsupported compression version');
+  }
+  
+  const iceUfrag = parts[1];
+  const icePwd = parts[2];
+  const fingerprint = compactToHex(parts[3]);
+  
+  // Format fingerprint with colons
+  const formattedFingerprint = fingerprint.match(/.{2}/g).join(':');
+  
+  // Build the base SDP
+  let sdp = [
+    'v=0',
+    'o=- 1 1 IN IP4 127.0.0.1',
+    's=-',
+    't=0 0',
+    'a=group:BUNDLE 0',
+    'a=extmap-allow-mixed',
+    'a=msid-semantic: WMS',
+    'm=application 9 UDP/DTLS/SCTP webrtc-datachannel',
+    'c=IN IP4 0.0.0.0',
+    `a=ice-ufrag:${iceUfrag}`,
+    `a=ice-pwd:${icePwd}`,
+    'a=ice-options:trickle',
+    `a=fingerprint:sha-256 ${formattedFingerprint}`,
+    'a=setup:actpass',
+    'a=mid:0',
+    'a=sctp-port:5000',
+    'a=max-message-size:262144'
+  ].join('\r\n');
+  
+  // Add candidates if they exist
+  if (parts.length > 4 && parts[4]) {
+    const candidates = parts[4].split('/');
+    
+    for (const candidate of candidates) {
+      const candParts = candidate.split(',');
+      
+      // Parse the candidate parts
+      const foundation = candParts[0];
+      const component = candParts[1];
+      const protocol = candParts[2] === 'u' ? 'UDP' : 'TCP';
+      const priority = compactToPriority(candParts[3]);
+      const ip = candParts[4];
+      const port = candParts[5];
+      
+      // Decode type
+      let type;
+      switch(candParts[6]) {
+        case 'h': type = 'host'; break;
+        case 's': type = 'srflx'; break;
+        case 'r': type = 'relay'; break;
+        default: type = 'unknown';
+      }
+      
+      // Build the candidate line
+      sdp += `\r\na=candidate:${foundation} ${component} ${protocol} ${priority} ${ip} ${port} typ ${type}`;
+    }
+  }
+  
+  return sdp;
+}
+
+function priorityToCompact(priority) {
+  // Simplified priority encoding - actual implementation would use a more sophisticated approach
+  // For typical values, this could be a mapping to shorter codes
+  return priority.toString(36);
+}
+
+function compactToPriority(compact) {
+  return parseInt(compact, 36);
+}
+
+function hexToCompact(hex) {
+  // Convert hex pairs to numbers, then to a more compressed alphabet
+  // This uses a custom encoding that maps to URL-safe characters
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
+  let result = '';
+  
+  // Process 3 bytes (6 hex chars) at a time to produce 4 output chars
+  for (let i = 0; i < hex.length; i += 6) {
+    const chunk = hex.substr(i, 6);
+    if (chunk.length < 6) {
+      // Handle the last partial chunk
+      const value = parseInt(chunk, 16);
+      result += chars[value % 64];
+      if (chunk.length > 2) {
+        result += chars[Math.floor(value / 64) % 64];
+      }
+    } else {
+      // Process full 6-hex-char chunk
+      const value = parseInt(chunk, 16);
+      result += chars[value & 0x3F];
+      result += chars[(value >> 6) & 0x3F];
+      result += chars[(value >> 12) & 0x3F];
+      result += chars[(value >> 18) & 0x3F];
+    }
+  }
+  
+  return result;
+}
+
+function compactToHex(compact) {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
+  let result = '';
+  
+  // Process 4 input chars at a time to produce 6 hex chars
+  for (let i = 0; i < compact.length; i += 4) {
+    let value = 0;
+    
+    for (let j = 0; j < 4 && i + j < compact.length; j++) {
+      const char = compact[i + j];
+      const charValue = chars.indexOf(char);
+      if (charValue === -1) {
+        throw new Error(`Invalid character in compact string: ${char}`);
+      }
+      value |= charValue << (j * 6);
+    }
+    
+    // Convert to hex
+    const hex = value.toString(16).padStart(6, '0');
+    result += hex;
+  }
+  
+  // Ensure result is the right length for a SHA-256 hash (64 hex chars)
+  return result.padEnd(64, '0');
+}
+
+function compressSDPForQR(sdp) {
+  // Extract critical values
+  const iceUfrag = sdp.match(/a=ice-ufrag:([^\r\n]+)/)[1];
+  const icePwd = sdp.match(/a=ice-pwd:([^\r\n]+)/)[1];
+  
+  // Extract fingerprint (removing colons)
+  const fingerprintMatch = sdp.match(/a=fingerprint:sha-256 ([^\r\n]+)/);
+  const fingerprint = fingerprintMatch[1].replace(/:/g, '');
+  
+  // Extract ICE candidates if they exist
+  const candidates = [];
+  const candidateRegex = /a=candidate:([^\r\n]+)/g;
+  let candidateMatch;
+  while ((candidateMatch = candidateRegex.exec(sdp)) !== null) {
+    const parts = candidateMatch[1].split(' ');
+    
+    // Skip IPv6 candidates
+    if (parts[4].includes(':')) continue;
+    
+    // Compact candidate representation
+    const foundation = parts[0];
+    const component = parts[1];
+    const protocol = parts[2].toLowerCase() === 'udp' ? '1' : '2';
+    const priority = parseInt(parts[3]);
+    const ip = compressIP(parts[4]);
+    const port = parseInt(parts[5]);
+    
+    // Encode type: host=1, srflx=2, relay=3
+    let typeCode;
+    switch(parts[7]) {
+      case 'host': typeCode = '1'; break;
+      case 'srflx': typeCode = '2'; break;
+      case 'relay': typeCode = '3'; break;
+      default: typeCode = '0';
+    }
+    
+    // Ultra-compact representation, optimized for QR
+    candidates.push(`${foundation}${component}${protocol}${compressNumber(priority)}${ip}${port}${typeCode}`);
+  }
+  
+  // Compact encoding of fingerprint, optimized for QR code alphanumeric mode
+  const qrFingerprint = fingerprintToQR(fingerprint);
+  
+  // Use very compact delimiter (single character)
+  let result = `Q${iceUfrag}~${icePwd}~${qrFingerprint}`;
+  
+  // Add candidates with minimal separator
+  if (candidates.length > 0) {
+    result += `~${candidates.join(',')}`;
+  }
+  
+  return result;
+}
+
+function decompressSDPFromQR(compressed) {
+  // Parse compressed string
+  // Format: Q[iceUfrag]~[icePwd]~[fingerprint]~[candidates]
+  if (!compressed.startsWith('Q')) {
+    throw new Error('Unsupported QR compression format');
+  }
+  
+  const parts = compressed.substring(1).split('~');
+  const iceUfrag = parts[0];
+  const icePwd = parts[1];
+  const fingerprint = qrToFingerprint(parts[2]);
+  
+  // Format fingerprint with colons
+  const formattedFingerprint = fingerprint.match(/.{2}/g).join(':');
+  
+  // Build the base SDP
+  let sdp = [
+    'v=0',
+    'o=- 1 1 IN IP4 127.0.0.1',
+    's=-',
+    't=0 0',
+    'a=group:BUNDLE 0',
+    'a=extmap-allow-mixed',
+    'a=msid-semantic: WMS',
+    'm=application 9 UDP/DTLS/SCTP webrtc-datachannel',
+    'c=IN IP4 0.0.0.0',
+    `a=ice-ufrag:${iceUfrag}`,
+    `a=ice-pwd:${icePwd}`,
+    'a=ice-options:trickle',
+    `a=fingerprint:sha-256 ${formattedFingerprint}`,
+    'a=setup:actpass',
+    'a=mid:0',
+    'a=sctp-port:5000',
+    'a=max-message-size:262144'
+  ].join('\r\n');
+  
+  // Add candidates if they exist
+  if (parts.length > 3 && parts[3]) {
+    const candidates = parts[3].split(',');
+    
+    for (const candidate of candidates) {
+      // Extract the packed candidate information
+      let i = 0;
+      
+      // Extract foundation (variable length, numeric)
+      let j = i;
+      while (j < candidate.length && /^\d$/.test(candidate[j])) j++;
+      const foundation = candidate.substring(i, j);
+      i = j;
+      
+      // Extract component (1 digit)
+      const component = candidate.substring(i, i + 1);
+      i += 1;
+      
+      // Extract protocol (1 digit code)
+      const protocolCode = candidate.substring(i, i + 1);
+      const protocol = protocolCode === '1' ? 'UDP' : 'TCP';
+      i += 1;
+      
+      // Extract priority (variable length, encoded)
+      j = i;
+      while (j < candidate.length && /^[0-9A-Z]$/.test(candidate[j])) j++;
+      const priorityEncoded = candidate.substring(i, j);
+      const priority = decompressNumber(priorityEncoded);
+      i = j;
+      
+      // Extract IP (encoded)
+      j = i;
+      while (j < candidate.length && !/^\d$/.test(candidate[j])) j++;
+      const ipEncoded = candidate.substring(i, j);
+      const ip = decompressIP(ipEncoded);
+      i = j;
+      
+      // Extract port (variable length, numeric)
+      j = i;
+      while (j < candidate.length && /^\d$/.test(candidate[j])) j++;
+      const port = candidate.substring(i, j);
+      i = j;
+      
+      // Extract type (1 digit code)
+      const typeCode = candidate.substring(i, i + 1);
+      let type;
+      switch(typeCode) {
+        case '1': type = 'host'; break;
+        case '2': type = 'srflx'; break;
+        case '3': type = 'relay'; break;
+        default: type = 'unknown';
+      }
+      
+      // Build the candidate line
+      sdp += `\r\na=candidate:${foundation} ${component} ${protocol} ${priority} ${ip} ${port} typ ${type}`;
+    }
+  }
+  
+  return sdp;
+}
+
+function compressIP(ip) {
+  // For common local IPs, use a single character code
+  if (ip === '127.0.0.1') return 'L';
+  if (ip === '0.0.0.0') return 'Z';
+  if (ip.startsWith('192.168.')) return 'P' + ip.split('.').slice(2).join('');
+  if (ip.startsWith('10.')) return 'T' + ip.split('.').slice(1).join('');
+  if (ip.startsWith('172.')) return 'S' + ip.split('.').slice(1).join('');
+  
+  // For other IPs, convert to a base36 representation
+  const parts = ip.split('.');
+  let num = 0;
+  for (let i = 0; i < 4; i++) {
+    num = num * 256 + parseInt(parts[i]);
+  }
+  return num.toString(36).toUpperCase();
+}
+
+function decompressIP(compressed) {
+  if (compressed === 'L') return '127.0.0.1';
+  if (compressed === 'Z') return '0.0.0.0';
+  if (compressed.startsWith('P')) {
+    const suffix = compressed.substring(1);
+    if (suffix.length === 0) return '192.168.0.0';
+    if (suffix.length === 1) return `192.168.${suffix}.0`;
+    return `192.168.${suffix.substring(0, 1)}.${suffix.substring(1)}`;
+  }
+  if (compressed.startsWith('T')) {
+    const suffix = compressed.substring(1);
+    if (suffix.length === 0) return '10.0.0.0';
+    if (suffix.length === 1) return `10.${suffix}.0.0`;
+    if (suffix.length === 2) return `10.${suffix.substring(0, 1)}.${suffix.substring(1)}.0`;
+    return `10.${suffix.substring(0, 1)}.${suffix.substring(1, 2)}.${suffix.substring(2)}`;
+  }
+  if (compressed.startsWith('S')) {
+    const suffix = compressed.substring(1);
+    if (suffix.length === 0) return '172.0.0.0';
+    if (suffix.length === 1) return `172.${suffix}.0.0`;
+    if (suffix.length === 2) return `172.${suffix.substring(0, 1)}.${suffix.substring(1)}.0`;
+    return `172.${suffix.substring(0, 1)}.${suffix.substring(1, 2)}.${suffix.substring(2)}`;
+  }
+  
+  // Default case: convert from base36
+  const num = parseInt(compressed, 36);
+  return [
+    (num >> 24) & 0xFF,
+    (num >> 16) & 0xFF,
+    (num >> 8) & 0xFF,
+    num & 0xFF
+  ].join('.');
+}
+
+function compressNumber(num) {
+  // Convert to base36 for compactness, prefer uppercase for QR
+  return num.toString(36).toUpperCase();
+}
+
+function decompressNumber(compressed) {
+  return parseInt(compressed, 36);
+}
+
+function fingerprintToQR(hex) {
+  // Convert 64-char hex to a more compact representation
+  // Using base36 for better QR code efficiency (alphanumeric mode)
+  let result = '';
+  
+  // Process 4 hex chars (16 bits) at a time to produce 3 base36 chars
+  for (let i = 0; i < hex.length; i += 4) {
+    const chunk = hex.substr(i, 4);
+    if (chunk.length < 4) {
+      // Handle the last partial chunk
+      const value = parseInt(chunk, 16);
+      result += value.toString(36).toUpperCase().padStart(3, '0').substring(0, 3);
+    } else {
+      // Process full chunk
+      const value = parseInt(chunk, 16);
+      result += value.toString(36).toUpperCase().padStart(3, '0').substring(0, 3);
+    }
+  }
+  
+  return result;
+}
+
+function qrToFingerprint(qrFp) {
+  let result = '';
+  
+  // Process 3 base36 chars at a time to produce 4 hex chars
+  for (let i = 0; i < qrFp.length; i += 3) {
+    const chunk = qrFp.substr(i, 3);
+    const value = parseInt(chunk, 36);
+    result += value.toString(16).padStart(4, '0').substring(0, 4);
+  }
+  
+  // Ensure result has correct length for SHA-256 (64 hex chars)
+  return result.padEnd(64, '0');
+}
+
+function sdpToQRCode(sdp, element) {
+  const compressed = compressSDPForQR(sdp);
+  
+  // Use the provided qrcodejs library
+  new QRCode(element, {
+    text: compressed,
+    width: 128,
+    height: 128,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.M // Use medium error correction
+  });
+  
+  return compressed; // Return compressed string for reference
+}
+
+function qrToSDP(qrData) {
+  return decompressSDPFromQR(qrData);
+}
+ */
+///
+
 function configureWhipOutSDP(description) {
 	// THIS IS FOR WHIP-OUTPUT; it has
 
@@ -45890,6 +47000,7 @@ function getWhipOutCanvasTrack(baseRTC = session.whipOut) {
 		try {
 			baseRTC.ctx.fillRect(0, 0, baseRTC.canvas.width, baseRTC.canvas.height);
 			baseRTC.canvasStream = baseRTC.canvas.captureStream(4);
+			
 			baseRTC.ctx.fillRect(0, 0, baseRTC.canvas.width, baseRTC.canvas.height);
 		} catch(e){
 			errorlog("Error creating whip output placeholder track");
@@ -46685,6 +47796,21 @@ async function processWhipIn(data) {
 			errorlog(e);
 		}
 	}
+	
+    if (!msg.description.sdp.includes("a=group:BUNDLE")) { // handling of bundle-only media lines; gstreamer's whipsink 1.25 for example
+		try {
+			const sdpLines = msg.description.sdp.split('\r\n');
+			const bundleLines = sdpLines.filter(line => line.includes('a=mid:'));
+			if (bundleLines.length > 0) {
+				const mids = bundleLines.map(line => line.split(':')[1]);
+				sdpLines.splice(1, 0, `a=group:BUNDLE ${mids.join(' ')}`);
+				msg.description.sdp = sdpLines.join('\r\n');
+			}
+		} catch(e){
+			errorlog(e);
+		}
+    }
+	
     if (data.streamID) {
         msg.streamID = data.streamID;
     } else {
@@ -48380,37 +49506,29 @@ function setupCommands() {
 		
 		try {
 			if (parseInt(value) == value) {
+				log(value);
 				value = parseInt(value);
 				if (value == 0) {
-					value = false;
+					value = false; // Auto mixer
 				} else {
-					value -= 1;
+					value -= 1; // Adjust index to match layouts array (1-based to 0-based)
 				}
 				response.index = value;
 			} else if (checkType(value) === "Array") {
-				
-				if (session.director) {
-					var combined = {};
-					for (var i = 0; i < value.length; i++) {
-						if (!value[i]) {
-							continue;
-						}
-						if (!("slot" in value[i])) {
-							continue;
-						}
-						var slot = document.querySelector("div.slotsbar[data-slot='" + (parseInt(value[i].slot) + 1) + "']");
-						if (!slot) {
-							continue;
-						}
-						var streamID = slot.dataset.sid;
-						combined[streamID] = value[i];
-					}
-					session.layout = combined;
-					issueLayout(session.layout, "0");
-					response.issued = true;
-					response.scene =  "0";
-					pokeIframeAPI("layout-updated", value);
+				log(value);
+			    session.layout_array = value;
+			    if (session.layout_array){
+					session.layout = combinedLayout(session.layout_array);
 				}
+				updateMixer();
+			   
+				if (session.director) {
+				   issueLayout("0");
+				   response.issued = true;
+				   response.scene = "0";
+				   pokeIframeAPI("layout-updated", value);
+				}
+				
 				response.type = 1;
 				updateMixer();
 				response.combined_layout = session.layout;
@@ -48418,9 +49536,10 @@ function setupCommands() {
 				previousDebug = response
 				return {response:response, previous:temp}
 			} else if (checkType(value) === "Object") {
+				log(value);
+				session.layout = value;
 				if (session.director) {
-					session.layout = value;
-					issueLayout(session.layout, "0");
+					issueLayout("0");
 					response.issued = true;
 					response.scene =  "0";
 					pokeIframeAPI("layout-updated", session.layout);
@@ -48438,7 +49557,7 @@ function setupCommands() {
 				pokeIframeAPI("layout-updated", session.layout);
 				pokeIframeAPI("layout-index", 0);
 				if (session.director) {
-					issueLayout(session.layout, "0");
+					issueLayout("0");
 					response.issued = true;
 					response.scene =  "0";
 					
@@ -48454,7 +49573,7 @@ function setupCommands() {
 				pokeIframeAPI("layout-updated", session.layout);
 				pokeIframeAPI("layout-index", 0);
 				if (session.director) {
-					issueLayout(session.layout, "0");
+					issueLayout("0");
 					response.issued = true;
 					response.scene =  "0";
 				}
@@ -48472,24 +49591,25 @@ function setupCommands() {
 					if (session.director) {
 						var combined = {};
 						for (var i = 0; i < temp.length; i++) {
-							if (!temp[i]) {
+							if (!temp[i] || !("slot" in temp[i])) {
 								continue;
 							}
-							if (!("slot" in temp[i])) {
-								continue;
-							}
-							var slot = document.querySelector("div.slotsbar[data-slot='" + (parseInt(temp[i].slot) + 1) + "']") || false;
-							if (!slot) {
+							
+							// Find stream ID for this slot from session.currentSlots directly
+							const slotNumber = parseInt(temp[i].slot) + 1;
+							let streamID = session.currentSlots[slotNumber];
+							
+							if (!streamID) {
 								warnlog("Slot target not found?");
 								continue;
 							}
-							var streamID = slot.dataset.sid;
+							
 							combined[streamID] = temp[i];
 						}
 						session.layout = combined;
 						log("issuing layout:");
 						log(session.layout);
-						issueLayout(session.layout, "0");
+						issueLayout("0");
 						response.issued = true;
 						response.scene =  "0";
 						response.combined_layout = session.layout;
@@ -49966,7 +51086,7 @@ async function createSecondStream() {
 		var quality = session.quality_ss;
 
 		if (quality === false) {
-			quality = session.quality_wb;
+			quality = session.roomid ? session.quality_room : session.quality_wb;
 		}
 
 		if (session.quality !== false) {
@@ -50466,330 +51586,6 @@ function stopSecondScreenshare() {
 	setTimeout(function () {
 		updateMixer();
 	}, 1000);
-}
-
-function createControlBoxScreenshare(UUID, soloLink, streamID) {
-	if (document.getElementById("deleteme")) {
-		getById("deleteme").parentNode.removeChild(getById("deleteme"));
-	}
-	var controls = getById("controls_blank").cloneNode(true);
-	controls.classList.remove("hidden");
-	controls.id = "controls_" + UUID;
-
-	var container = document.createElement("div");
-	container.className = "vidcon directorMargins";
-	container.id = "container_" + UUID; // needed to delete on user disconnect
-	container.UUID = UUID;
-	container.dataset.UUID = UUID;
-	container.dataset.sid = streamID;
-
-	if (session.orderby) {
-		try {
-			var added = false;
-			for (var i = 0; i < getById("guestFeeds").children.length; i++) {
-				if (getById("guestFeeds").children[i].UUID && !getById("guestFeeds").children[i].shifted) {
-					if (getById("guestFeeds").children[i].UUID in session.rpcs) {
-						if (session.rpcs[getById("guestFeeds").children[i].UUID].streamID.toLowerCase() > streamID.toLowerCase()) {
-							getById("guestFeeds").insertBefore(container, getById("guestFeeds").children[i]);
-							added = true;
-							break;
-						}
-					}
-				}
-			}
-			if (!added) {
-				getById("guestFeeds").appendChild(container);
-			}
-		} catch (e) {
-			getById("guestFeeds").appendChild(container);
-		}
-	} else {
-		getById("guestFeeds").appendChild(container);
-	}
-
-	controls.querySelector(".controlsGrid").classList.add("notmain");
-
-	if (!session.rpcs[UUID].voiceMeter) {
-		if (session.meterStyle == 1) {
-			session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate2").cloneNode(true);
-		} else {
-			session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
-			session.rpcs[UUID].voiceMeter.style.opacity = 0;
-			if (session.meterStyle == 2) {
-				session.rpcs[UUID].voiceMeter.classList.add("video-meter-2");
-				session.rpcs[UUID].voiceMeter.classList.remove("video-meter");
-			} else {
-				session.rpcs[UUID].voiceMeter.classList.add("video-meter-director");
-			}
-		}
-		session.rpcs[UUID].voiceMeter.id = "voiceMeter_" + UUID;
-		session.rpcs[UUID].voiceMeter.dataset.level = 0;
-		session.rpcs[UUID].voiceMeter.classList.remove("hidden");
-	}
-
-	session.rpcs[UUID].remoteMuteElement = getById("muteStateTemplate").cloneNode(true);
-	session.rpcs[UUID].remoteMuteElement.id = "";
-	session.rpcs[UUID].remoteMuteElement.style.top = "5px";
-	session.rpcs[UUID].remoteMuteElement.style.right = "7px";
-
-	session.rpcs[UUID].remoteVideoMuteElement = getById("videoMuteStateTemplate").cloneNode(true);
-	session.rpcs[UUID].remoteVideoMuteElement.id = "";
-	session.rpcs[UUID].remoteVideoMuteElement.style.top = "5px";
-	session.rpcs[UUID].remoteVideoMuteElement.style.right = "28px";
-
-	session.rpcs[UUID].remoteRaisedHandElement = getById("raisedHandTemplate").cloneNode(true);
-	session.rpcs[UUID].remoteRaisedHandElement.id = "";
-	session.rpcs[UUID].remoteRaisedHandElement.style.top = "5px";
-	session.rpcs[UUID].remoteRaisedHandElement.style.right = "49px";
-
-	var videoContainer = document.createElement("div");
-	videoContainer.id = "videoContainer_" + UUID; // needed to delete on user disconnect
-	videoContainer.style.margin = "0";
-	videoContainer.style.position = "relative";
-	videoContainer.style.minHeight = "30px";
-
-	var iframeDetails = document.createElement("div");
-	iframeDetails.id = "iframeDetails_" + UUID; // needed to delete on user disconnect
-	iframeDetails.className = "iframeDetails hidden";
-
-	//controls.innerHTML += "<div id='advanced_audio_director_" + UUID + "' class='hidden advancedAudioSettings'></div>";
-	//controls.innerHTML += "<div id='advanced_video_director_" + UUID + "' class='hidden advancedVideoSettings'></div>";
-
-	var handsID = "hands_" + UUID;
-
-	controls.innerHTML += "<div>";
-
-	if (session.hidesololinks == false) {
-		controls.innerHTML +=
-			"<div class='soloButton' title='A direct solo view of the video/audio stream with nothing else.'> \
-			<a class='soloLink advanced task' data-menu='context-menu' data-sololink='true' data-drag='1' draggable='true' onclick='copyFunction(this,event)' \
-			value='" +
-			soloLink +
-			"' href='" +
-			soloLink +
-			"'/>" +
-			sanitizeChat(soloLink) +
-			"</a>\
-			<button class='pull-right' style='width:100%;' onclick='copyFunction(this.previousElementSibling,event)'><i class='las la-user'></i><span translate='copy-solo-view-link'>copy solo view link</span></button>\
-			</div>";
-	}
-
-	controls.innerHTML +=
-		'<button data-action-type="hand-raised" id=\'' +
-		handsID +
-		"' class='hidden lowerRaisedHand' title=\"This guest raised their hand. Click this to clear notification.\" onclick=\"remoteLowerhands('" +
-		UUID +
-		'\');">\
-			<i class="las la-hand-paper"></i>\
-			<span data-translate="user-raised-hand">Lower Raised Hand</span>\
-		</button>\
-		</div>';
-
-	controls.querySelectorAll("[data-action-type]").forEach(ele => {
-		// give action buttons some self-reference
-		ele.dataset.UUID = UUID;
-		ele.dataset.sid = streamID;
-	});
-
-	var buttons = "";
-	if (session.slotmode) {
-		var slots = document.querySelectorAll("div.slotsbar[data-slot]");
-		var biggestSlot = 0;
-		var slotDefault = null;
-		if (streamID in session.pastSlots) {
-			slotDefault = session.pastSlots[streamID];
-		}
-		var allSlots = [];
-		if (session.slotmode == 1) {
-			for (var i = 0; i < slots.length; i++) {
-				if (parseInt(slots[i].dataset.slot) > biggestSlot) {
-					biggestSlot = parseInt(slots[i].dataset.slot);
-				}
-				if (slotDefault === parseInt(slots[i].dataset.slot)) {
-					slotDefault = null;
-				}
-				allSlots.push(parseInt(slots[i].dataset.slot));
-			}
-			biggestSlot += 1;
-		}
-		if (slotDefault !== null) {
-			biggestSlot = slotDefault;
-		} else if (session.slotmode == 1) {
-			var bestfree = 0;
-			for (var i = 1; i <= biggestSlot; i++) {
-				if (allSlots.includes(i)) {
-					continue;
-				} else {
-					bestfree = i;
-					break;
-				}
-			}
-			biggestSlot = bestfree;
-		}
-		var slotName = "slot: " + biggestSlot;
-		if (!biggestSlot) {
-			slotName = "unset";
-		}
-		session.pastSlots[streamID] = biggestSlot;
-
-		buttons +=
-			"<div draggable='true' title='Drag to swap layout positions' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondrop='dropSlot(event)' ondragover='allowDropSlot(event)' data-slot='" +
-			biggestSlot +
-			"' data-sid='" +
-			streamID +
-			"' class='slotsbar'>\
-			<button ondrop='dropSlot(event)' data-action-type='setslot' draggable='true' ondragend='dragendSlot(event)' ondragstart='dragSlot(event)' ondragover='allowDropSlot(event)' onclick='changeSlot(event, this);'>" +
-			slotName +
-			"</button></div>";
-	}
-
-	buttons +=
-		"<div title='Does not impact scene order.' class='shift'><i class='las la-angle-left' data--u-u-i-d='" +
-		UUID +
-		"' onclick='shiftPC(this,-1);'></i><span onclick='lockPosition(this);' style='cursor:pointer;' data-locked='0' data--u-u-i-d='" +
-		UUID +
-		"' id='position_" +
-		UUID +
-		"'><i class='las la-lock-open'></i></span><i class='las la-angle-right' data--u-u-i-d='" +
-		UUID +
-		"' onclick='shiftPC(this,1);'></i></div><div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" +
-		streamID +
-		"</span>\
-	<i class='las la-copy' data-sid='" +
-		streamID +
-		"' onclick='copyFunction(this.dataset.sid,event)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
-	<i class='las la-window-minimize' data--u-u-i-d='" +
-		UUID +
-		"' onclick='minimizeMe(this)' title='Minimize this control box' style='cursor:pointer'></i>\
-	<span id='label_" +
-		UUID +
-		"' class='addALabel' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
-	</div>";
-
-	container.innerHTML = buttons;
-	updateLockedElements();
-
-	var videoContainerControlBox = document.createElement("div");
-	videoContainerControlBox.className = "controlVideoBox";
-	container.containerControlBox = videoContainerControlBox;
-
-	container.appendChild(videoContainerControlBox);
-	videoContainerControlBox.appendChild(videoContainer);
-
-	if (session.signalMeter) {
-		if (!session.rpcs[UUID].signalMeter) {
-			session.rpcs[UUID].signalMeter = getById("signalMeterTemplate").cloneNode(true);
-			session.rpcs[UUID].signalMeter.id = "signalMeter_" + UUID;
-			session.rpcs[UUID].signalMeter.dataset.level = 0;
-			session.rpcs[UUID].signalMeter.classList.remove("hidden");
-			session.rpcs[UUID].signalMeter.dataset.UUID = UUID;
-			session.rpcs[UUID].signalMeter.title = getTranslation("signal-meter");
-
-			//if (session.rpcs[UUID].stats.info && session.rpcs[UUID].stats.info.cpu_maxed){
-			//	session.rpcs[UUID].signalMeter.dataset.cpu = "1";
-			//}
-
-			session.rpcs[UUID].signalMeter.addEventListener("click", function (e) {
-				// show stats of video if double clicked
-				log("clicked signal meter");
-				try {
-					e.preventDefault();
-					if (session.statsMenu !== false) {
-						var uid = e.currentTarget.dataset.UUID;
-						if ("stats" in session.rpcs[uid]) {
-							var [menu, innerMenu] = statsMenuCreator();
-							printViewStats(innerMenu, uid);
-							menu.interval = setInterval(printViewStats, session.statsInterval, innerMenu, uid);
-						}
-					}
-					e.stopPropagation();
-					return false;
-				} catch (e) {
-					errorlog(e);
-				}
-			});
-		}
-		videoContainer.appendChild(session.rpcs[UUID].signalMeter);
-	}
-
-	if (session.batteryMeter) {
-		////////
-		if (!session.rpcs[UUID].batteryMeter) {
-			session.rpcs[UUID].batteryMeter = getById("batteryMeterTemplate").cloneNode(true);
-			session.rpcs[UUID].batteryMeter.id = "batteryMeter_" + UUID;
-			/*
-			if (session.rpcs[UUID].stats.info && (session.rpcs[UUID].stats.info.power_level!==null)){
-				var level = session.rpcs[UUID].batteryMeter.querySelector(".battery-level");
-				if (level){
-					var value = session.rpcs[UUID].stats.info.power_level;
-					if (value > 100){value = 100;}
-					else if (value < 0){ value = 0;}
-					level.style.height = parseInt(value)+"%";
-					if (value<10){
-						session.rpcs[UUID].batteryMeter.classList.add("alert");
-					} else if (value<25){
-						session.rpcs[UUID].batteryMeter.classList.add("warn");
-					}
-					if (value<100){
-						session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-					}
-					session.rpcs[UUID].batteryMeter.title = (Math.round(value*10)/10)+"% battery remaining";
-				}
-			}
-			if (session.rpcs[UUID].stats.info && ("plugged_in" in session.rpcs[UUID].stats.info) && (session.rpcs[UUID].stats.info.plugged_in===false)){
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "0";
-				session.rpcs[UUID].batteryMeter.classList.remove("hidden");
-			} else {
-				session.rpcs[UUID].batteryMeter.dataset.plugged = "1";
-			}
-			*/
-			batteryMeterInfoUpdate(UUID);
-		}
-		videoContainer.appendChild(session.rpcs[UUID].batteryMeter);
-	}
-
-	if (session.showConnections) {
-		if (!session.rpcs[UUID].connectionDetails) {
-			createConnectionDetailsEle(UUID);
-		}
-		videoContainer.appendChild(session.rpcs[UUID].connectionDetails);
-	}
-
-	videoContainer.appendChild(session.rpcs[UUID].voiceMeter);
-	videoContainer.appendChild(session.rpcs[UUID].remoteMuteElement);
-	videoContainer.appendChild(session.rpcs[UUID].remoteVideoMuteElement);
-	videoContainer.appendChild(session.rpcs[UUID].remoteRaisedHandElement);
-	videoContainer.appendChild(iframeDetails);
-	videoContainer.appendChild(session.rpcs[UUID].videoElement);
-	container.appendChild(controls);
-
-	session.group.forEach(group => {
-		var ele = controls.querySelector('[data-action-type="toggle-group"][data--u-u-i-d="' + UUID + '"][data-group="' + group + '"]');
-		if (!ele) {
-			var newGroup = htmlToElement('<button style="margin: 0 5px 10px 5px;" data-sid="' + session.rpcs[UUID].streamID + '" data--u-u-i-d="' + UUID + '" data-action-type="toggle-group" data-group="' + group + '" title="Add to Group: ' + group + '" onclick="changeGroup(this, event);"><span ><i class="las la-users" style="color:#060"></i>' + group + "</span></button>");
-
-			var added = false;
-			container.querySelectorAll(".customGroup>[data-group]").forEach(ele => {
-				log(ele);
-				if (!added && ele.dataset.group > group + "") {
-					ele.parentNode.insertBefore(newGroup, ele);
-					added = true;
-				}
-			});
-			if (!added) {
-				var newGroupCon = container.querySelector(".customGroup");
-				if (!newGroupCon) {
-					newGroupCon = document.createElement("div");
-					newGroupCon.classList.add("customGroup");
-					container.appendChild(newGroupCon);
-				}
-				newGroupCon.appendChild(newGroup);
-			}
-		}
-	});
-
-	initSceneList(UUID);
-	pokeIframeAPI("control-box", true, UUID);
 }
 
 function enableFullscreenZoom(){

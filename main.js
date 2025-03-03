@@ -946,10 +946,14 @@ async function main() {
 		session.batteryMeter = true;
 	}
 
-	session.slotmode = false; // temporary; remove in the future TODO: ## -----------------------
 	if (urlParams.has("slotmode") || urlParams.has("slotsmode")) {
 		session.slotmode = parseInt(urlParams.get("slotmode")) || parseInt(urlParams.get("slotsmode")) || 1;
 	}
+	
+	if (urlParams.has("updateonslotschange") || urlParams.has("uosc")) {
+		session.updateOnSlotChange = true;
+	}
+	
 
 	if (urlParams.has("signalmeter")) {
 		session.signalMeter = urlParams.get("signalmeter");
@@ -1410,6 +1414,10 @@ async function main() {
 	if (urlParams.has("pauseinvisible")) {
 		session.pauseInvisible = true;
 	}
+	
+	if (urlParams.has("zoomslider")) {
+		session.zoomSlider = true;
+	}
 
 	if (urlParams.get("viewslot")) {
 		session.viewslot = parseInt(urlParams.get("viewslot")) || false;
@@ -1417,6 +1425,7 @@ async function main() {
 		session.layout = {};
 		session.exclusiveLayoutAudio = true;
 		session.hiddenSceneViewBitrate = 0;
+		
 	} else if (urlParams.has("layout")) {
 		if (!urlParams.get("layout")) {
 			session.accept_layouts = true;
@@ -2854,6 +2863,9 @@ async function main() {
 	}
 	if (urlParams.has("outboundvideobitrate") || urlParams.has("outboundbitrate") || urlParams.has("ovb")) {
 		session.outboundVideoBitrate = parseInt(urlParams.get("outboundvideobitrate")) || parseInt(urlParams.get("outboundbitrate")) || parseInt(urlParams.get("ovb")) || false;
+		session.outboundVideoBitrate_userSet = true;
+	} else if (session.outboundVideoBitrate!==false){
+		session.outboundVideoBitrate_userSet = true;
 	}
 
 	if (urlParams.has("webp") || urlParams.has("images")) {
@@ -2970,6 +2982,10 @@ async function main() {
 					session.include.push(sidd);
 				}
 			});
+	}
+	
+	if (urlParams.get("waitpage")) {
+		session.waitPage = urlParams.get("waitpage");
 	}
 
 	if (urlParams.has("directorview") || urlParams.has("dv")) {
@@ -3421,6 +3437,10 @@ async function main() {
 				session.darkmode = false;
 			}
 		} else if (urlParams.has("lightmode") || urlParams.has("lighttheme")) {
+			session.darkmode = false;
+		} else if (urlParams.has("whitemode") || urlParams.has("whitetheme")) {
+			document.body.classList.remove('darktheme');
+			document.body.classList.add('whitetheme');
 			session.darkmode = false;
 		} else if (window.obsstudio) {
 			session.darkmode = false; // prevent OBS from defaulting to dark mode, avoiding possible overlooked bugs.
@@ -4194,8 +4214,8 @@ async function main() {
 		}
 	}
 
-	if (urlParams.has("maxvideobitrate") || urlParams.has("maxbitrate") || urlParams.has("mvb")) {
-		session.maxvideobitrate = urlParams.get("maxvideobitrate") || urlParams.get("maxbitrate") || urlParams.get("mvb");
+	if (urlParams.has("maxvideobitrate") || urlParams.has("maxbitrate") || urlParams.has("maxvb") ||  urlParams.has("mvb")) {
+		session.maxvideobitrate = urlParams.get("maxvideobitrate") || urlParams.get("maxbitrate") ||  urlParams.get("maxvb") || urlParams.get("mvb");
 		session.maxvideobitrate = parseInt(session.maxvideobitrate);
 
 		if (session.maxvideobitrate < 1) {
@@ -4214,6 +4234,10 @@ async function main() {
 			} else {
 				session.totalRoomBitrate = session.totalRoomBitrate.split(",")[0];
 			}
+		}
+		
+		if ((session.totalRoomBitrate == "false") || (session.totalRoomBitrate == "off")){
+			session.totalRoomBitrate = 0;
 		}
 
 		session.totalRoomBitrate = parseInt(session.totalRoomBitrate) || 0;
@@ -4379,19 +4403,6 @@ async function main() {
 			getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 			getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
 
-			if (session.outboundVideoBitrate === false) {
-				// default is 2500
-				if (session.quality == -1) {
-					// 1080p
-					session.outboundVideoBitrate = 4000;
-				} else if (session.quality == -3) {
-					// 2k
-					session.outboundVideoBitrate = 6000;
-				} else if (session.quality == -2) {
-					// 4k
-					session.outboundVideoBitrate = 8000;
-				}
-			}
 		} catch (e) {
 			errorlog(e);
 		}
@@ -4399,18 +4410,14 @@ async function main() {
 		session.quality = 0;
 		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
-		if (session.outboundVideoBitrate === false) {
-			session.outboundVideoBitrate = 4000;
-		}
+		
 	} else if (urlParams.has("4k")) {
 		session.quality = -2;
 		getById("gear_screen").parentNode.removeChild(getById("gear_screen"));
 		getById("gear_webcam").parentNode.removeChild(getById("gear_webcam"));
-		if (session.outboundVideoBitrate === false) {
-			session.outboundVideoBitrate = 8000;
-		}
+		
 	}
-
+	
 	if (urlParams.has("sink")) {
 		session.sink = urlParams.get("sink");
 	} else if (urlParams.has("outputdevice") || urlParams.has("od") || urlParams.has("audiooutput")) {
@@ -5470,6 +5477,18 @@ async function main() {
 			}
 			session.roomid = false;
 		}
+		if (session.quality===false){
+			try {
+				document.getElementById("webcamquality").elements.namedItem("resolution").value = (session.roomid ? (session.quality_room || 0) : (session.quality_wb || 0));
+				document.getElementById("webcamquality3").elements.namedItem("resolution").value = (session.roomid ? (session.quality_room || 0) : (session.quality_wb || 0));
+			} catch(e){}
+		}
+		
+	} else if (session.quality===false){
+		try {
+			document.getElementById("webcamquality").elements.namedItem("resolution").value = session.quality_wb || 0;
+			document.getElementById("webcamquality3").elements.namedItem("resolution").value = session.quality_wb || 0;
+		} catch(e){}
 	}
 
 	if (session.permaid === false && session.roomid === false && session.view === false && session.effect === false && session.director === false) {
@@ -5886,6 +5905,10 @@ async function main() {
 		session.screenShareBitrate = urlParams.get("screensharebitrate") || urlParams.get("ssbitrate");
 		session.screenShareBitrate = parseInt(session.screenShareBitrate) || 2500;
 	}
+	
+	if (urlParams.has("compressed") || urlParams.has("compresssdp") ||  urlParams.has("compress")){
+		session.compressSDP = true; // WIP.
+	}
 
 	if (urlParams.has("screensharelabel") || urlParams.has("sslabel")) {
 		session.screenShareLabel = urlParams.get("screensharelabel") || urlParams.get("sslabel");
@@ -6284,22 +6307,27 @@ async function main() {
 		if ((iPad || iOS) && navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1 && SafariVersion > 13) {
 			// Modern iOS doesn't need pop up
 			play();
-		} else if (navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		} else if (navigator.userAgent.indexOf("Safari") != -1 && (navigator.userAgent.indexOf("Chrome") == -1 && navigator.userAgent.indexOf("Chromium") == -1)) {
 			// Safari on Desktop does require pop up
-			if (!session.cleanOutput) {
-				warnUser("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video", 20000);
+			try {
+				navigator.mediaDevices
+					.getUserMedia({
+						audio: true
+					})
+					.then(function () {
+						closeModal();
+						play();
+					})
+					.catch(function () {
+						play();
+					});
+				if (!session.cleanOutput) {
+					warnUser("Safari requires us to ask for an audio permission to use peer-to-peer technology. You will need to accept it in a moment if asked to view this live video", 20000);
+				}
+			} catch(e){
+				errorlog(e);
+				play();
 			}
-			navigator.mediaDevices
-				.getUserMedia({
-					audio: true
-				})
-				.then(function () {
-					closeModal();
-					play();
-				})
-				.catch(function () {
-					play();
-				});
 		} else {
 			// everything else is OK.
 			play();
@@ -6598,6 +6626,18 @@ async function main() {
 				// toggle
 				toggleVideoMute();
 			}
+		}
+		
+		if ("pauseinvisible" in e.data) { // whether videos hidden in the update mixer are muted or not, based on if they are visible or not.
+			if (e.data.pauseinvisible === "toggle") {
+				// toggle
+				session.pauseInvisible = !session.pauseInvisible;
+			} else if (!e.data.pauseinvisible) {
+				session.pauseInvisible = false;
+			} else {
+				session.pauseInvisible = true;
+			}
+			updateMixer();
 		}
 
 		if ("keyframe" in e.data) {
@@ -7485,31 +7525,34 @@ async function main() {
 				session.requestStream(e.data.requestStream);
 			} // don't use if the stream is in your room (as not needed)
 		} // you can load a stream ID from inside a room that exists outside any room
+		
+		if ("layout" in e.data) {
+			if (Array.isArray(e.data.layout)){
+				session.layout_array = e.data.layout;
+				session.layout = combinedLayout(session.layout_array);
+			} else {
+				session.layout_array = null;
+				session.layout = e.data.layout;
+			}
+			// update mixer is run later, some lines down.
+			pokeIframeAPI("layout-updated", session.layout, null, null, e.data.cib);
+		}
 
 		if ("previewMode" in e.data) {
-			if ("layout" in e.data) {
-				session.layout = e.data.layout;
-				pokeIframeAPI("layout-updated", session.layout, null, null, e.data.cib); // action, value = null, UUID = null, SID=null, CID=null) {
-			}
 			switchModes(e.data.previewMode);
 		} else if ("layout" in e.data) {
 			warnlog("changing layout request via IFRAME API");
-			session.layout = e.data.layout;
-			pokeIframeAPI("layout-updated", session.layout, null, null, e.data.cib);
-
 			if (e.data.obsCommand) {
-				issueLayoutOBS(e.data);
-			} else {
-				if (session.director) {
-					if ("scene" in e.data) {
-						if ("UUID" in e.data) {
-							issueLayout(e.data.layout, e.data.scene, e.data.UUID);
-						} else {
-							issueLayout(e.data.layout, e.data.scene);
-						}
-					} else if ("UUID" in e.data) {
-						issueLayout(e.data.layout, false, e.data.UUID);
+				issueLayoutOBS(e.data); 
+			} else if (session.director) { // only a director can issue a layout
+				if ("scene" in e.data) {
+					if ("UUID" in e.data) {
+						issueLayout(e.data.scene, e.data.UUID);
+					} else {
+						issueLayout(e.data.scene);
 					}
+				} else if ("UUID" in e.data) {
+					issueLayout(false, e.data.UUID);
 				}
 			}
 			updateMixer();

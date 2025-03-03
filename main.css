@@ -64,6 +64,7 @@
 	--codirector-dark-box: rgb(129 127 127);
 	
 	--widget-width: 25%;
+	--rtl-or-ltr: left;
 	
 	/* Original colors */
 	--background-color: #141926;
@@ -309,9 +310,25 @@ th {
 	border: 1px solid lightgray;
 }
 
+.rtl {
+    direction: rtl;
+    text-align: right;
+}
+.rtl input,
+.rtl textarea {
+    text-align: right;
+}
+[dir="rtl"] .keep-ltr {
+    direction: ltr;
+    text-align: left;
+}
+[dir="rtl"] .mirror-rtl {
+    transform: scaleX(-1);
+}
+
 .email {
 	unicode-bidi: bidi-override;
-	direction: rtl;
+	direction: rtl!important;
 	user-select: none;
 }
 
@@ -348,7 +365,6 @@ a.soloLink:visited{
 
 /* Links */
 a {
-	-webkit-app-region: no-drag;
 	text-decoration: none;
 }
 .darktheme a:link {
@@ -415,14 +431,122 @@ a {
 	color: var(--a-darker-active);
 }
 
+/* White theme styling */
+body.whitetheme {
+    background-color: #ffffff;
+    color: #000000;
+}
+.whitetheme #head4 {
+	color: black;
+}
+.whitetheme #reshare {
+	color: #292 !important; 
+}
+.whitetheme #miniPerformer button {
+	color: #FFF;
+}
+.whitetheme .infoblob{
+    color: #000000;
+}
+.whitetheme div#guestFeeds, .whitetheme #roomHeader .hideLinksClass{
+	background-color: #ababab;
+}
+
+.whitetheme .container-inner {
+    background-color: #f8f8f8;
+}
+
+.whitetheme button {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #000000;
+}
+
+.whitetheme button:hover {
+    background-color: #e8e8e8;
+}
+
+.whitetheme .directorContainer {
+    background-color: #f5f5f5;
+}
+
+.whitetheme .card {
+    background-color: #f5f5f5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.whitetheme #addPasswordBasic,
+.whitetheme #avatarDiv,
+.whitetheme #avatarDiv2,
+.whitetheme #avatarDiv3,
+.whitetheme #audioScreenShare1,
+.whitetheme #audioMenu,
+.whitetheme #audioMenu2,
+.whitetheme #effectsDiv,
+.whitetheme #effectsDiv2,
+.whitetheme #effectsDiv3,
+.whitetheme #grabDirectorSoloLinkParent,
+.whitetheme #videoMenu,
+.whitetheme #videoMenu2,
+.whitetheme #videoMenu3,
+.whitetheme #headphonesDiv,
+.whitetheme #headphonesDiv2,
+.whitetheme #headphonesDiv3,
+.whitetheme #videoSettings,
+.whitetheme #videoSettings2,
+.whitetheme #popupSelector_user_settings,
+.whitetheme .invite_setting_group {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+}
+
+.whitetheme select {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    color: #000000;
+}
+
+.whitetheme input[type='text'],
+.whitetheme input[type='password'] {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    color: #000000;
+}
+
+.whitetheme .directorsgrid .vidcon {
+    background-color: #f8f8f8;
+    border: 1px solid #e0e0e0;
+}
+
+.whitetheme #promptModal,
+.whitetheme .customModelPopup,
+.whitetheme .promptModal {
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+}
+
+.whitetheme .cameraTip {
+    background-color: #e8f4ff;
+    border-left: 4px solid #50cef1;
+    color: #000000;
+}
+
+.whitetheme #header {
+    color: #000000;
+}
+
+.whitetheme .modalBackdrop {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+
 input {
 	border-radius: 4px;
 	padding: 2px;
-	-webkit-app-region: no-drag;
 }
 
 button.grey {
-	-webkit-app-region: no-drag;
 	padding: 10px;
 	margin: 10px 0px;
 	cursor: pointer;
@@ -514,22 +638,19 @@ button.hint {
 #header {
 	width: 100%;
 	padding: 1px;
-	background-color: #0F131D;
 	color: #FFF;
-	-webkit-app-region: drag;
 	min-height: 20px;
 }
 #head1{
 	display: inline-block;
 	padding:1px;
 	position: relative;
-	-webkit-app-region: no-drag;
 }
 #head4{
-	-webkit-app-region: no-drag;
+	font-size: 68%; 
+	color: white;
 }
 #head5 {
-	-webkit-app-region: no-drag;
 	display: inline-block;
 	text-decoration: none;
 	color: white;
@@ -1668,6 +1789,7 @@ div[data-action-type='toggle-group'] {
 	width: 100%;
 	padding: 20px;
 	max-width: 1280px;
+	text-align: var(--rtl-or-ltr);
 }
 
 .outer {
@@ -1684,7 +1806,6 @@ div[data-action-type='toggle-group'] {
 	top: 20px;
 	cursor: pointer;
 	display: none;
-	-webkit-app-region: no-drag;
 }
 .testtonebutton{
 	margin: 0 0 0 15px;
@@ -1698,9 +1819,6 @@ div[data-action-type='toggle-group'] {
 }
 .testtonebutton:active{
 	background-color:#AAA
-}
-select{
-	-webkit-app-region: no-drag;
 }
 
 .highlight {
@@ -4321,7 +4439,15 @@ div#guestFeeds:empty {
 	height:0px;
 	display: block;
 }
-
+#reshare {
+	font-weight: bold; 
+	color: #afa !important; 
+	cursor: grab; 
+	background-color: #0000;  
+	font-size: 115%; 
+	min-width: 335px; 
+	max-width: 800px
+}
 a#reshare {
 	white-space: nowrap;
 	margin: 0;
@@ -5216,6 +5342,53 @@ iframe.insecure {
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
+
+.video-zoom-slider {
+  position: absolute;
+  bottom: 45px;
+  left: 10px;
+  right: 10px;
+  height: 40px;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+  z-index: 5;
+}
+
+.video-zoom-slider:hover,
+.video-container:hover .video-zoom-slider {
+  opacity: 1;
+}
+
+.video-zoom-slider input[type="range"] {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.video-zoom-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+}
+
+.video-zoom-slider input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
 .makeSmallerDirectorRoom{
 	max-width: calc(100% - 415px);
 	min-width: min(calc(100% - 395px), 75%);
@@ -5334,16 +5507,13 @@ button {
 	background-color: var(--lighttheme-2);
 	color: var(--lighttheme-text);
 	filter: brightness(1);
-
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	-webkit-app-region: no-drag;
 	user-select: none;
 	cursor: pointer;
 	padding: 4px 6px;
 	border-radius: 4px;
-
 	border: 1px solid var(--lighttheme-6);
 }
 button:hover {
@@ -5607,12 +5777,11 @@ input[type='checkbox'], input[type='radio'] {
 	padding:0;
 }
 #videoMenu {
-	padding: 5px 10px 9px 10px;
+	padding: 10px 10px 9px 10px;
 	vertical-align: middle;
 	text-align: left;
 	margin-top: 0px;
 }
-
 .disable {
 	opacity: 0.5;
 	cursor: not-allowed;
@@ -5646,7 +5815,6 @@ input[type='checkbox'], input[type='radio'] {
 	right: -500px;
 	overflow: auto;
 	z-index: 4;
-	-webkit-app-region: no-drag;
 	padding-bottom: 80px;
 }
 #popupSelector label {
