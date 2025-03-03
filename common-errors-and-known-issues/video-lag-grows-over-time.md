@@ -3,13 +3,13 @@
 Video lag that goes over time typically hints at a CPU being overloaded; it might not be able to handle the capture resolution or the load required to encode video for several viewers at once.
 
 \
-Some users report this issue happens when using the Streamlabs Virtual Camera, but not when using their webcam or screen share. For others, it might commonly happen if using an older laptop, like an Intel-based Apple Macbook, where they thermal throttle performance after a short while.
+Some users report this issue happens when using the Streamlabs Virtual Camera, but not when using their webcam or screen share. For others, it might commonly happen if using an older laptop, like an Intel-based Apple MacBook, where they thermal throttle performance after a short while.
 
 ## Solutions:
 
 ### Reduce quality
 
-Using \&quality=2 and a reduced bitrate by viewers can lower the load
+Using `&quality=2` and a reduced bitrate by viewers can lower the load
 
 ### Meshcast
 
@@ -21,7 +21,7 @@ Laptops that run on battery power will run at reduced performance, so make sure 
 
 ### If the issue is only with the Streamlabs or OBS Virtual camera
 
-Loading the virtual camera into the Electron Capture app ([https://electroncapture.app](https://electroncapture.app)) will give you the built-in option to full-window the virtual camera. This makes it super easy to screen share the window using VDO.Ninja, and this should bypass any peformance problems caused by trying to load the virtual camera directly as a webcam source.\
+Loading the virtual camera into the Electron Capture app ([https://electroncapture.app](https://electroncapture.app)) will give you the built-in option to full-window the virtual camera. This makes it super easy to screen share the window using VDO.Ninja, and this should bypass any performance problems caused by trying to load the virtual camera directly as a webcam source.\
 \
 When opening the Electron Capture app, it will auto-detect a virtual camera device, and offer you the option to full-window it.
 

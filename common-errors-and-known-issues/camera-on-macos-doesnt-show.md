@@ -55,7 +55,7 @@ Resetting Chrome settings can help resolve the issue if it's due to a misconfigu
 
 Verify that your camera works with other applications:
 
-* Open an application like **Photo Booth** or **Facetime** and check if the camera works.
+* Open an application like **Photo Booth** or **FaceTime** and check if the camera works.
 
 #### 8. Reinstall Chrome
 

@@ -26,7 +26,7 @@ Created originally for [VDO.Ninja](https://vdo.ninja) users, it can provide user
 
 ### Why was this made ?
 
-On some systems the OBS Browser Source plugin isn't available or doesn't work all that well, so this tool was made as a viable agnostic alternative. It was originally built to let you cleanly screen-grab just a video stream without the need of the OBS Browser Source plugin. The app was also made to make selecting the output audio playback device easy, outputting audio to something such as a Virtual Audio device: ie) https://vb-audio.com/Cable/ (Windows & macOS; donationware) or VAC (Windows @ https://vac.muzychenko.net/), or Loopback (macOS).
+On some systems the OBS Browser Source plugin isn't available or doesn't work all that well, so this tool was made as a viable agnostic alternative. It was originally built to let you cleanly screen-grab just a video stream without the need of the OBS Browser Source plugin. The app was also made to make selecting the output audio playback device easy, outputting audio to something such as a Virtual Audio device: i.e.) https://vb-audio.com/Cable/ (Windows & macOS; donationware) or VAC (Windows @ https://vac.muzychenko.net/), or Loopback (macOS).
 
 While the OBS Browser source is ever maturing, and issues with video smearing, crashing, and dropped audio are far less common these days, there are still user reports of desync issues and other mishaps with OBS browser sources. As a result, Electron Capture remains the preference for many professional VDO.Ninja users, and over time it has evolved to offer additional solutions for many different use cases in the video production world.
 
@@ -110,7 +110,7 @@ start elecap.exe -t feed8 -u https://vdo.ninja/?view=gfd9hnx^&scene^&codec=h264^
 ```
 
 * Please note, do not use double-quotes, rather single-quotes, if needing to enclose text via the command line.
-* Please also note,the use ot timeout /T 1, as adding a delay between loading apps allows them to load correctly
+* Please also note, the use to timeout /T 1, as adding a delay between loading apps allows them to load correctly
 * x and y position is available in v1.5.2 and up; x or y values must be greater than 0.
 
 ![](https://user-images.githubusercontent.com/2575698/80891745-290d3000-8c94-11ea-85c4-ae0e7cd1ec19.png)
@@ -143,7 +143,7 @@ It's also possible to select audio-only when screen sharing via Electron Capture
 
 Global Hotkeys, such as CTRL+M, are supported. CTRL+M will mute the mic, in the most recently opened window. You can assign a custom global hot-key in VDO.Ninja, and it will be respected by Electron Capture. (VDO.Ninja Settings -> User -> Global Hotkey)
 
-Youtube has a built-in automatic ad-skipper added, and for both Youtube, Twitch, and more, when watching a video, you can full-window the video, allowing for clean video capture. This option is available via the context menu of Electron Capture; just right-click somewhere on the page that is empty and select Clean Video Output.
+YouTube has a built-in automatic ad-skipper added, and for both YouTube, Twitch, and more, when watching a video, you can full-window the video, allowing for clean video capture. This option is available via the context menu of Electron Capture; just right-click somewhere on the page that is empty and select Clean Video Output.
 
 ![image](https://user-images.githubusercontent.com/2575698/130308991-4a6e15f2-00e3-453f-a79f-8a874d2a6417.png)
 
@@ -151,7 +151,7 @@ Youtube has a built-in automatic ad-skipper added, and for both Youtube, Twitch,
 
 A popular way of outputting audio from the Electron Capture app into OBS is done using a virtual audio cable. Some such cables include:
 
-Mac Audio Options: https://rogueamoeba.com/loopback/ (MacOS & non-free, but excellent), and [https://existential.audio/blackhole/](https://existential.audio/blackhole/) (MacOS & free) (and more here [https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio](https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio))
+Mac Audio Options: https://rogueamoeba.com/loopback/ (macOS & non-free, but excellent), and [https://existential.audio/blackhole/](https://existential.audio/blackhole/) (macOS & free) (and more here [https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio](https://github.com/steveseguin/vdoninja/wiki/FAQ#macaudio))
 
 Windows Audio Option: [https://www.vb-audio.com/Cable/](https://www.vb-audio.com/Cable/) (donation ware)
 
@@ -159,7 +159,7 @@ If you intend to have more than a 6 virtual audio cables, you can try VAC instea
 
 You can also use some advanced URL parameters to output the audio to specific channels. The following link links the parameters and the outcome, based on device/software used: [https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1R-y7xZ2BCn-GzTlwqq63H8lorXecO02DU9Hu4twuhuA/edit?usp=sharing)
 
-You can still capture audio via OBS Browser source, appending [`&novideo`](../../advanced-settings/video-parameters/and-novideo.md) to the URL to disable video. Appending [`&noaudio`](../../advanced-settings/view-parameters/noaudio.md) to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticible in most cases.
+You can still capture audio via OBS Browser source, appending [`&novideo`](../../advanced-settings/video-parameters/and-novideo.md) to the URL to disable video. Appending [`&noaudio`](../../advanced-settings/view-parameters/noaudio.md) to the Electron Capture URL would conversely disable audio there, allowing you to capture audio with OBS browser source and video with Electron Capture. The audio/video sync might be slightly off in this setup, but not noticeable in most cases.
 
 More recently, with newer versions of OBS, you can capture an application's audio using OBS natively, but with older versions you can use the following OBS plugin to also do it: [https://github.com/bozbez/win-capture-audio](https://github.com/bozbez/win-capture-audio)&#x20;
 
@@ -170,15 +170,15 @@ More recently, with newer versions of OBS, you can capture an application's audi
 
 If you right click the app when on a site, you can change the audio output device for that site. This is useful for setting a YouTube or VDO.Ninja video to output to a virtual audio cable or headphones, rather than playout via the default audio device.
 
-On MacOS, this is especially helpful since there is a lack of audio routing controls.
+On macOS, this is especially helpful since there is a lack of audio routing controls.
 
-Please note: To use this feature, you will need to elevate the app's privilleges, which can expose the user to security issues on untrusted websites.
+Please note: To use this feature, you will need to elevate the app's privileges, which can expose the user to security issues on untrusted websites.
 
 #### Pinning and click-pass thru
 
 You can pin the app on top of other apps via the right-click menu, and when enabled, you can then also enable "click thru" mode also via the context-menu, so no mouse input is captured. The app acts a bit like it is invisible, turning it into a bit of HUD for other applications and games.
 
-If using Social Stream or vdo.ninja, you can append \&transparent to those URLs to make the background transparent. You can also use custom CSS to make web pages shown semi-transparent, so you can still see underneath.
+If using Social Stream or VDO.ninja, you can append \&transparent to those URLs to make the background transparent. You can also use custom CSS to make web pages shown semi-transparent, so you can still see underneath.
 
 Once "click thru" mode is enabled, you can re-enable click-capture by just selecting the app via the task bar, as bringing the app into focus will disable the click-thru mode.
 
@@ -204,7 +204,7 @@ You can see a quick start / cheat sheet guide for example uses of the app with V
 * Also note, the top portion of the app is draggable, so you can move it around to place it accordingly. It is also resizable.
 * Multiple versions of the app can run on macOS; just make a copy of the file with a different name to open up a new window.
 * Desktop audio capture with screen share is not supported by Electron (https://www.electronjs.org/docs/latest/api/desktop-capturer#caveats)
-* You need to enable Screen Capture support in the macOS security preferences for the app to enable desktop capture support on macOS 10.15 Catalina or higher. Yuo also need to enable elevated privillges in the Electron Capture app itself.
+* You need to enable Screen Capture support in the macOS security preferences for the app to enable desktop capture support on macOS 10.15 Catalina or higher. You also need to enable elevated privileges in the Electron Capture app itself.
 * If capturing the window with OBS, you can use either DISPLAY CAPTURE with a WINDOW CROP -or- WINDOW CAPTURE
 
 \--- _WINDOW CAPTURE_ will have a video delay of up to \~800ms, but Windows can be stacked without issue
@@ -230,11 +230,11 @@ If you have problems, try a different version or contact me on Discord.
 * Newest version can be found here: [https://github.com/steveseguin/electroncapture/releases/](https://github.com/steveseguin/electroncapture/releases/)
 * If having problems, there's an older version here (v1.1.3) [https://github.com/steveseguin/electroncapture/releases/download/1.1.3/obsn-1.1.3.dmg](https://github.com/steveseguin/electroncapture/releases/download/1.1.3/obsn-1.1.3.dmg)
 
-If on version of Electron doesn't work for you all that well, try a different version. There may be some issues with rounded edges depending on you MacOS version and the Electron version used.
+If on version of Electron doesn't work for you all that well, try a different version. There may be some issues with rounded edges depending on you macOS version and the Electron version used.
 
 #### Linux Version
 
-There are two pre-build versions of Electron Capture available currently. One built for PopOS and another for Raspbian. Those builds are here: https://github.com/steveseguin/electroncapture/releases/tag/2.5.0
+There are two pre-build versions of Electron Capture available currently. One built for Pop!\_OS and another for Raspbian. Those builds are here: https://github.com/steveseguin/electroncapture/releases/tag/2.5.0
 
 For most Linux users though, we're recommending Linux users build it themselves. Details below
 

@@ -55,7 +55,7 @@ The director can also join the room if needed. Toggle the 'Director will also be
 
 The director will be provided isolated direct links to each of those video streams in the group room, allowing for fine-grain mixing control in OBS.
 
-Using OBS Virtualcam (or the Mac equivalent), you can even let your guests view the OBS live stream with sub-100ms of latency. In this case, each guest only needs to view one video stream, the main mixed OBS stream, freeing up group resources to allow for even larger group rooms.
+Using OBS VirtualCam (or the Mac equivalent), you can even let your guests view the OBS live stream with sub-100ms of latency. In this case, each guest only needs to view one video stream, the main mixed OBS stream, freeing up group resources to allow for even larger group rooms.
 
 A director can also address a specific guest via full screen text messages, or via dedicated talkback audio.
 

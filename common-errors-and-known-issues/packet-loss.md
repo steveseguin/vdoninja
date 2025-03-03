@@ -56,9 +56,9 @@ Sometimes two peers just can't get a good connection, while with other peers the
 
 * Turning down the audio bitrate ([`&audiobitrate=128`](../advanced-settings/view-parameters/audiobitrate.md)) will be less prone to clicking issues vs something high, like 256-kbps. The default is 32-kbps.
 * You can add [`&enhance`](../advanced-settings/view-parameters/enhance.md) on the viewer side to try to prioritize the audio over the video. This might help with audio clicking issues.
-* Using [`&audiocodec=red`](../advanced-settings/audio-parameters/minptime-1.md#red) on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that shoulnd't be an issue for most modern connections.
+* Using [`&audiocodec=red`](../advanced-settings/audio-parameters/minptime-1.md#red) on the viewer side can increase the amount of error correction data being sent, reducing packet loss. This will double the audio bandwidth, but that shouldn't be an issue for most modern connections.
 
-### Youtube Video guide on packet loss + VDO.Ninja
+### YouTube Video guide on packet loss + VDO.Ninja
 
 I have a video talking about packet loss, with details on how to setup Speedify as well: [https://www.youtube.com/watch?v=je2ljlvLzlYAnd](https://www.youtube.com/watch?v=je2ljlvLzlYAnd)
 

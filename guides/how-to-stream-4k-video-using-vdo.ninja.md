@@ -59,8 +59,8 @@ Normally you shouldn't need to change codecs, but sometimes it does make a diffe
 
 ## Performance issues
 
-As a result, to successfully stream 4K video, you generally need a computer system with 8 real CPU cores or more, running at 3.6ghz or higher. A modern AMD 3900X-series CPU or Intel 9900K CPU are ideal for this task, but a quad-core laptop will not be. You might be able to get away with lesser bitrates and lesser CPU requirements if just screen-sharing text, but it still is not for the faint of heart.
+As a result, to successfully stream 4K video, you generally need a computer system with 8 real CPU cores or more, running at 3.6GHz or higher. A modern AMD 3900X-series CPU or Intel 9900K CPU are ideal for this task, but a quad-core laptop will not be. You might be able to get away with lesser bitrates and lesser CPU requirements if just screen-sharing text, but it still is not for the faint of heart.
 
-Lastly, MacOS users may find that 4K is simply not possible or very difficult. If you do manage to get it working, it might only operate at 5-fps or so. I don’t quite know why this is, but if you intend on sharing 4K video, you might be better off using a Windows PC. It seems to perform better.
+Lastly, macOS users may find that 4K is simply not possible or very difficult. If you do manage to get it working, it might only operate at 5-fps or so. I don’t quite know why this is, but if you intend on sharing 4K video, you might be better off using a Windows PC. It seems to perform better.
 
 We've successfully streamed 4K50 over 5G cellular Internet at 65-mbps using a MacBook Air M1 and VDO.Ninja.

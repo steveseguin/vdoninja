@@ -11,7 +11,7 @@ Versus.cam is the upcoming and standalone replacement for the [vdo.ninja/monitor
 ### Details
 
 * It contains a larger and dedicated graph per scene/view link than what the [vdo.ninja/beta/'s ](https://vdo.ninja/beta/)director room has under scene-stats. Both color code to indicate packet loss, where red is bad, and green is good.&#x20;
-* It is setup to use a group room by default, with a very simple interface to login and get started without visiting vdo.ninja itself.&#x20;
+* It is setup to use a group room by default, with a very simple interface to login and get started without visiting VDO.ninja itself.&#x20;
 * Despite having a group room by default, it works with standalone push/view links as well, via the "Add a stream manually" button, which lets you include normal view links that exist outside rooms.
 * All the scene links and invite links are preconfigured for E-Sports , where video is set to pull around 20-mbps for smooth 1080p60 game play. The idea is, if you choose to use this page for creating links, it's all already setup to be used for ingestion.
 * The room is configured so that guests cannot see or talk to each other. All guests can do is text-chat with the versus host.

@@ -44,6 +44,6 @@ View links and scenes can sometimes can use an iPhone H264's encoder, even if th
 
 ### H264 specific issues
 
-Some Windows computers that can offer H264 hardware encoding with AMD or Nvidia GPUs run into the same limitations that an iPhone device may have. That is, if more than 2 or 3 video streams are being published that use H264 encoding, the hardware encoder on those devices may fail.
+Some Windows computers that can offer H264 hardware encoding with AMD or NVIDIA GPUs run into the same limitations that an iPhone device may have. That is, if more than 2 or 3 video streams are being published that use H264 encoding, the hardware encoder on those devices may fail.
 
-If someone if using OBS to publish H264 video via RTMP using Nvidia's NVenc, while also publishing H264 video to VDO.Ninja, conflicts may arise, and video streams may fail. This shouldn't happen really, but in theory, it's something to be aware of.
+If someone if using OBS to publish H264 video via RTMP using NVIDIA's NVenc, while also publishing H264 video to VDO.Ninja, conflicts may arise, and video streams may fail. This shouldn't happen really, but in theory, it's something to be aware of.

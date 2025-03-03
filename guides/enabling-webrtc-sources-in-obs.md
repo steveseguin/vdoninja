@@ -8,7 +8,7 @@ description: >-
 
 This guide will help you troubleshoot and resolve issues with WebRTC/P2P-based browser sources in OBS (Open Broadcaster Software). We'll cover several methods that can ensure these sources work properly, assuming the sources work fine in a normal browser already, and just fail within OBS.
 
-Often the issues with VDO.NInja or Social Stream Ninja not appearing in OBS are not firewall related, but rather glitches in the matrix, so we'll cover a few common solutions there also.
+Often the issues with VDO.Ninja or Social Stream Ninja not appearing in OBS are not firewall related, but rather glitches in the matrix, so we'll cover a few common solutions there also.
 
 ### Method 1: Adding OBS to Windows Firewall
 

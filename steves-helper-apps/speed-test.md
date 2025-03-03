@@ -27,7 +27,7 @@ At some point I'll add a dashboard or notification system to make managing invit
 
 <figure><img src="../.gitbook/assets/image (1) (1) (4).png" alt=""><figcaption></figcaption></figure>
 
-Testing regions for vdo.ninja/alpha/check\
+Testing regions for VDO.ninja/alpha/check\
 [https://vdo.ninja/alpha/regions](https://vdo.ninja/alpha/regions)
 
 There is also another Speed Test option here:\

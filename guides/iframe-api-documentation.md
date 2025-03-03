@@ -12,7 +12,7 @@ The solution decided on isn't an SDK framework, but rather the use of embeddable
 
 Modern web browsers allow the parent website to communicate with the child webpage, giving a high-level of control to a developer, while also abstracting the complex code and hosting requirements. Functionality, we can make an VDON video stream act much like an HTML video element tag, where you can issue commands like play, pause, or change video sources with ease.
 
-Creating an VDON iframe can be done in HTML or programmatically with Javascript like so:
+Creating an VDON iframe can be done in HTML or programmatically with JavaScript like so:
 
 ```
 const iframe = document.createElement("iframe");

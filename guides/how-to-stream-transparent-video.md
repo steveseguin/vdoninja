@@ -62,7 +62,7 @@ When green screening, since color is so important, try using [`&codec=av1`](../a
 
 VDO.Ninja has a mode called Chunked, which can be activated on Chromium browsers by adding [`&chunked`](../newly-added-parameters/and-chunked.md) to the push URL.
 
-When also used with `&alpha`, ie:
+When also used with `&alpha`, i.e.:
 
 &#x20;[`https://vdo.ninja/alpha/?chunked&alpha`](https://vdo.ninja/alpha/?chunked\&alpha)
 

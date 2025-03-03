@@ -10,9 +10,9 @@ You can also refer to the #report-bugs channel on [Discord](https://discord.com/
 
 Below are some links to third parties, for a list of known issues that commonly will apply to VDO.Ninja as well. They might have some issues not yet reported here and are often up to date.
 
-[https://docs.agora.io/en/All/web\_sdk\_compatibility?platform=Web](https://docs.agora.io/en/All/web\_sdk\_compatibility?platform=Web)\
+[https://docs.agora.io/en/All/web\_sdk\_compatibility?platform=Web](https://docs.agora.io/en/All/web_sdk_compatibility?platform=Web)\
 \
-[https://github.com/twilio/twilio-video.js/blob/master/COMMON\_ISSUES.md](https://github.com/twilio/twilio-video.js/blob/master/COMMON\_ISSUES.md)\
+[https://github.com/twilio/twilio-video.js/blob/master/COMMON\_ISSUES.md](https://github.com/twilio/twilio-video.js/blob/master/COMMON_ISSUES.md)\
 \
 [https://support.twilio.com/hc/en-us/articles/223180908-Troubleshooting-Common-Problems-with-the-Twilio-Voice-JavaScript-SDK](https://support.twilio.com/hc/en-us/articles/223180908-Troubleshooting-Common-Problems-with-the-Twilio-Voice-JavaScript-SDK)\
 \
@@ -36,7 +36,7 @@ Below are more possible/past issues, although the list is not often curated and 
 * Streamlabs (SLOBS) on macOS does not currently support VDO.Ninja directly; you'll need to use the Electron Capture app or the normal OBS version instead.
 * OBS on PC can sometimes run into a Max Buffer Limit Reached error, which can cause the audio to become delayed by seconds or simply stop being captured at all. Using the Electron Capture app to capture audio can avoid this problem.
 * Some browser-extensions will cause webRTC to fail. Try loading VDO.Ninja in incognito mode or try using the Electron Capture app instead.
-* On most modern browsers, a user will need to click the browser window before the video will play. This goes for VMIX and for Firefox/Chrome. This is not the case for OBS or the Electron Capture app, however.
+* On most modern browsers, a user will need to click the browser window before the video will play. This goes for vMix and for Firefox/Chrome. This is not the case for OBS or the Electron Capture app, however.
 * Android 11 users using Chrome may need to push the app to the background, and then foreground it again, to unfreeze the video camera when it loads or changes camera sources.
 * iOS (iPhone) users using Safari 13 may sometimes not send audio.
 * iOS (iPhone) users sometimes cannot access their camera until they close all other Safari browser tabs. If it still does not work, using the native iOS app on the App Store may work; "Capture for VDO.Ninja".

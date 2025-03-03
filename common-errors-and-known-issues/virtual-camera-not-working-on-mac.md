@@ -1,7 +1,7 @@
 ---
 description: >-
   If the OBS Virtual Camera is not appearing in Chrome or your browser after
-  installing OBS on MacOS, you may need to enable screen recording permissions
+  installing OBS on MacOS, you may need to enable screen recording permissions.
 ---
 
 # Virtual camera not working on Mac

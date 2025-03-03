@@ -7,7 +7,7 @@ description: >-
 
 # No video in OBS, just an "Add camera" button
 
-If see the VDO.Ninja menu, instead of a video, it is typically caused by having your PUSH link used as a VIEW link in OBS or Streamlabs's browser source.
+If you see the VDO.Ninja menu, instead of a video, it is typically caused by having your PUSH link used as a VIEW link in OBS or Streamlabs's browser source.
 
 To fix, you should be able to just replace the `?push=` part of the URL with `?view=`.
 

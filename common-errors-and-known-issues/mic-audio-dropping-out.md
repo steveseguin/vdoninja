@@ -38,7 +38,7 @@ Make sure to update your iOS device if possible, use the newest version of VDO.N
 
 ### Bluetooth or microphones connected to a USB hub
 
-It is not recommended to use Bluetooth audio devices with VDO.Ninja. In the past, there were drop outs when using AirPods on a battery-powered Macbook, for example. Constant Bluetooth range / connectivity issues can also cause VDO.Ninja to potentially lose the connection to the microphone.
+It is not recommended to use Bluetooth audio devices with VDO.Ninja. In the past, there were drop outs when using AirPods on a battery-powered MacBook, for example. Constant Bluetooth range / connectivity issues can also cause VDO.Ninja to potentially lose the connection to the microphone.
 
 USB Hubs are not all created equal, and some may cause USB devices to drop in and out. For this reason, connect your microphone and cameras directly to computer, bypassing USB hubs if possible.
 

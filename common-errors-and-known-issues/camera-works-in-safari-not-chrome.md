@@ -8,7 +8,7 @@ description: >-
 
 ### Check if its VDO.Ninja specific or browser-wide
 
-Often the camera will not just fail ot load in VDO.Ninja, but fail to load with any web app in Chrome or browser.
+Often the camera will not just fail to load in VDO.Ninja, but fail to load with any web app in Chrome or browser.
 
 You can confirm its not VDO.Ninja specific by going to the following page and seeing if the camera works with this simple camera app: [https://webrtc.github.io/samples/src/content/devices/input-output/](https://webrtc.github.io/samples/src/content/devices/input-output/)
 
@@ -38,7 +38,7 @@ Apple Logo > Force Quit > Select All Apps > (find 'Camera process') -> Force Qui
 
 ### Turn off hardware acceleration
 
-In Chrome, you can turn off "Use hardware acceeleration when available" in the `chrome://settings/system` page. You'll want to restart the browser after
+In Chrome, you can turn off "Use hardware acceleration when available" in the `chrome://settings/system` page. You'll want to restart the browser after
 
 ### Make sure Chrome has access to your microphone and camera
 

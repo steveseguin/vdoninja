@@ -32,7 +32,7 @@ VDO.Ninja may still scale the video down however, although only if the connectio
 
 You can improve audio quality in the same way, by increasing the [`&audiobitrate`](../advanced-settings/view-parameters/audiobitrate.md), but you can get better results by just disabling noise and echo cancellation instead.
 
-[`&proaudio`](../general-settings/stereo.md) is flag that presets many audio options, which can be added to both the sender's and viewser's link to enable stereo audio with no audio processing and a very high audio bitrate set. You may need to be using headphones, especially if in a group room, if using [`&proaudio`](../general-settings/stereo.md) or if disabling the echo cancellation features.
+[`&proaudio`](../general-settings/stereo.md) is flag that presets many audio options, which can be added to both the sender's and viewer's link to enable stereo audio with no audio processing and a very high audio bitrate set. You may need to be using headphones, especially if in a group room, if using [`&proaudio`](../general-settings/stereo.md) or if disabling the echo cancellation features.
 
 ## More Details
 

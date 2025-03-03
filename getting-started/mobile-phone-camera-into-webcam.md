@@ -1,7 +1,7 @@
 # Mobile phone camera into webcam
 
 {% hint style="info" %}
-This set of instructions will work for Windows, Mac1 and Linux2.
+This set of instructions will work for Windows, macOS and Linux.
 {% endhint %}
 
 ## Simple Steps

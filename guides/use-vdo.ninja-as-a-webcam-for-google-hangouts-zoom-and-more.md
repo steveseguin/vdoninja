@@ -31,11 +31,11 @@ Please find below a diagram explaining the basic premise of what we are intendin
 
 This guide assumes you have OBS installed, along with the other required software, though we shall briefly cover these initial installation steps now.
 
-We also will assume you are using Windows. You will need to adapt accordingly for MacOS, which likely is going to be more complicated.&#x20;
+We also will assume you are using Windows. You will need to adapt accordingly for macOS, which likely is going to be more complicated.&#x20;
 
 On the computer that will be using Zoom or Google Hangouts to broadcast, please do the following:
 
-1. Install OBS Studio  h[ttps://github.com/obsproject/obs-studio/releases/](https://www.google.com/url?q=https://github.com/obsproject/obs-studio/releases/\&sa=D\&source=editors\&ust=1651965669925129\&usg=AOvVaw2y3\_HZy3Sm\_0aAQ7QRRX8K)
+1. Install OBS Studio  h[ttps://github.com/obsproject/obs-studio/releases/](https://www.google.com/url?q=https://github.com/obsproject/obs-studio/releases/\&sa=D\&source=editors\&ust=1651965669925129\&usg=AOvVaw2y3_HZy3Sm_0aAQ7QRRX8K)
 2. Install the VB-Cable Virtual Audio device.\
    [https://www.vb-audio.com/Cable/](https://www.google.com/url?q=https://www.vb-audio.com/Cable/\&sa=D\&source=editors\&ust=1651965669925809\&usg=AOvVaw3k4NHvzmWNnuxOnB2nnoYZ)
 
@@ -65,7 +65,7 @@ Once we have our PUSH link setup to stream our camera, we can move on to pulling
 
 To setup our OBS Studio, create a Scene and then add a Browser Source in OBS Studio. Give it a name and we will fill out the details in the next step.
 
-![We want to load our VIEW link in OBS as a Browser source](https://lh3.googleusercontent.com/piBkBuRIVMOmOQ35CisMz-cq0WUxdqKMxQhptnKFwUGAUT75eDZkoRXE52f1KFOpBFQ5l6XkjzFQZXTzwGXJ152n0bDa7iVnDd\_B8EIewpjiEEEsxJnADnaToOi391fPZQ9SUNxSaCLsvaA1DA)
+![We want to load our VIEW link in OBS as a Browser source](https://lh3.googleusercontent.com/piBkBuRIVMOmOQ35CisMz-cq0WUxdqKMxQhptnKFwUGAUT75eDZkoRXE52f1KFOpBFQ5l6XkjzFQZXTzwGXJ152n0bDa7iVnDd_B8EIewpjiEEEsxJnADnaToOi391fPZQ9SUNxSaCLsvaA1DA)
 
 ### Step 4.
 
@@ -96,11 +96,7 @@ Now we just need to stretch the video to fill the full scene. It should snap int
 
 Start the OBS Virtual camera ; located under the Start Recording button
 
-<div align="left">
-
-<figure><img src="https://lh3.googleusercontent.com/zOShyv0F0uvhQ3PlI7mjCe8C6vZsGRUpq2mhFEuZzl8wGUvFkz1od6wYtSHsoPR8aXlG-oRHI9MTlFiOoouvJUtl0Bs96SrOwnug9MpuyYUE9sYJTAsJPAByYwG4we-cMenOQ79DBf_PO233sg" alt=""><figcaption></figcaption></figure>
-
-</div>
+<div align="left"><figure><img src="https://lh3.googleusercontent.com/zOShyv0F0uvhQ3PlI7mjCe8C6vZsGRUpq2mhFEuZzl8wGUvFkz1od6wYtSHsoPR8aXlG-oRHI9MTlFiOoouvJUtl0Bs96SrOwnug9MpuyYUE9sYJTAsJPAByYwG4we-cMenOQ79DBf_PO233sg" alt=""><figcaption></figcaption></figure></div>
 
 ### Step 7. (optional)
 
@@ -116,11 +112,7 @@ In our last configuration step, we want to go into the Advanced Audio Properties
 
 If you intend to feed audio from OBS back into an VDO.Ninja group call, you can use this step to also mix-minus the audio; selecting just the audio sources you want the remote guests to hear, excluding their own audio to prevent echo.
 
-<div align="left">
-
-<figure><img src="https://lh5.googleusercontent.com/qQGwkh0oeKLgaBcz24L79Zv7UiDZ2igWYYEkkVgiQZXjQ_Q95qBuFMl5-e2XMc-uZLzvQECYpBGNXS_n3_qlyS9IDHBCV3aCDkllplh519Q4pI4rs738Vcgryc4t2axygQYGzqO-BAEeFcCdWg" alt=""><figcaption></figcaption></figure>
-
-</div>
+<div align="left"><figure><img src="https://lh5.googleusercontent.com/qQGwkh0oeKLgaBcz24L79Zv7UiDZ2igWYYEkkVgiQZXjQ_Q95qBuFMl5-e2XMc-uZLzvQECYpBGNXS_n3_qlyS9IDHBCV3aCDkllplh519Q4pI4rs738Vcgryc4t2axygQYGzqO-BAEeFcCdWg" alt=""><figcaption></figcaption></figure></div>
 
 <figure><img src="https://lh3.googleusercontent.com/Y0KGvcDsbj-X4KP0S8HQNGo3IbPvRSr7XYlqK4Yoj916XFLZXWeAcYNKJUFQzA2APuSaWfiBPhyjzjcXX1JnLr2LIR3CztDYeatNEoPtYj4minUkIXf1HhVDjYZW1jLZFmwt8146pU-gAu0yGQ" alt=""><figcaption></figcaption></figure>
 
@@ -134,17 +126,9 @@ It is important to remember that you need to select the VB-Audio Virtual Cable i
 
 If publishing to VDO.Ninja, remember that you can select multiple audio sources in VDO.Ninja by holding down CTRL (or command) when selecting them. You could include the VB Audio Cable and your local microphone together, for example.
 
-<div align="left">
+<div align="left"><figure><img src="https://lh6.googleusercontent.com/u8qy24hWB8gqCObTfmZXoNQJebutm08SzyjuYRaN55oaIzK3mb0igE22QZymMVqdQiZbMDHUyzk45_V0enlCzLiOnWEJCMvVEz8NfHB6eshVmB3AKBGecgJZQiBnjayAGEnx5Tr6EA5TpvNkLA" alt=""><figcaption></figcaption></figure></div>
 
-<figure><img src="https://lh6.googleusercontent.com/u8qy24hWB8gqCObTfmZXoNQJebutm08SzyjuYRaN55oaIzK3mb0igE22QZymMVqdQiZbMDHUyzk45_V0enlCzLiOnWEJCMvVEz8NfHB6eshVmB3AKBGecgJZQiBnjayAGEnx5Tr6EA5TpvNkLA" alt=""><figcaption></figcaption></figure>
-
-</div>
-
-<div align="left">
-
-<figure><img src="https://lh5.googleusercontent.com/uVrtV18j6fyGt6DS9-iKmvp5-k8ps-6hICvB1wdJEZyIoM-I6CVtRnT5VGS72Q1pTygzH7iWbBzuAXyTIC18PbkH_Hb9jf0DROj0tnrGbbVz-JE8vUcu4B5RJv6ZpgutwhvP4Be5N6b8XWnVMQ" alt=""><figcaption></figcaption></figure>
-
-</div>
+<div align="left"><figure><img src="https://lh5.googleusercontent.com/uVrtV18j6fyGt6DS9-iKmvp5-k8ps-6hICvB1wdJEZyIoM-I6CVtRnT5VGS72Q1pTygzH7iWbBzuAXyTIC18PbkH_Hb9jf0DROj0tnrGbbVz-JE8vUcu4B5RJv6ZpgutwhvP4Be5N6b8XWnVMQ" alt=""><figcaption></figcaption></figure></div>
 
 ### All done!
 

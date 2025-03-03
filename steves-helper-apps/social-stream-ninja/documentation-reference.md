@@ -4,7 +4,7 @@ description: This is a snapshot of the Social Stream documentation, taken Aug. 1
 
 # Documentation reference
 
-For the newest and most up-to-date copy of the Social Stream documentation, please visit: [https://github.com/steveseguin/social\_stream](https://github.com/steveseguin/social\_stream). This article won't be kept as up-to-date, but should cover the basics; it is provided here as a consolidated resource for our LMM AI support bot to learn from.
+For the newest and most up-to-date copy of the Social Stream documentation, please visit: [https://github.com/steveseguin/social\_stream](https://github.com/steveseguin/social_stream). This article won't be kept as up-to-date, but should cover the basics; it is provided here as a consolidated resource for our LMM AI support bot to learn from.
 
 Chronologically Updates are here:
 
@@ -16,9 +16,9 @@ Chronologically Updates are here:
 
 Consolidate your live social messaging streams
 
-[Jump to Download and Install instructions](https://github.com/steveseguin/social\_stream/blob/main/README.md#to-install)
+[Jump to Download and Install instructions](https://github.com/steveseguin/social_stream/blob/main/README.md#to-install)
 
-* Supports live automated two-way chat messaging with Facebook, Youtube, Twitch, Zoom, and dozens more
+* Supports live automated two-way chat messaging with Facebook, YouTube, Twitch, Zoom, and dozens more
 * Includes a "featured chat" overlay, with messages selectable via the dockable dashboard; auto or manual selection.
 * Supports bot-commands and automated chat responses, with custom logic supported via scriptable plugin file.
 * Text-to-speech support, along with many other niche features supported.
@@ -34,28 +34,28 @@ Social Stream makes use of VDO.Ninja's data-transport API to stream data securel
 #### Supported sites:
 
 * twitch.tv - pop out chat to trigger
-* youtube live - pop out the chat to trigger (studio or guest view); or add \&socialstream to the YT link
-* youtube static comments - click SS in the top right corner of Youtube, then select the message you wish to publish inside the YT comment section via the new buttons there.
-* facebook live - guest view, publisher view, or the producer's pop-up chat on the web is supported.
+* YouTube Live - pop out the chat to trigger (studio or guest view); or add \&socialstream to the YT link
+* YouTube Static Comments - click SS in the top right corner of Youtube, then select the message you wish to publish inside the YT comment section via the new buttons there.
+* Facebook Live - guest view, publisher view, or the producer's pop-up chat on the web is supported.
 * workplace.com - (same setup as Facebook)
 * zoom.us (web version)
-* owncast demo page (`watch.owncast.online`, or for a pop-out chat version, open `https://watch.owncast.online/embed/chat/readwrite/` )
+* Owncast demo page (`watch.owncast.online`, or for a pop-out chat version, open `https://watch.owncast.online/embed/chat/readwrite/` )
 * crowdcast.io
 * livestream.com
 * mixcloud.com (pop out chat)
-* ms teams (experimental support)
+* Microsoft Teams (experimental support)
 * vimeo.com (pop out chat page; https://vimeo.com/live-chat/xxxxxxxxx/interaction/)
-* instagram live (instagram.com/\*/live/), css note: `[data.type = "instagramlive"]`
+* Instagram Live (instagram.com/\*/live/), css note: `[data.type = "instagramlive"]`
 * Instagram post non-live comments (REQUIRES the TOGGLE in menu to enable it), css note: `[data.type = "instagram"]`
 * instafeed.me (no pop out; alternative instagram live support)
-* tiktok live (tiktok.com/\*/live)
-* webex live chat (not the pop out)
-* linkedin events and live comments. (works with linkedin.com/videos/live/\* or linkedin.com/videos/events/\* or linkedin.com/events/\*)
-* vdo.ninja (pop-out chat)
+* TikTok Live (tiktok.com/\*/live)
+* Webex Live Chat (not the pop out)
+* LinkedIn Events and Live Comments. (works with linkedin.com/videos/live/\* or linkedin.com/videos/events/\* or linkedin.com/events/\*)
+* VDO.ninja (pop-out chat)
 * Whatsapp.com (REQUIRES the TOGGLE in menu to enable it; use @ https://web.whatsapp.com ; fyi, no avatar support)
 * discord.com (web version; requires toggle enabled via the settings as well)
-* telegram (web.telegram.org in stream mode; requires toggle enabled)
-* slack (https://app.slack.com/ ; required toggle enabled to use)
+* Telegram (web.telegram.org in stream mode; requires toggle enabled)
+* Slack (https://app.slack.com/ ; required toggle enabled to use)
 * Google Meet ; required toggle enabled to use
 * ![Requires toggling to enable certain integrations](https://user-images.githubusercontent.com/2575698/178857380-24b3a0fc-bf86-4645-91ec-24893df19279.png) telegram, slack, whatsapp, discord require an extra step to enable. See this video for more help: https://www.youtube.com/watch?v=L3l0\_8V1t0Q
 * restream.io chat supported (https://chat.restream.io/chat)
@@ -125,7 +125,7 @@ I have a video walk-thru on how I added a simple social site to Social Stream:
 
 You can also refer to some of my code commits, where you can see which changes I made to add support for any specific site.
 
-ie: `https://github.com/steveseguin/social_stream/commit/942fce2697d5f9d51af6da61fc878824dee514b4`
+i.e.: `https://github.com/steveseguin/social_stream/commit/942fce2697d5f9d51af6da61fc878824dee514b4`
 
 For a simple site, a developer should need just 30 minutes to an hour to get a site supported. A more complicated and tricky site may take a few hours or longer, depending on the developer's skill.
 
@@ -141,17 +141,17 @@ For a more recent guide focusing on setup for Discord, slack, Whatsapp, and Tele
 
 #### To install
 
-This extension should work with Chromium-based browser on systems that support webRTC. This includes Chrome, Edge, and Brave. [Firefox users see here](https://github.com/steveseguin/social\_stream#firefox-support).
+This extension should work with Chromium-based browser on systems that support WebRTC. This includes Chrome, Edge, and Brave. [Firefox users see here](https://github.com/steveseguin/social_stream#firefox-support).
 
 Currently you must download, extract, and load the browser extension manually. It is not available yet in the browser's web store.
 
-The link to download newest version is here: [https://github.com/steveseguin/social\_stream/archive/refs/heads/main.zip](https://github.com/steveseguin/social\_stream/archive/refs/heads/main.zip)
+The link to download newest version is here: [https://github.com/steveseguin/social\_stream/archive/refs/heads/main.zip](https://github.com/steveseguin/social_stream/archive/refs/heads/main.zip)
 
 Once extracted into a folder, you can go here to load it: chrome://extensions/
 
 ![image](https://user-images.githubusercontent.com/2575698/142858940-62d88048-5254-4f27-be71-4d99ea5947ab.png)
 
-Ensure you have Developer Mode enabled; then you can just load the extension via the load unpacked button and selecting the folder you extracted the fiels to.
+Ensure you have Developer Mode enabled; then you can just load the extension via the load unpacked button and selecting the folder you extracted the files to.
 
 ![image](https://user-images.githubusercontent.com/2575698/142857907-80428c61-c192-4bff-a1dc-b1a674f9cc4a.png)
 
@@ -163,7 +163,7 @@ Please note also that you will need to manually update the extension to access n
 
 If you see the browser say there is an "Error", specifically a manifest v2 warning or something, you can safely ignore it. It is not actually an error and will not impact the function of the extension.
 
-Something of concern though is Google will be updating Chrome browsers on January 2023 to block many popular Chrome extensions, including many Adblockers and also Social Stream. I'm working to resolve this concern, but Social Stream may end up having diminished functionality if Google has their way. If necessary, Social Stream may evolve into a downloadable app instead to avoid these limiations, but I'm hoping to avoid that if possible.
+Something of concern though is Google will be updating Chrome browsers on January 2023 to block many popular Chrome extensions, including many Adblockers and also Social Stream. I'm working to resolve this concern, but Social Stream may end up having diminished functionality if Google has their way. If necessary, Social Stream may evolve into a downloadable app instead to avoid these limitations, but I'm hoping to avoid that if possible.
 
 **Updating**
 
@@ -177,7 +177,7 @@ Link to the newest version of Social Stream
 
 Please note: DO NOT Uninstall the extension if you want to update it. This will delete all your settings. Replace the files, and reload the extension or browser instead. If you MUST uninstall, you can export your settings to disk and reload them after you have reinstalled.
 
-New app integrations do not auto-update; just the overlay and dock page will auto-update. It's suggeseted you update every now and then manually, or whenever you encounter a bug. I'll try to resolve this issue down the road, perhaps with a standalone desktop app eventually.
+New app integrations do not auto-update; just the overlay and dock page will auto-update. It's suggested you update every now and then manually, or whenever you encounter a bug. I'll try to resolve this issue down the road, perhaps with a standalone desktop app eventually.
 
 **Firefox support**
 
@@ -215,13 +215,13 @@ Please note: XPI files are currently provided on request or with major updates; 
 
 #### To use
 
-Open Twitch or Youtube "Pop out" chat; or just go to your Facebook Live chat while connected to Ethernet or WiFi. You must not minimize or close these windows, but they can be left in the background or moved to the side.
+Open Twitch or YouTube "Pop out" chat; or just go to your Facebook Live chat while connected to Ethernet or WiFi. You must not minimize or close these windows, but they can be left in the background or moved to the side.
 
 Then, press the Social Stream chrome extension button and ENABLE streaming of chat data. (Red implies disabled. Green is enabled)
 
 ![image](https://user-images.githubusercontent.com/2575698/142856707-0a6bc4bd-51b4-4cd0-9fa3-ef5a1adfcbf7.png)
 
-**Please note: If the Extension's icon is RED, then it means it is still off and wil not work. You have to click "Enable extension", and the icon must change to the color green.**
+**Please note: If the Extension's icon is RED, then it means it is still off and will not work. You have to click "Enable extension", and the icon must change to the color green.**
 
 Next, using the provided two links, you can manage the social stream of chat messages and view selected chat messages as overlays.
 
@@ -247,10 +247,10 @@ If using the automated chat response options, like auto-hi, you must ensure the 
 
 * Toggle the extension on and off, and reload the pop-out chat window. Ideally the pop-out chat should be visible on screen, as even just a few pixels shown will allow the pop-out chat to work at full-power. Chrome otherwise may throttle performance.
 * Open a new dock / overlay link if things still do not work, as the session ID may have changed.
-* Ensure that VDO.Ninja works with your browser, as if not, webRTC may be disabled and so this social stream extension will not work also.
+* Ensure that VDO.Ninja works with your browser, as if not, WebRTC may be disabled and so this social stream extension will not work also.
 * If using Facebook live chat, please sure you are viewing the page as a "viewer", not as a publisher, and that you are connected to WiFi or Ethernet, and not mobile LTE/4G/5G.
 * The auto-responder requires you to be signed in to the social endpoint and that you have access to chat; ensure you accept any disclaimer and try issuing a test message first.
-* Try using the extension in Incognito mode or try disabling all other browser extensions, then reloading the browser, and trying again. Many extension types will conflict with Socialstream, causing certain functions to fail.
+* Try using the extension in Incognito mode or try disabling all other browser extensions, then reloading the browser, and trying again. Many extension types will conflict with SocialStream, causing certain functions to fail.
 
 #### Customize
 
@@ -269,7 +269,7 @@ To customize the dock, you can use the following options:
 To customize the featured chat overlay, the following URL parameters are available
 
 * `&showtime=20000` (auto-hides selected messages after 20s)
-* `&showsource` (shows the youtube/twitch/fb icons next to the name)
+* `&showsource` (shows the YouTube/Twitch/Facebook icons next to the name)
 * `&fade` (will have featured messages fade in, rather than pop up)
 * `&swipe` (will have featured messages swipe in from the left side)
 * `&center` (center featured messages)
@@ -350,9 +350,9 @@ An example of one is available here: [https://socialstream.ninja/themes/pretty.h
 
 For anyone who wants to create a custom theme/style/template for their chat stream, you can share them via adding them to this repository as a Pull Request.
 
-**Custom Javascript**
+**Custom JavaScript**
 
-You can inject a bit of javascript into the dock or index pages using `&js={URL ENCODED JAVASCRIPT}`
+You can inject a bit of JavaScript into the dock or index pages using `&js={URL ENCODED JAVASCRIPT}`
 
 For example, [https://socialstream.ninja/index.html?session=test123\&js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js](https://socialstream.ninja/index.html?session=test123\&js=https%3A%2F%2Fvdo.ninja%2Fexamples%2Ftestjs.js)
 
@@ -362,17 +362,17 @@ You can create your own custom auto-responding triggers or other actions by incl
 
 Included in the code is the `custom_sample.js` file, which you can rename to custom.js to get started. Included in it is the `&auto1` trigger, which auto responds "1" to any message that is also "1". You need to add `&auto1` to the dock's URL to activate it.
 
-It's fairly easy to modify the `auto1` trigger to do whatever you want. You can also customize or removee the URL-parameter trigger needed to activate it.
+It's fairly easy to modify the `auto1` trigger to do whatever you want. You can also customize or remove the URL-parameter trigger needed to activate it.
 
 #### Queuing messages
 
-If you hold CTRL (or cmd on mac), you can select messages in the dock that get added to a queue. A button should appear in the top dock menu bar that will let you cycle through the queue, one at a time. When pressing the Next in Queue button, messages from the queue will appear as featured chat messages in the overlay page.
+If you hold CTRL (or cmd on Mac), you can select messages in the dock that get added to a queue. A button should appear in the top dock menu bar that will let you cycle through the queue, one at a time. When pressing the Next in Queue button, messages from the queue will appear as featured chat messages in the overlay page.
 
 #### Pinning messages
 
 Like queuing a message, you can also instead hold down the ALT key while clicking a message to pin it; it will stay at the top of the page, until unpinned in the same fashion.
 
-#### Togglable Menu Commands
+#### Toggleable Menu Commands
 
 These are some generic auto-reply commands that can be toggled on/off via the extension's menu. They do not need a custom.js file to work
 
@@ -474,9 +474,9 @@ If you wish to ask the payer for a name, include a custom field called "Display 
 
 Lastly, to allow these events to show up in the Social Stream dock, add \&server to the dock URL; this will have the dock start listening for incoming messages from the webhook/api server. You can always test that the workflow is working using Stripe's "Test mode"; just spam 424242.. etc for the credit card number, expiration, cvc, etc, when using the test mode, rather than a valid credit card.
 
-![image](https://github.com/steveseguin/social\_stream/assets/2575698/29bab9b6-8fb7-482d-87d1-2b7f2bd74f9f)
+![image](https://github.com/steveseguin/social_stream/assets/2575698/29bab9b6-8fb7-482d-87d1-2b7f2bd74f9f)
 
-![image](https://github.com/steveseguin/social\_stream/assets/2575698/3f31974c-6bbb-4ed0-bc7c-4d27f7c3103b)
+![image](https://github.com/steveseguin/social_stream/assets/2575698/3f31974c-6bbb-4ed0-bc7c-4d27f7c3103b)
 
 #### Text to speech
 
@@ -496,13 +496,13 @@ There is a toggle in the dock to turn off and on the text-to-speech; turning it 
 
 **Installing different language-speech packs**
 
-By default, the list of support languages on your computer could be slim. To add more speech options for different langauges, you'll need to install them.
+By default, the list of support languages on your computer could be slim. To add more speech options for different languages, you'll need to install them.
 
 see: https://support.microsoft.com/en-us/windows/download-language-pack-for-speech-24d06ef3-ca09-ddcc-70a0-63606fd16394 for details
 
 There's a simplified test app for text-to-speech here also, that might also help try different languages on the fly: https://mdn.github.io/dom-examples/web-speech-api/speak-easy-synthesis/
 
-You can manaul set the pitch, volume, rate, and even voice-name with the below URL parameters. The voice just matches on a partial word, so "siri", "google", "bob", or whatever is being used will work. This still assumes the language selected also matches. `&speech=en` (first english to match), `&speech=en-US` (default), or `&speech=fr-CA` can specify the language, for example.
+You can manual set the pitch, volume, rate, and even voice-name with the below URL parameters. The voice just matches on a partial word, so "Siri", "Google", "bob", or whatever is being used will work. This still assumes the language selected also matches. `&speech=en` (first english to match), `&speech=en-US` (default), or `&speech=fr-CA` can specify the language, for example.
 
 ```
 &pitch=1
@@ -541,7 +541,7 @@ If you want a different set of voices, or wish to train your own, ElevenLabs.io 
 
 Anyways, documentation on getting start with finding a voice you want to use and testing your API key: API Social Stream is using: https://api.elevenlabs.io/docs#/text-to-speech/Text\_to\_speech\_v1\_text\_to\_speech\_\_voice\_id\_\_stream\_post Available voices: https://api.elevenlabs.io/docs#/voices/Get\_voices\_v1\_voices\_get
 
-To use this with Social Stream, you'll need to be using the featured-chat index.html or dock.html page, and you'll need to provide your api key there.
+To use this with Social Stream, you'll need to be using the featured-chat index.html or dock.html page, and you'll need to provide your API key there.
 
 Example URL with options `https://socialstream.ninja/index.html?session=SESSIONIDHERE&tts&elevenlabskey=YOURELEVENLABSAPIKEYHERE&latency=4&voice=VR6AewLTigWG4xSOukaG`
 
@@ -571,8 +571,8 @@ There is a toggle that lets you show the source of the chat messages.
 
 If the auto responder doesn't work -- you see a blue bar, but nothing happens, there's a couple things to do.
 
-* make sure if using YouTube/Twitch that the pop out window is open
-* go to `chrome://apps` and remove the YouTube(s) apps that might appear. You can remove them all really if none are required.
+* Make sure if using YouTube/Twitch that the pop out window is open
+* Go to `chrome://apps` and remove the YouTube(s) apps that might appear. You can remove them all really if none are required.
 * Make sure you have permission to post into the chat first -- sometimes you need to be a subscriber for example to send chat messages.
 
 ![image](https://user-images.githubusercontent.com/2575698/146602513-e3b7e69c-19fa-4e58-b907-6f08b3f873e0.png)
@@ -599,17 +599,17 @@ In the bottom right corner, hit relaunch to relaunch chrome with new settings. T
 
 * Try refreshing the chat page; sometimes refreshing the page will retrigger the code and bypass any errors. This is particularly try if you install or refresh the extension after the chat page has already been loaded.
 * Try to keep the chat window and dock page active and if possible, even partially visible on screen. If the windows are hidden or minimized, they may stop working. This is also true if the scroll bar for the chat window is not at the bottom; sometimes messages won't load unless you are seeing the newest messages.
-* If using OBS Studio on macOS or Linux, for some reason this extension will not work if hosted locally on your drive, so custom CSS needs to happen via the browser source style section. It works great on PC locally, and when hosted on socialstream.ninja, but locally on mac, it does not seem supported. This is an issue you'll need to take up with the OBS developers.
+* If using OBS Studio on macOS or Linux, for some reason this extension will not work if hosted locally on your drive, so custom CSS needs to happen via the browser source style section. It works great on PC locally, and when hosted on SocialStream.ninja, but locally on mac, it does not seem supported. This is an issue you'll need to take up with the OBS developers.
 * For discord, slack, and telegram, for security reasons, you need to enable the TOGGLE switch in the settings to enable.
 * To set the Session ID to your own value, go to Extensions settings to set it. On Chrome: Settings -> Extensions -> Social Stream Ninja -> Details -> Extension options.
 
 #### Requesting a site
 
-You can make a request here on Github as an issue ticket, or join the Discord server at https://discord.socialstream.ninja and request there.
+You can make a request here on GitHub as an issue ticket, or join the Discord server at https://discord.socialstream.ninja and request there.
 
-Not all requested sites can or will be supported. Steve generally will add support for publicly accessible social chat sites that have a significantly-large community; it's ultimately up to the decretion of Steve though on what he wants to add or has time to add. Code contributions from others that add new site integration or features are normally welcomed, but sites/features that may violate Canadian laws, fail to meet quality standards, or for any other reason, may possibly not be merged or accepted. In these cases you may need to self-host or fork the repo, maintaining your own copy with said changes instead.
+Not all requested sites can or will be supported. Steve generally will add support for publicly accessible social chat sites that have a significantly-large community; it's ultimately up to the discretion of Steve though on what he wants to add or has time to add. Code contributions from others that add new site integration or features are normally welcomed, but sites/features that may violate Canadian laws, fail to meet quality standards, or for any other reason, may possibly not be merged or accepted. In these cases you may need to self-host or fork the repo, maintaining your own copy with said changes instead.
 
-There is no guarentee that a site that gets added will continue to be supported over time. Steve also doesn't accept payment for adding an integration or for support.
+There is no guarantee that a site that gets added will continue to be supported over time. Steve also doesn't accept payment for adding an integration or for support.
 
 #### Adding sites yourself
 
@@ -619,7 +619,7 @@ I have a video walk-thru on how I added a simple social site to Social Stream:
 
 You can also refer to some of my code commits, where you can see which changes I made to add support for any specific site.
 
-ie: `https://github.com/steveseguin/social_stream/commit/942fce2697d5f9d51af6da61fc878824dee514b4`
+i.e.: `https://github.com/steveseguin/social_stream/commit/942fce2697d5f9d51af6da61fc878824dee514b4`
 
 For a simple site, a developer should need just 30 minutes to an hour to get a site supported. A more complicated and tricky site may take a few hours or longer, depending on the developer's skill.
 
@@ -627,16 +627,16 @@ For a simple site, a developer should need just 30 minutes to an hour to get a s
 
 You can find me on discord over at https://discord.socialstream.ninja or [https://discord.gg/7U4ERn9y](https://discord.gg/vFU8AuwNf3), offering free support in channel #chat.overlay-support
 
-Feedback and feature requests are welcomed. Please also make a Github issue if you're not a fan of Discord, but still need to report a bug or feature request.
+Feedback and feature requests are welcomed. Please also make a GitHub issue if you're not a fan of Discord, but still need to report a bug or feature request.
 
 #### Icons
 
-I do not claim rights of all the icons distributed. While I made some of the icons, trademarks and logos of third party companies/services are the rights of those respectivitive entities. Use them according to the terms that those entities may offer them under.
+I do not claim rights of all the icons distributed. While I made some of the icons, trademarks and logos of third party companies/services are the rights of those respective entities. Use them according to the terms that those entities may offer them under.
 
 #### Credit
 
-This project contains inspiration by my other project, chat.overlay.ninja, which was a derivation of another Youtube-specific chat widget, which was inspired by the stylings of other featured-chat code sample, of which that was also inspired by existing chat overlay designs. May the many new innovations of this project inspire the future foundation of other awesome projects as well.
+This project contains inspiration by my other project, chat.overlay.ninja, which was a derivation of another YouTube-specific chat widget, which was inspired by the stylings of other featured-chat code sample, of which that was also inspired by existing chat overlay designs. May the many new innovations of this project inspire the future foundation of other awesome projects as well.
 
 #### Contributors to this project
 
-[![](https://contrib.rocks/image?repo=steveseguin/social\_stream)](https://github.com/steveseguin/social\_stream/graphs/contributors)
+[![](https://contrib.rocks/image?repo=steveseguin/social_stream)](https://github.com/steveseguin/social_stream/graphs/contributors)

@@ -14,7 +14,7 @@ In some cases, the functionality of [VDO.Ninja](https://vdo.ninja) may overlap w
 * The interface is **open-source**, so you can white-label, stylize, tweak, and deploy the website code however you want.
 * **Reusable invite links**, meaning OBS Browser Sources don't need to be recreated or changed once created and shared.
 * Playback of video has been tested to work on using Amazon's Firestick's with Silk browser, along with a Tesla's Model 3's infotainment display.
-* **No plugins needed for OBS** -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[MacOS](https://github.com/steveseguin/obsninja/wiki/FAQ#MacOS) users need to update to OBS v26.1.2 to access support for VDO.Ninja natively.)
+* **No plugins needed for OBS** -- just drag the selected link into OBS (v25 or newer on PC\*) and it auto generates the OBS Browser source with the correct resolution. (\*[macOS](https://github.com/steveseguin/obsninja/wiki/FAQ#MacOS) users need to update to OBS v26.1.2 to access support for VDO.Ninja natively.)
 * **QR Code support for invite links**, which allows for easy ingestion of mobile devices without needing to use the keyboard.
 * **Browser-based control of OBS scenes**.
 * **No overlays or windows to crop** -- VDO.Ninja auto-fills the window and if there is a black border, it becomes a transparent layer.

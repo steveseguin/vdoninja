@@ -63,7 +63,7 @@ If there is of great interest to users, please let me know on Discord in the Fea
 
 ### Headless recording
 
-This is a bit like having a headless version of OBS in the cloud, where it's configured to take a [VDO.Ninja](https://vdo.ninja/) browser link and publish it using FFMPEG to RTMP. Works with DigitalOcean or even an Orange pi.
+This is a bit like having a headless version of OBS in the cloud, where it's configured to take a [VDO.Ninja](https://vdo.ninja/) browser link and publish it using FFmpeg to RTMP. Works with DigitalOcean or even an Orange pi.
 
 [https://github.com/steveseguin/browser-to-rtmp-docker](https://github.com/steveseguin/browser-to-rtmp-docker)
 
@@ -82,7 +82,7 @@ If you are enterprising, you can have [Raspberry.Ninja](https://raspberry.ninja/
 If you want to record more than a single guest, but rather an entire scene, using URL parameters you can achieve this. We are essentially doing a screen share of the output window, and recording that.\
 \
 **Record entire scene to disk:** [https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&record\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=ROOMNAME](https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&record\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=ROOMNAME)\
-**Publish entire scene to a WHIP endpont:**\
+**Publish entire scene to a WHIP endpoint:**\
 [https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&whippush\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=surprisethinP](https://vdo.ninja/?scene=0\&layout\&remote\&clean\&chroma=000\&ssar=landscape\&nosettings\&prefercurrenttab\&selfbrowsersurface=include\&displaysurface=browser\&np\&nopush\&publish\&whippush\&screenshareaspectratio=1.7777777777777777\&locked=1.7777777777777777\&room=surprisethinP)
 
 <figure><img src="../.gitbook/assets/image (243).png" alt=""><figcaption></figcaption></figure>

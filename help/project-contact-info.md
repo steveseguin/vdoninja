@@ -2,10 +2,10 @@
 
 ## Project Information and Support Links
 
-**web service URL**: [https://VDO.Ninja](https://obs.ninja)\
-**project development URL**: [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)\
-**developer/maintainer**: [steve@seguin.email](mailto:steve@seguin.email)\
-**donations**: [via GitHub Sponsors](https://github.com/steveseguin/obsninja/wiki/Sponsor-%E2%9D%A4)
+**Web service URL**: [https://VDO.Ninja](https://obs.ninja)\
+P**roject development URL**: [https://github.com/steveseguin/vdo.ninja](https://github.com/steveseguin/vdo.ninja)\
+D**eveloper/maintainer**: [steve@seguin.email](mailto:steve@seguin.email)\
+D**onations**: [via GitHub Sponsors](https://github.com/steveseguin/obsninja/wiki/Sponsor-%E2%9D%A4)
 
 ### Community Support
 

@@ -1,6 +1,6 @@
 # Can't turn off echo-cancellation on macOS
 
-I've had user reports that Mac OS is forcing Echo cancellation on all devices except the built in mic. This was at least tested with a Scarlett Solo gen3\
+I've had user reports that MacOS is forcing Echo cancellation on all devices except the built in mic. This was at least tested with a Scarlett Solo gen3\
 \
 Any "extra" device has echo cancellation forced on currently.\
 \

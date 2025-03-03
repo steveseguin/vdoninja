@@ -24,5 +24,5 @@ description: >-
 
 **Use OBS and it's Virtual Camera:**
 
-* You can use OBS to capture lightroom, and from there output it to VDO.Ninja via the OBS Virtual Camera.  You would select the virtual camera in VDO.Ninjas a camera source, instead of a screen share source.  OBS has more advanced screen capture options than Chrome does.
+* You can use OBS to capture Lightroom, and from there output it to VDO.Ninja via the OBS Virtual Camera.  You would select the virtual camera in VDO.Ninjas a camera source, instead of a screen share source.  OBS has more advanced screen capture options than Chrome does.
 

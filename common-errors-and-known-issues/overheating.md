@@ -24,7 +24,7 @@ Normally H264 will be used automatically if the hardware-device has a hardware-d
 
 When it comes to hardware encoding on laptops, H264 encoders sometimes kick-in, but the vast majority of the the time the browser will choose to still encode H264 video using a software-encoder. For the best chance of it working, use a Chromium-browser, like Chrome.
 
-It should be noted that hardware encoders are finite in availability -- this means that they are often not something you can rely on when in a group-video call with multiple peers requesting video streams. If using an Nvidia GPU, you might be limited to 2 or 3 hardware encoders, just like an iOS device, which doesn't work well if streaming to many viewers. \
+It should be noted that hardware encoders are finite in availability -- this means that they are often not something you can rely on when in a group-video call with multiple peers requesting video streams. If using an NVIDIA GPU, you might be limited to 2 or 3 hardware encoders, just like an iOS device, which doesn't work well if streaming to many viewers. \
 \
 The VP9 codec offers higher quality than most default codecs, but it also uses higher CPU load. AV1 may be even worse, so sometimes H264 is best. Just something to be aware of.\
 \
@@ -76,7 +76,7 @@ Download the mobile app versions here: [https://docs.vdo.ninja/getting-started/n
 
 Please contact steve at `steve@seguin.email` or via discord ([discord.vdo.ninja](https://discord.vdo.ninja)) if you'd like to contribute to development of these native versions. The cost, time, and skill requirements for their continued development are quite steep.
 
-### Laptops and Macbooks
+### Laptops and MacBooks
 
 Older 2011-era Apple notebooks are prone to overheating. Even newer generation Macbooks can overheat if stressed. Normally these systems throttle the CPU to be MUCH slower when they get too hot, so it may appear like there is a network issue.&#x20;
 
@@ -84,11 +84,11 @@ Ensure you are not running a laptop at 100% CPU load, make sure it has plenty of
 
 ![](<../.gitbook/assets/image (5) (1) (1) (1) (1) (1) (1) (1) (1).png>)
 
-### Raspberry Pi, Nvidia Jetson, and dedicated hardware-encoders
+### Raspberry Pi, NVIDIA Jetson, and dedicated hardware-encoders
 
 VDO.Ninja has limited support for hardware encoders. Hardware encoders greatly reduce heat, but they are often poorly suited for low-latency video that requires tolerant packet-loss capabilities and dynamic resolutions. Green/purple/grey coloring of video, lost frames, and distorted video blocks are common when using hardware-encoders at very-low latencies.&#x20;
 
-There is support for the Raspberry Pi, both software-encoder and hardware-encoder options, but the hardware-encoded option is the most limited and challenging. The current project supporting this offering is here: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja)
+There is support for the Raspberry Pi, both software-encoder and hardware-encoder options, but the hardware-encoded option is the most limited and challenging. The current project supporting this offering is here: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry_ninja)
 
 Like with the native mobile app versions, the capabilities of this option is very limited. It does not support group-rooms and it does not yet support multiple viewers. Since many are using the Raspberry Pi wirelessly, it must also be said that it has very poor support of packet loss recovery -- the video will often not be smooth, especially if the WiFi signal is not very strong.&#x20;
 
@@ -96,6 +96,6 @@ Using a Chromium browser with a Raspberry Pi, in software-encoded mode, will pro
 
 ![](<../.gitbook/assets/image (6) (1) (1) (1) (1) (1) (1) (1).png>)
 
-Just as a consideration though, the Nvidia Jetson development boards support higher resolutions and seem to have better support for dynamic video and packet loss recovery. These products are a bit more expensive, but tend to work better than a Raspberry Pi when it comes to encoding HD video. I have a support for the Hardware-encoding capabilities of a Jetson here, buried away alongside the files for the Raspberry Pi: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry\_ninja) It's pretty basic support also currently, but has a lot of potential.
+Just as a consideration though, the NVIDIA Jetson development boards support higher resolutions and seem to have better support for dynamic video and packet loss recovery. These products are a bit more expensive, but tend to work better than a Raspberry Pi when it comes to encoding HD video. I have a support for the Hardware-encoding capabilities of a Jetson here, buried away alongside the files for the Raspberry Pi: [https://github.com/steveseguin/raspberry\_ninja](https://github.com/steveseguin/raspberry_ninja) It's pretty basic support also currently, but has a lot of potential.
 
 In the future, more professional video-centric hardware encoding options with built-in LTE/5G transmitters will support VDO.Ninja in a basic publish-only mode. This advancement will be due to the adoption of community standards for publishing low-latency video, although don't hold your breath for progress here.

@@ -39,9 +39,9 @@ With non-Snapdragon GPUs, such as found in entry-level and some mid-range smartp
 
 On the Google Pixel the H264/VP8 encoder will glitch like crazy when used in Portrait mode, however it's glitch free when using the VP9 codec via software encoding.
 
-### Nvidia
+### NVIDIA
 
-If a director, choosing to publish video to your group with H264 might reduce some CPU load, but if using an Nvidia graphics card, you may end up forfeiting your ability to use NVenc encoding for RTMP or MKV file recording, since Nvidia only offers typically three encoders. You can unlock this limit, but the benefits of using NVenc with VDO.Ninja often provides no benefits it seems over a software H264 option.
+If a director, choosing to publish video to your group with H264 might reduce some CPU load, but if using an NVIDIA graphics card, you may end up forfeiting your ability to use NVENC encoding for RTMP or MKV file recording, since NVIDIA only offers typically three encoders. You can unlock this limit, but the benefits of using NVENC with VDO.Ninja often provides no benefits it seems over a software H264 option.
 
 If using a CDN-service like meshcast.io, where a server redistributes the video to a large audience, H264 is highly compatible with most viewers, but this is only true for the OpenH264 profile ID `42e01f` of H264. Hardware-encoded version of H264 may not be compatible with all browsers, such as with Safari viewers, so its not advised.
 
@@ -61,7 +61,7 @@ If you're comfortable with Linux, basic publishing into VDO.Ninja is available u
 
 Hardware encoding with multiple viewer per encoded stream is supported with this option, although features are limited. It is not for the faint of heart; generally this approach is still reserved for hobbyists, enthusiasts, and developers. A Raspberry Pi can publish 1080p30 to VDO.Ninja, and supports HDMI connected cameras; at least when using this project's code.
 
-Code and quick start deployment images are available for the Raspberry Pi and Nvidia Jetson embedded development boards, along with hardware-encoding support for those platforms.
+Code and quick start deployment images are available for the Raspberry Pi and NVIDIA Jetson embedded development boards, along with hardware-encoding support for those platforms.
 
 Other Linux systems are support with the provided code, but it is up to you to ensure the hardware driver and configuration is setup correctly in those cases.
 

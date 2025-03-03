@@ -24,7 +24,7 @@ At present, the native mobile app versions of VDO.Ninja are fairly basic, but th
 There are some limitations to the native mobile app versions though.
 
 * You can only publish with the mobile apps; you cannot view or listen to remote guests
-* UVC camera and mic support is not fully supported yet, but we're working on it. UVC devices are supported via the Raspberry Pi and Nvidia Jetson devices however (see bottom).
+* UVC camera and mic support is not fully supported yet, but we're working on it. UVC devices are supported via the Raspberry Pi and NVIDIA Jetson devices however (see bottom).
 * The native app requires a modern version of Android, while the web-based version of VDO.Ninja has been tested with Android 5.1 using Chrome.
 * Older iPhones cannot screen share
 
@@ -97,12 +97,12 @@ You cannot capture the desktop/system audio when screen sharing -- just the micr
 
 ## Raspberry Ninja
 
-If the mobile app versions of VDO.Ninja do not achieve what you want, there is a Linux / Windows WSL / Apple and embedded-friendly version of VDO.Ninja called Rasberry Ninja.\
+If the mobile app versions of VDO.Ninja do not achieve what you want, there is a Linux / Windows WSL / Apple and embedded-friendly version of VDO.Ninja called Raspberry Ninja.\
 \
 It supports publishing and viewing videos, VDO.Ninja to NDI support, raw stream recording, built-in multiviewer SFU broadcasting,  and doesn't require a browser. It will work with hardware encoders, CSI-based cameras, and can work on even an extremely basic Raspberry Pi Zero W.
 
 {% embed url="https://raspberry.ninja" %}
-Check out Raspberry Ninja if you need more flexiblity and don't want to use the browser
+Check out Raspberry Ninja if you need more flexibility and don't want to use the browser
 {% endembed %}
 
 ## Updates

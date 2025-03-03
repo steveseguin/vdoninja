@@ -14,7 +14,7 @@ Created for [VDO.Ninja](https://vdo.ninja) users, it can provide users a clean w
 
 ## Why ?
 
-On some systems the OBS Browser Source plugin isn't available or doesn't work all that well, so this tool is a viable alternative. It lets you cleanly screen-grab just a video stream without the need of the Browser Source plugin. It also makes it easy to select the output audio playback device, such as a Virtual Audio device: ie) [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/) (Windows & macOS; donationware).
+On some systems the OBS Browser Source plugin isn't available or doesn't work all that well, so this tool is a viable alternative. It lets you cleanly screen-grab just a video stream without the need of the Browser Source plugin. It also makes it easy to select the output audio playback device, such as a Virtual Audio device: i.e.) [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/) (Windows & macOS; donationware).
 
 The app can also be set to remain on top of other windows, attempts to hide the mouse cursor when possible, provides accurate window sizes for 1:1 pixel mapping, and supports global system hotkeys (`CTRL+M` on Windows, for example).
 

@@ -24,12 +24,24 @@ A [`&push`](../source-settings/push.md) ID can be up to around 40-characters in 
 
 While you can use a name as a stream ID, it's not very secure to do so. Instead, you can label your streams with [`&label`](../general-settings/label.md) to make it easier to identify. [`&showlabels`](../advanced-settings/design-parameters/showlabels.md) will then show those labels via a video overlay if you want as well.
 
-### Other ways to set a permanent view link
+### Auto-remember the last user stream ID
 
-You can also use [`&permaid`](../advanced-settings/setup-parameters/and-permaid.md) on a guest invite link, which will save the randomly generated stream ID to the guest's local browser storage. Every time they rejoin, their stream ID kept in local storage will be reused. With this approach, you do not need to set a stream ID ahead of time, and as long as the guest doesn't clear their cache, change computers, or use a different browser, the stream ID won't change.\
-\
+You can also use [`&permaid`](../advanced-settings/setup-parameters/and-permaid.md) on a guest invite link, which will save the randomly generated stream ID to the guest's local browser storage. Every time they rejoin, their stream ID kept in local storage will be reused. With this approach, you do not need to set a stream ID ahead of time, and as long as the guest doesn't clear their cache, change computers, or use a different browser, the stream ID won't change.
+
+### Using several scenes, one per guest
+
 Another option is to not use stream IDs at all to specify a video to load into OBS, etc. Instead, you can use custom [scenes](../advanced-settings/view-parameters/scene.md). Scene 1, S2, S3, etc. When a guest joins a room, you can simply assign the guest to a specific scene, and that scene link in OBS would be unchanging. Guests would not automatically be assigned to a scene, so you'd need to manually do that, but you don't need to update any URL in OBS with this approach.
 
-Like the above, you can also use the VDO.Ninja [Mixer App](../steves-helper-apps/mixer-app.md) ([https://vdo.ninja/mixer](https://vdo.ninja/mixer)) to have custom layouts, with "slots", and you can assign guests as they join to certain slots. You can have the system auto-assign guests to the first available slot also, or manually do so.
+### Using the Mixer app and slots
+
+Like the above, you can also use the VDO.Ninja [Mixer App](../steves-helper-apps/mixer-app.md) ([https://vdo.ninja/mixer](https://vdo.ninja/mixer)) to have custom layouts, with "slots", and you can assign guests as they join to certain slots. You can have the system auto-assign guests to the first available slot also, or manually do so.\
+\
+Also in this auto-assign mode, you can assign a guest a slot via their URL, and if that slot is available when they join, you can have them join it automatically rather than the first available slot.
+
+### View specific slots without custom layouts
+
+For those wanting to avoid creating custom layouts or having to use the mixer app, [\&viewslot](../advanced-settings/mixer-scene-parameters/and-viewslot.md) can be used on a scene link to show only the guest who is assigned that specific slot. You can use \&slotsmode on the director's URL to show the slot options, or you can just use the mixer app.
+
+### Other options
 
 There are perhaps other ways of doing this as all as well, but for most users, specifying a custom stream ID for each guest is recommended. The use of a spreadsheet to keep track of invites for guests is a great way to manage this, and with the use of URL forwarding services, like [short.io](https://short.io/), you can also change a guest's VDO.Ninja invite link retroactively, via the shortening service.

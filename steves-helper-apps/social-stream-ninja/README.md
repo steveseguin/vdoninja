@@ -28,7 +28,7 @@ I've been poking at this project for the past year, and due to frequent requests
 
 I'd say 90% of the features available in the extension work in this standalone version, with the interface about 50% done.
 
-Available as an installer for Windows x64 and MacOS.
+Available as an installer for Windows x64 and macOS.
 
 <figure><img src="../../.gitbook/assets/image (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 

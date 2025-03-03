@@ -4,7 +4,7 @@ Firefox is not fully supported, although we try to maintain basic support for re
 
 * Chrome on PC
 * Chrome on Android (maybe Opera if issues arise with Chrome)
-* Chrome on MacOS
+* Chrome on macOS
 * Safari on iOS
 
 Firefox can sometimes work when Chrome does not. With some video camera devices, Chrome may fail to load a camera device, while Firefox will work.

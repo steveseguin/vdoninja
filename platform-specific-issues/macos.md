@@ -4,7 +4,7 @@
 As of January 2021, OBS for macOS now supports VDO.Ninja natively. Update to OBS v26.1.2 for macOS to obtain access.
 {% endhint %}
 
-Please not that only H264 hardware decoding is supported, so you may wish to specify [`&codec=h264`](../advanced-settings/view-parameters/codec.md) in your OBS view links to reduce CPU load.
+Please note that only H264 hardware decoding is supported, so you may wish to specify [`&codec=h264`](../advanced-settings/view-parameters/codec.md) in your OBS view links to reduce CPU load.
 
 For those using older versions of OBS or StreamLabs, I recommend instead using the Electron Capture app to assist: [https://github.com/steveseguin/electroncapture](https://github.com/steveseguin/electroncapture). Follow the link for instructions and files.
 
@@ -21,7 +21,7 @@ To capture audio on macOS using the Electron Capture app, you'll need a virtual 
 | Blackhole     | **Free**     | [https://existential.audio/blackhole/](https://existential.audio/blackhole/)                                                                                                         |
 | VB Cable      | Donationware | [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/)                                                                                                                           |
 | Loopback      | _Paid_       | [https://rogueamoeba.com/loopback/](https://rogueamoeba.com/loopback/)                                                                                                               |
-| Audiohijack   | _Paid_       | [https://rogueamoeba.com/audiohijack](https://rogueamoeba.com/audiohijack)                                                                                                           |
+| Audio Hijack  | _Paid_       | [https://rogueamoeba.com/audiohijack](https://rogueamoeba.com/audiohijack)                                                                                                           |
 | iShowU        | _Paid_       | [https://obsproject.com/forum/resources/os-x-capture-audio-with-ishowu-audio-capture.505/](https://obsproject.com/forum/resources/os-x-capture-audio-with-ishowu-audio-capture.505/) |
 | Soundflower   | **Free**     | [https://rogueamoeba.com/freebies/soundflower/](https://rogueamoeba.com/freebies/soundflower/)                                                                                       |
 | GroundControl | **Free**     | [https://www.gingeraudio.com/](https://www.gingeraudio.com/)                                                                                                                         |

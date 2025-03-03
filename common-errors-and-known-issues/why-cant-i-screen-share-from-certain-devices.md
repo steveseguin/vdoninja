@@ -7,9 +7,9 @@ The Screen sharing feature is highly dependent on the operating system of the de
 * Safari on iOS does not yet support it officially, although it does support it with the "technical builds" designed for developers. Until Apple officially supports, there isn't much I can do there easily.
 * Android does not support it and it is doubtful that it will in the near future.
 
-In either case, you can use Native mobile apps to solve this problem, as the native apps let you screen share using iOS and Android.  However, the native apps are pretty basic right now, and may lack many features and may even lack system-audio capture.
+In either case, you can use Native mobile apps to solve this problem, as the native apps let you screen share using iOS and Android. However, the native apps are pretty basic right now, and may lack many features and may even lack system-audio capture.
 
-There's other tricks as well to get screen sharing working on mobile, such as using Quicktime via USB.
+There's other tricks as well to get screen sharing working on mobile, such as using QuickTime via USB.
 
 {% content-ref url="../steves-helper-apps/native-mobile-app-versions.md" %}
 [native-mobile-app-versions.md](../steves-helper-apps/native-mobile-app-versions.md)

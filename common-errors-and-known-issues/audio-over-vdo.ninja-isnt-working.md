@@ -36,7 +36,7 @@ In some cases, adding `&noap` to the URL for the sender or/and reciever of the a
 
 ### Not all playback devices support audio
 
-Some media devices, like the Magewell Director Mini, may not support audio via VDO.Ninja, and only video. Please also ensure the video is playing, as some devices may pause a media track until there is a user-gesture, which woudl prevent audio from playing in cases.
+Some media devices, like the Magewell Director Mini, may not support audio via VDO.Ninja, and only video. Please also ensure the video is playing, as some devices may pause a media track until there is a user-gesture, which would prevent audio from playing in cases.
 
 ### Echo cancellation
 
