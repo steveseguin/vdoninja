@@ -48,6 +48,10 @@ It can be used in conjunction with [`&bgimage`](and-bgimage.md) to specific a cu
 
 ## Related
 
+{% content-ref url="../view-parameters/activespeaker.md" %}
+[activespeaker.md](../view-parameters/activespeaker.md)
+{% endcontent-ref %}
+
 {% content-ref url="style.md" %}
 [style.md](style.md)
 {% endcontent-ref %}

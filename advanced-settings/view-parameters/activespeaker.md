@@ -38,6 +38,12 @@ This will not impact modes 2 or 4
 
 ## Related
 
+If looking to add a green box around active speakers, or make it just easier to see who is talking, please considering using \&meterstyle instead.
+
+{% content-ref url="../design-parameters/meterstyle.md" %}
+[meterstyle.md](../design-parameters/meterstyle.md)
+{% endcontent-ref %}
+
 {% content-ref url="../mixer-scene-parameters/and-motiondetection-alpha.md" %}
 [and-motiondetection-alpha.md](../mixer-scene-parameters/and-motiondetection-alpha.md)
 {% endcontent-ref %}
