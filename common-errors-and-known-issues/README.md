@@ -17,7 +17,7 @@
 * [loading-circle-shows-in-obs-or-browser.md](loading-circle-shows-in-obs-or-browser.md "mention")
 * [appearing-then-disappearing-guest.md](appearing-then-disappearing-guest.md "mention")
 * [cant-auto-start-screen-sharing.md](cant-auto-start-screen-sharing.md "mention")
-* [audio-clicking-popping.md](audio-clicking-popping.md "mention")
+* [audio-clicking-popping-distortion.md](audio-clicking-popping-distortion.md "mention")
 * [cant-share-my-screen.md](cant-share-my-screen.md "mention")
 * [nothing-shows-up-in-obs-or-it-is-choppy.md](nothing-shows-up-in-obs-or-it-is-choppy.md "mention")
 * [already-in-use-or-claimed-errors.md](already-in-use-or-claimed-errors.md "mention")
