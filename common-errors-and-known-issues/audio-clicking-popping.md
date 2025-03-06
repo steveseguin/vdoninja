@@ -28,6 +28,10 @@ Devices like FiiO DAC can sometimes have very high audio sample rates, potential
 * Ensure to only use mono or stereo audio with your devices; surround can cause issues.
 * Adjust these settings in Windows audio settings.
 
+
+
+<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>Recommended settings: 16- or 24-bit, 48Khz, Stereo or Mono</p></figcaption></figure>
+
 ### Buffer Size Issues
 
 * Increase audio buffer packet sizes for any  virtual audio cables or pro audio gear.
@@ -101,6 +105,41 @@ Try adding these URL parameters to viewer and sender links:
 * `&samplerate=48000`
 * `&micsamplerate=48000`
 
+### Disable Hardware Acceleration
+
+While it's an odd ball option, sometimes disabling Hardware Acceleration in OBS or Chrome can fix strange driver or hardware issues.
+
+### Browser / System performance throttling
+
+Rarely, but sometimes audio may glitch of the browser itself is throttling performance. While using the [Electron Capture app](../steves-helper-apps/electron-capture.md) instead of Chrome can minimize the odds of this happening, below are steps that might also help:
+
+* Browser may pause non-visible windows, so you may need to disable this behaviour in your browser.&#x20;
+  * To do so, "Disable" the option located at `chrome://flags/#enable-throttle-display-none-and-visibility-hidden-cross-origin-iframes`.&#x20;
+  * Also "Disable" the flag `chrome://flags/#calculate-native-win-occlusion`.&#x20;
+  * Restart the browser after saving the changes.
+* Plug the computer into a power-outlet if using a laptop.
+  * Laptops when running on battery power may throttle performance aggressively, so keep your device plugged in.
+  * Avoiding being in a low-battery  or power-saving state
+* Avoid minimizing any windows.&#x20;
+  * Things work best if windows are kept visible and open, but if you need to put them in the background, don't minimize them at least.
+  * This isn't normally an issue, but it might be if using digital effects, like a digital zoom or the whiteboard feature
+* Browsers may also sometimes stop tabs/windows after an hour of inactivity.&#x20;
+  * Disable any option in your browser under `chrome://settings/performance` related to performance throttling or background tabs, such as "Throttle Javascript timers in background".
+* You can go to `chrome://discards/` and toggle off "Auto Discardable" on the VDO.NInja or other windows of interest.
+
+![image](https://github.com/user-attachments/assets/692fd148-798e-4cb1-9c09-b667b50a542a)
+
+* Try to keep the VDO.Ninja pages active and if possible, even partially visible on screen.&#x20;
+  * If the windows are hidden or minimized, they may stop working if the system is designed to optimize.
+* Another option to avoid throttling, if using Windows, is to do Win + Tab, and have two virtual Desktops on your PC.&#x20;
+  * Put the chat windows into one virtual desktop, and use OBS in the other.&#x20;
+  * Win+Tab can let you switch between desktops/windows.
+* You can also try the Electron Capture desktop app, as that has more controls and will avoid common throttling / visibility issues found while using Chrome.
+
 #### Further Resources
 
-For issues with audio distortion or robotic voices, [you can see this article.](robotic-audio-distortion.md)\
+For issues with audio distortion or robotic voices, [you can see this article.](robotic-audio-distortion.md)
+
+{% content-ref url="robotic-audio-distortion.md" %}
+[robotic-audio-distortion.md](robotic-audio-distortion.md)
+{% endcontent-ref %}
