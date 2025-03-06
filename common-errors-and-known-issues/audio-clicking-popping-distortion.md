@@ -2,7 +2,7 @@
 description: Audio Troubleshooting Guide for VDO.Ninja
 ---
 
-# Audio Clicking / Popping
+# Audio Clicking / Popping / Distortion
 
 ## Common Issues and Solutions
 
@@ -41,9 +41,14 @@ Devices like FiiO DAC can sometimes have very high audio sample rates, potential
 * Ensure to only use mono or stereo audio with your devices; surround can cause issues.
 * Adjust these settings in Windows audio settings.
 
+![](<../.gitbook/assets/image (258).png>)
 
 
-<figure><img src="../.gitbook/assets/image.png" alt=""><figcaption><p>Recommended settings: 16- or 24-bit, 48Khz, Stereo or Mono</p></figcaption></figure>
+
+### Disable surround sound or DTX audio
+
+* You might think you disabled the surround sound on your headphones, but you might only think you did
+* Try with a different pair of headphones; something less fancy, if you are using a Bluetooth or Surround sound gaming headset.
 
 ### Buffer Size Issues
 
