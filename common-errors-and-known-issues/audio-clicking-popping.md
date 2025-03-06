@@ -6,6 +6,16 @@ description: Audio Troubleshooting Guide for VDO.Ninja
 
 ## Common Issues and Solutions
 
+### OBS Studio related audio issues
+
+There are numerous of known causes for audio drop out or audio distortion in OBS. Often it's caused by OBS Studio being throttled by the system, or perhaps a firewall setting is causing network issues. So try the following first, if the issue is OBS specific:
+
+* Consider running OBS Studio in **Administrator mode,** if on Windows
+* Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error.
+* Make sure the computer isn't running near 100% load to ensure it's not just overloaded.
+  * Do not rely on the OBS CPU usage value, but instead use Windows Task Manager to judge CPU usage
+* Try a different version of OBS Studio.
+
 ### Bluetooth Microphone Clicking/Popping
 
 Bluetooth microphones can cause clicking or popping sounds. Consider using a wired microphone for better reliability.
@@ -43,13 +53,6 @@ Devices like FiiO DAC can sometimes have very high audio sample rates, potential
 * Ensure the computer isn't running near 100% load.
 * Consider running OBS Studio in admin mode.
 * Consider reducing video resolution and bitrate to free up CPU resources for audio processing.
-
-### OBS Studio Issues
-
-* Restarting OBS or addressing heavy CPU load may also help prevent buffer underruns, which sometimes appear in the OBS logs as a max buffer reached error.
-* Make sure the computer isn't running near 100% load to ensure it's not just overloaded.
-  * Do not rely on the OBS CPU usage value, but instead use Windows Task Manager to judge CPU usage
-* Consider running OBS Studio in Administrator mode, if on Windows
 
 ### Surround Sound Headphones
 
