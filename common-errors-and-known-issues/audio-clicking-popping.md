@@ -94,6 +94,14 @@ Ensure your Mac is plugged into a power outlet, not running on battery power.
    * Add to `&audiocodec=red` the viewer-side links
    * This will switch from OPUS Forward Error Correcting to OPUS Redundancy mode
 
+### Meshcast /WHIP / WHEP / Servers
+
+Audio packet loss may occur if broadcasting WebRTC media via an SFU server, where the viewer isn't able to receive the transmitted stream without error or hiccup.\
+\
+Adding `&buffer=2000` to the viewer's URL might help, trying a different server or lowering the audio/video bitrate could be another option.\
+\
+OPUS with FEC (error control) common avoid these issues, but if FEC isn't on, or if PCM is used, then then clicking may be a bit expected.
+
 ### Additional Troubleshooting Steps
 
 #### Audio Processing tweaks
