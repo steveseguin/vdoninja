@@ -16,15 +16,15 @@ Creating an VDON iframe can be done in HTML or programmatically with JavaScript 
 
 ```
 const iframe = document.createElement("iframe");
-iframe.allow = "autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;gyroscope;screen-wake-lock;";
+iframe.allow = "document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;";
 iframe.src = "https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent";
 ```
 
-You can also make an VDO.Ninja without Javascript, using just HTML, like
+You can also make an VDO.Ninja without Javascript, using just HTML, like:
 
-`<iframe allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;gyroscope;screen-wake-lock;" src="https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent"></iframe>`
-
-Adding that iframe to the DOM will reveal a simple page for accessing for a user to select and share their webcam. For a developer wishing to access a remote guest's stream, this makes the ingestion of that stream into production software like OBS Studios very easy. The level of customization and control opens up opportunities, such as a pay-to-join audience option for a streaming interactive broadcast experience.
+`<iframe allow="document-domain;encrypted-media;sync-xhr;usb;web-share;cross-origin-isolated;midi *;geolocation;camera *;microphone *;fullscreen;picture-in-picture;display-capture;accelerometer;autoplay;gyroscope;screen-wake-lock;" src="https://vdo.ninja/?push=vhX5PYg&cleanoutput&transparent"></iframe>`\
+\
+Adding that IFrame to the DOM will reveal a simple page for accessing for a user to select and share their webcam. For a developer wishing to access a remote guest's stream, this makes the ingestion of that stream into production software like OBS Studios very easy. The level of customization and control opens up opportunities, such as a pay-to-join audience option for a streaming interactive broadcast experience.
 
 An example of how this API is used by VDO.Ninja is with its Internet Speedtest, which has two VDO.Ninja IFrames on a single page. One IFrame feeds video to the other IFrame, and the speed at which it does this is a measure of the system's performance. Detailed stats of the connection are made available to the parent window, which displays the results. [https://vdo.ninja/speedtest](https://vdo.ninja/speedtest)
 
@@ -40,6 +40,8 @@ I also have an example of how you can transfer virtually any data (JSON, text, s
 There's dozens of other examples of how the IFrame API can be used to communicate via p2p, easily with any website, such as controlling PowerPoint remotely, but here's an example of how to use it to control OBS Studio remotely. [https://github.com/steveseguin/sample-p2p-tunnel](https://github.com/steveseguin/sample-p2p-tunnel)
 
 Please note that since VDO.Ninja requires SSL to be strictly enabled site wide, any website you embed a VDO.Ninja IFrame into also will require SSL enabled site wide. Using a service like Cloudflare can provide SSL-enabled caching for websites to make this fairly easy to do.
+
+Please also note that there we are allowing numerous permissions when setting up our IFRAME. You may need to adjust these for your use case; `allow="camera *;microphone *;"` for example.
 
 Something else to note about this IFrame API is that it can not only be controlled via URL parameters given to the IFrame _src_ URL, but also using `postMessage` and `addEventListener` methods of the browser. The later is used to dynamically control VDO.Ninja, while the former is used to initiate the instance to a desired state.
 
