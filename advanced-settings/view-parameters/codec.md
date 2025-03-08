@@ -125,9 +125,13 @@ For more help with enabling H265 on your browser, or to see if your browser curr
 
 The parameter `&codec=hardware` is Android-specific and is the same as doing `&codec=h264`[`&h264profile`](../../newly-added-parameters/and-h264profile.md), but perhaps easier to remember. Worth trying if your android phone is struggling to publish video at a high enough quality into OBS. I may expand on this feature to be smarter.
 
-### Comma seperated - update in [v23](../../releases/v23.md)
+### Prioritize a list of codecs
 
 `&codec` can now accept comma separated values that define the order of preferred video codecs if the primary one fails. You might want this it you want AV1 to be the main codec, falling back to H264 rather than VP8 if not supported. ie: `&codec=av1,h264`
+
+### Figuring out what encoders your browser supports
+
+I've created this page to help you list what encoders are available on your system, for a variety of different purposes. [https://vdo.ninja/codecs](https://vdo.ninja/codecs)
 
 ## Related
 
